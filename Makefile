@@ -41,6 +41,8 @@ LDFLAGS := -lGLESv2 -lEGL -lm -lX11
 
 .PHONY: all clean
 
+all: $(BIN)
+
 $(BIN): $(OBJ) | $(BIN_DIR)
 	$(CC) $^ -o $@ $(LDFLAGS)
 
