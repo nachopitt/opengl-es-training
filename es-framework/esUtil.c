@@ -27,12 +27,19 @@
 #include <EGL/egl.h>
 #include "esUtil.h"
 
+#ifdef USE_X11
 #include  <X11/Xlib.h>
 #include  <X11/Xatom.h>
 #include  <X11/Xutil.h>
 
 // X11 related local variables
 static Display *x_display = NULL;
+#elif defined(USE_FB)
+#include <GLES2/gl2ext.h>
+#include <EGL/eglvivante.h>
+
+static EGLNativeDisplayType* native_display = NULL;
+#endif //USE_X11
 
 ///
 // CreateEGLContext()
@@ -53,7 +60,11 @@ EGLBoolean CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
     EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE, EGL_NONE };
 
     // Get Display
+#ifdef USE_X11
     display = eglGetDisplay((EGLNativeDisplayType)x_display);
+#elif defined(USE_FB)
+    display = eglGetDisplay(native_display);
+#endif //USE_X11
     if ( display == EGL_NO_DISPLAY )
     {
         return EGL_FALSE;
@@ -104,6 +115,7 @@ EGLBoolean CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
 }
 
 
+#ifdef USE_X11
 ///
 //  WinCreate()
 //
@@ -204,6 +216,21 @@ GLboolean userInterrupt(ESContext *esContext)
     return userinterrupt;
 }
 
+#elif defined(USE_FB)
+EGLBoolean FBCreate(ESContext *esContext) {
+    native_display = (EGLNativeDisplayType)fbGetDisplayByIndex(USE_FB);
+    if (native_display == NULL) {
+        return EGL_FALSE;
+    }
+
+    esContext->hWnd = (EGLNativeWindowType)fbCreateWindow(native_display, 0, 0, 0, 0);
+    return EGL_TRUE;
+}
+
+GLboolean userInterrupt(ESContext *esContext) {
+    return GL_FALSE;
+}
+#endif //USE_X11
 
 //////////////////////////////////////////////////////////////////
 //
@@ -240,6 +267,7 @@ void ESUTIL_API esInitContext ( ESContext *esContext )
 //
 GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, GLint width, GLint height, GLuint flags )
 {
+#ifdef USE_X11
     EGLint attribList[] =
     {
         EGL_RED_SIZE,       5,
@@ -251,6 +279,18 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
         EGL_SAMPLE_BUFFERS, (flags & ES_WINDOW_MULTISAMPLE) ? 1 : 0,
         EGL_NONE
     };
+#elif defined(USE_FB)
+    EGLint attribList[] = {
+        EGL_SAMPLES,        0,
+        EGL_RED_SIZE,       8,
+        EGL_GREEN_SIZE,     8,
+        EGL_BLUE_SIZE,      8,
+        EGL_ALPHA_SIZE,     EGL_DONT_CARE,
+        EGL_DEPTH_SIZE,     0,
+        EGL_SURFACE_TYPE,   EGL_WINDOW_BIT,
+        EGL_NONE
+    };
+#endif //USE_X11
 
     if ( esContext == NULL )
     {
@@ -260,7 +300,11 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
     esContext->width = width;
     esContext->height = height;
 
+#ifdef USE_X11
     if ( !WinCreate ( esContext, title) )
+#elif defined(USE_FB)
+    if (!FBCreate(esContext))
+#endif //USE_X11
     {
         return GL_FALSE;
     }

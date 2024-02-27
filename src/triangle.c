@@ -155,7 +155,8 @@ int main(int argc, char* argv[]) {
     esCreateWindow(&esContext, "Hello Triangle", 320, 240, ES_WINDOW_RGB);
 
     if (!Init(&esContext)) {
-        return 0;
+        perror("Init context");
+        return 1;
     }
 
     esRegisterDrawFunc(&esContext, Draw);

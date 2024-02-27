@@ -30,14 +30,30 @@ BIN := triangle
 
 SRC := $(SRC_DIR)/triangle.c $(ES_FRAMEWORK_DIR)/esUtil.c
 
-INC := -I$(ES_FRAMEWORK_DIR)
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJ := $(OBJ:$(ES_FRAMEWORK_DIR)/%.c=$(ES_FRAMEWORK_OBJ_DIR)/%.o)
 
-CPPFLAGS := $(INC) -MMD -MP
-CFLAGS := -Wall -g -O0
+NATIVE_DISPLAY_TYPE ?= x11
 
-LDFLAGS := -lGLESv2 -lEGL -lm -lX11
+CC := $(CROSS_COMPILE)gcc
+
+CPPFLAGS := -MMD -MP
+CFLAGS := -Wall -g -O0 -I$(ES_FRAMEWORK_DIR)
+
+ifeq ($(NATIVE_DISPLAY_TYPE), x11)
+CFLAGS += -DUSE_X11
+LDFLAGS += -lEGL -lGLESv2 -lm -lX11
+else
+ifeq ($(NATIVE_DISPLAY_TYPE), fb)
+CFLAGS += -DUSE_FB=$(FB_NUMBER)
+LDFLAGS += -lGAL -lVSC -lGLESv2
+endif
+endif
+
+ifneq ($(GPU_PKG_CONFIG),)
+CFLAGS += $(shell pkg-config $(GPU_PKG_CONFIG) --define-prefix=$(dir $(GPU_PKG_CONFIG))../../../ --cflags)
+LDFLAGS += $(shell pkg-config $(GPU_PKG_CONFIG) --define-prefix=$(dir $(GPU_PKG_CONFIG))../../../ --libs)
+endif
 
 .PHONY: all clean
 
