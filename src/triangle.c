@@ -119,7 +119,7 @@ int Init(ESContext* esContext) {
 }
 
 // Draw a triangle using the shader pair created in Init()
-void Draw(ESContext* esContext) {
+void DrawTriangle(ESContext* esContext) {
     UserData* userData = esContext->userData;
     GLfloat vVertices[] = {
         0.0f, 0.5f, 0.0f,
@@ -159,7 +159,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    esRegisterDrawFunc(&esContext, Draw);
+    esRegisterDrawFunc(&esContext, DrawTriangle);
 
     esMainLoop(&esContext);
 
