@@ -53,16 +53,20 @@ int Init(ESContext* esContext) {
     UserData* userData = esContext->userData;
     GLchar vShaderStr[] =
         "attribute vec4 vPosition;\n"
+        "attribute vec4 aColor;\n"
+        "varying vec4 vColor;\n"
         "void main()\n"
         "{\n"
+        "   vColor = aColor;\n"
         "   gl_Position = vPosition;\n"
         "}\n";
 
     GLchar fShaderStr[] =
         "precision mediump float;\n"
+        "varying vec4 vColor;\n"
         "void main()\n"
         "{\n"
-        "   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "   gl_FragColor = vColor;\n"
         "}\n";
 
     GLuint vertexShader;
@@ -126,6 +130,11 @@ void DrawTriangle(ESContext* esContext) {
         -0.5f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f
     };
+    GLfloat vColors[] = {
+        1.0f, 0.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+    };
 
     // Set the viewport
     glViewport(0, 0, esContext->width, esContext->height);
@@ -138,7 +147,9 @@ void DrawTriangle(ESContext* esContext) {
 
     // Load the vertex data
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, vColors);
     glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
