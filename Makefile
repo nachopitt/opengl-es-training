@@ -28,7 +28,7 @@ endif
 
 BIN := triangle
 
-SRC := $(SRC_DIR)/triangle.c $(ES_FRAMEWORK_DIR)/esUtil.c
+SRC := $(SRC_DIR)/triangle.c $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_DIR)/esUtil.c
 
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJ := $(OBJ:$(ES_FRAMEWORK_DIR)/%.c=$(ES_FRAMEWORK_OBJ_DIR)/%.o)
