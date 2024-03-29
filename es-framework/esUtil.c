@@ -133,6 +133,8 @@ EGLBoolean WinCreate(ESContext *esContext, const char *title)
     EGLint num_config;
     Window win;
 
+    (void) ecfg;
+    (void) num_config;
     /*
      * X11 native display initialization
      */
