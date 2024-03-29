@@ -2,7 +2,6 @@ SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
 INSTALL_DIR := install
-
 ES_FRAMEWORK_DIR := es-framework
 ES_FRAMEWORK_OBJ_DIR := $(OBJ_DIR)/$(ES_FRAMEWORK_DIR)
 
@@ -26,9 +25,8 @@ RMDIR := $(RM)
 MKDIR := mkdir -p
 endif
 
-BIN := triangle
-
-SRC := $(SRC_DIR)/triangle.c $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_DIR)/esUtil.c
+BIN := triangle square
+SRC := $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_DIR)/esUtil.c
 
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJ := $(OBJ:$(ES_FRAMEWORK_DIR)/%.c=$(ES_FRAMEWORK_OBJ_DIR)/%.o)
@@ -38,7 +36,7 @@ NATIVE_DISPLAY_TYPE ?= x11
 CC := $(CROSS_COMPILE)gcc
 
 CPPFLAGS := -MMD -MP
-CFLAGS := -Wall -g -O0 -I$(ES_FRAMEWORK_DIR)
+CFLAGS := -Wall -g -O0 -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR)
 
 ifeq ($(NATIVE_DISPLAY_TYPE), x11)
 CFLAGS += -DUSE_X11
@@ -59,7 +57,7 @@ endif
 
 all: $(BIN)
 
-$(BIN): $(OBJ) | $(BIN_DIR)
+$(BIN): %: $(OBJ_DIR)/%.o $(OBJ) | $(BIN_DIR)
 	$(CC) $^ -o $(BIN_DIR)/$@ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
