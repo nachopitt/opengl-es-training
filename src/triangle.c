@@ -15,7 +15,7 @@ void DrawTriangle(ESContext* esContext) {
         1.0f, 0.0f, 0.0f, 1.0f,
     };
 
-    DrawShape(esContext, vVertices, 3, GL_FLOAT, vColors, 4, GL_FLOAT);
+    DrawShape(esContext, GL_TRIANGLES, vVertices, 3, GL_FLOAT, vColors, 4, GL_FLOAT, 3);
 }
 
 int main(int argc, char* argv[]) {

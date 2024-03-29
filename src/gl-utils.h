@@ -15,6 +15,6 @@ GLuint LoadShader(const GLchar* shaderSrc, GLenum type);
 int Init(ESContext* esContext);
 
 // Draw a shape using the shader pair created in Init()
-void DrawShape(ESContext* esContext, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType);
+void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType, GLint indicesCount);
 
 #endif // GL_UTILS

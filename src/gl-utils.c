@@ -119,7 +119,7 @@ int Init(ESContext* esContext) {
 }
 
 // Draw a shape using the shader pair created in Init()
-void DrawShape(ESContext* esContext, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType) {
+void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType, GLint indicesCount) {
     UserData* userData = esContext->userData;
 
     // Set the viewport
@@ -137,7 +137,7 @@ void DrawShape(ESContext* esContext, GLfloat vVertices[], GLint vertexComponentS
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(primitivesType, 0, indicesCount);
 
     eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
 }
