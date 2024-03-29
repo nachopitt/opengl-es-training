@@ -60,7 +60,7 @@ endif
 all: $(BIN)
 
 $(BIN): $(OBJ) | $(BIN_DIR)
-	$(CC) $^ -o $@ $(LDFLAGS)
+	$(CC) $^ -o $(BIN_DIR)/$@ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
