@@ -1,5 +1,7 @@
+#include <stdlib.h>
 #include <stdio.h>
 
+#include "esUtil.h"
 #include "gl-utils.h"
 
 // Draw a square using the shader pair created in Init()
@@ -17,6 +19,7 @@ void DrawSquare(ESContext* esContext) {
         1.0f, 0.0f, 0.0f, 1.0f,
     };
 
+    // Call gl-utils's DrawShape function
     DrawShape(esContext, GL_TRIANGLE_STRIP, vVertices, 3, GL_FLOAT, vColors, 4, GL_FLOAT, 4);
 }
 
