@@ -1,7 +1,7 @@
 SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
-INSTALL_DIR := install
+
 ES_FRAMEWORK_DIR := es-framework
 ES_FRAMEWORK_OBJ_DIR := $(OBJ_DIR)/$(ES_FRAMEWORK_DIR)
 
@@ -77,11 +77,9 @@ clean:
 ifeq ($(UNAME),Windows)
 	if exist $(BIN_DIR) $(RMDIR) $(BIN_DIR)
 	if exist $(OBJ_DIR) $(RMDIR) $(OBJ_DIR)
-	if exist $(INSTALL_DIR) $(RMDIR) $(INSTALL_DIR)
 else
 	$(RMDIR) $(BIN_DIR)
 	$(RMDIR) $(OBJ_DIR)
-	$(RMDIR) $(INSTALL_DIR)
 endif
 
 -include $(OBJ:.o=.d)
