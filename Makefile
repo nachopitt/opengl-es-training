@@ -25,7 +25,9 @@ RMDIR := $(RM)
 MKDIR := mkdir -p
 endif
 
-BIN := triangle square
+TARGETS := triangle square
+
+BINS := $(TARGETS:%=$(BIN_DIR)/%)
 SRC := $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_DIR)/esUtil.c
 
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -53,12 +55,14 @@ CFLAGS += $(shell pkg-config $(GPU_PKG_CONFIG) --define-prefix=$(dir $(GPU_PKG_C
 LDFLAGS += $(shell pkg-config $(GPU_PKG_CONFIG) --define-prefix=$(dir $(GPU_PKG_CONFIG))../../../ --libs)
 endif
 
-.PHONY: all clean
+.PHONY: all clean $(TARGETS)
 
-all: $(BIN)
+all: $(TARGETS)
 
-$(BIN): %: $(OBJ_DIR)/%.o $(OBJ) | $(BIN_DIR)
-	$(CC) $^ -o $(BIN_DIR)/$@ $(LDFLAGS)
+$(TARGETS): %: $(BIN_DIR)/%
+
+$(BINS): $(BIN_DIR)/%: $(OBJ_DIR)/%.o $(OBJ) | $(BIN_DIR)
+	$(CC) $^ -o $@ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
