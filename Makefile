@@ -25,7 +25,7 @@ RMDIR := $(RM)
 MKDIR := mkdir -p
 endif
 
-TARGETS := triangle square
+TARGETS := triangle square gstreamer-hello-world
 
 BINS := $(TARGETS:%=$(BIN_DIR)/%)
 SRC := $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_DIR)/esUtil.c
@@ -38,7 +38,8 @@ NATIVE_DISPLAY_TYPE ?= x11
 CC := $(CROSS_COMPILE)gcc
 
 CPPFLAGS := -MMD -MP
-CFLAGS := -Wall -g -O0 -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR)
+CFLAGS := -Wall -g -O0 -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR) $(shell pkg-config gstreamer-1.0 --cflags)
+LDFLAGS := $(shell pkg-config gstreamer-1.0 --libs)
 
 ifeq ($(NATIVE_DISPLAY_TYPE), x11)
 CFLAGS += -DUSE_X11
