@@ -62,7 +62,7 @@ all: $(TARGETS)
 $(TARGETS): %: $(BIN_DIR)/%
 
 $(BINS): $(BIN_DIR)/%: $(OBJ_DIR)/%.o $(OBJ) | $(BIN_DIR)
-	$(CC) $^ -o $@ $(LDFLAGS)
+	$(CC) $^ -o $@ $(CFLAGS) $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
