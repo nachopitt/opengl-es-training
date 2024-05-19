@@ -25,19 +25,12 @@ int main(int argc, char* argv[]) {
     ESContext esContext;
     UserData userData;
 
-    esInitContext(&esContext);
-    esContext.userData = &userData;
-
-    esCreateWindow(&esContext, "Hello Triangle", 320, 240, ES_WINDOW_RGB);
-
-    if (!CompileAndLinkShaders(&esContext)) {
+    if (Init(&esContext, &userData, "Hello Triangle", 320, 240, ES_WINDOW_RGB, DrawTriangle)) {
         perror("Init context");
         return 1;
     }
 
-    esRegisterDrawFunc(&esContext, DrawTriangle);
-
-    esMainLoop(&esContext);
+    Run(&esContext);
 
     return 0;
 }

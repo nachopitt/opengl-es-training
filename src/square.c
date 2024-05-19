@@ -27,19 +27,12 @@ int main(int argc, char* argv[]) {
     ESContext esContext;
     UserData userData;
 
-    esInitContext(&esContext);
-    esContext.userData = &userData;
-
-    esCreateWindow(&esContext, "Hello Square", 320, 240, ES_WINDOW_RGB);
-
-    if (!CompileAndLinkShaders(&esContext)) {
+    if (Init(&esContext, &userData, "Hello Square", 320, 240, ES_WINDOW_RGB, DrawSquare)) {
         perror("Init context");
         return 1;
     }
 
-    esRegisterDrawFunc(&esContext, DrawSquare);
-
-    esMainLoop(&esContext);
+    Run(&esContext);
 
     return 0;
 }

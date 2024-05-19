@@ -3,45 +3,19 @@
 
 #include "gl-utils.h"
 
-// Create a shader object, load the shader source, and compile the shader
-GLuint LoadShader(const GLchar* shaderSrc, GLenum type) {
-    GLuint shader;
-    GLint compiled;
+int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction) {
+    esInitContext(esContext);
+    esContext->userData = userData;
 
-    // Create the shader object
-    shader = glCreateShader(type);
+    esCreateWindow(esContext, title, width, height, flags);
 
-    if (shader == 0)
-        return 0;
-
-    // Load the shader source
-    glShaderSource(shader, 1, &shaderSrc, NULL);
-
-    // Compile the shader
-    glCompileShader(shader);
-
-    // Check the compile status
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-
-    if (!compiled) {
-        GLint infoLen = 0;
-
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
-
-        if (infoLen > 1) {
-            char* infoLog = malloc(sizeof(char) * infoLen);
-
-            glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
-            esLogMessage("Error compiling shader:\n%s\n", infoLog);
-
-            free(infoLog);
-        }
-
-        glDeleteShader(shader);
-        return 0;
+    if (!CompileAndLinkShaders(esContext)) {
+        return 1;
     }
 
-    return shader;
+    esRegisterDrawFunc(esContext, drawFunction);
+
+    return 0;
 }
 
 // Initialize the shader and program object
@@ -118,6 +92,47 @@ int CompileAndLinkShaders(ESContext* esContext) {
     return TRUE;
 }
 
+// Create a shader object, load the shader source, and compile the shader
+GLuint LoadShader(const GLchar* shaderSrc, GLenum type) {
+    GLuint shader;
+    GLint compiled;
+
+    // Create the shader object
+    shader = glCreateShader(type);
+
+    if (shader == 0)
+        return 0;
+
+    // Load the shader source
+    glShaderSource(shader, 1, &shaderSrc, NULL);
+
+    // Compile the shader
+    glCompileShader(shader);
+
+    // Check the compile status
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+
+    if (!compiled) {
+        GLint infoLen = 0;
+
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
+
+        if (infoLen > 1) {
+            char* infoLog = malloc(sizeof(char) * infoLen);
+
+            glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
+            esLogMessage("Error compiling shader:\n%s\n", infoLog);
+
+            free(infoLog);
+        }
+
+        glDeleteShader(shader);
+        return 0;
+    }
+
+    return shader;
+}
+
 // Draw a shape using the shader pair created in Init()
 void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType, GLint indicesCount) {
     UserData* userData = esContext->userData;
@@ -142,3 +157,6 @@ void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[],
     eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
 }
 
+void Run(ESContext* esContext) {
+    esMainLoop(esContext);
+}
