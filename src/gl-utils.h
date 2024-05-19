@@ -12,7 +12,7 @@ typedef struct {
 GLuint LoadShader(const GLchar* shaderSrc, GLenum type);
 
 // Initialize the shader and program object
-int Init(ESContext* esContext);
+int CompileAndLinkShaders(ESContext* esContext);
 
 // Draw a shape using the shader pair created in Init()
 void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType, GLint indicesCount);

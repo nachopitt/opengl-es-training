@@ -45,7 +45,7 @@ GLuint LoadShader(const GLchar* shaderSrc, GLenum type) {
 }
 
 // Initialize the shader and program object
-int Init(ESContext* esContext) {
+int CompileAndLinkShaders(ESContext* esContext) {
     UserData* userData = esContext->userData;
     GLchar vShaderStr[] =
         "attribute vec4 vPosition;\n"

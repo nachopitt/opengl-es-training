@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 
     esCreateWindow(&esContext, "Hello Square", 320, 240, ES_WINDOW_RGB);
 
-    if (!Init(&esContext)) {
+    if (!CompileAndLinkShaders(&esContext)) {
         perror("Init context");
         return 1;
     }
