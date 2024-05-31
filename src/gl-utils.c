@@ -1,15 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <string.h>
 #include "gl-utils.h"
 
-int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction) {
+int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, char* vShaderFile, char* fShaderFile) {
     esInitContext(esContext);
     esContext->userData = userData;
 
     esCreateWindow(esContext, title, width, height, flags);
 
-    if (!CompileAndLinkShaders(esContext)) {
+    if (!CompileAndLinkShaders(esContext, vShaderFile, fShaderFile)) {
         return 1;
     }
 
@@ -19,25 +19,43 @@ int Init(ESContext* esContext, UserData* userData, const char* title, GLint widt
 }
 
 // Initialize the shader and program object
-int CompileAndLinkShaders(ESContext* esContext) {
+int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShaderFile) {
     UserData* userData = esContext->userData;
-    GLchar vShaderStr[] =
-        "attribute vec4 vPosition;\n"
-        "attribute vec4 aColor;\n"
-        "varying vec4 vColor;\n"
-        "void main()\n"
-        "{\n"
-        "   vColor = aColor;\n"
-        "   gl_Position = vPosition;\n"
-        "}\n";
+    FILE* vShaderFileHandle;
+    FILE* fShaderFileHandle;
+    long fileSize;
 
-    GLchar fShaderStr[] =
-        "precision mediump float;\n"
-        "varying vec4 vColor;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_FragColor = vColor;\n"
-        "}\n";
+    vShaderFileHandle = fopen(vShaderFile, "r");
+    if (vShaderFileHandle == NULL) {
+        perror(vShaderFile);
+
+        return 0;
+    }
+
+    fseek(vShaderFileHandle, 0, SEEK_END);
+    fileSize = ftell(vShaderFileHandle);
+    fseek(vShaderFileHandle, 0, SEEK_SET);  /* same as rewind(f); */
+
+    GLchar* vShaderStr = malloc(fileSize + 1);
+    memset(vShaderStr, 0, fileSize + 1);
+    fread(vShaderStr, 1, fileSize, vShaderFileHandle);
+    fclose(vShaderFileHandle);
+
+    fShaderFileHandle = fopen(fShaderFile, "r");
+    if (fShaderFileHandle == NULL) {
+        perror(fShaderFile);
+
+        return 0;
+    }
+
+    fseek(fShaderFileHandle, 0, SEEK_END);
+    fileSize = ftell(fShaderFileHandle);
+    fseek(fShaderFileHandle, 0, SEEK_SET);  /* same as rewind(f); */
+
+    GLchar* fShaderStr = malloc(fileSize + 1);
+    memset(fShaderStr, 0, fileSize + 1);
+    fread(fShaderStr, 1, fileSize, fShaderFileHandle);
+    fclose(fShaderFileHandle);
 
     GLuint vertexShader;
     GLuint fragmentShader;

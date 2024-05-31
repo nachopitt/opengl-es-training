@@ -11,10 +11,10 @@ typedef struct {
 typedef void (ESCALLBACK *DrawFunction)(ESContext*);
 
 // Initialize context, window, shaders and drawing function
-int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction);
+int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, char* vShaderFile, char* fShaderFile);
 
 // Initialize the shader and program object
-int CompileAndLinkShaders(ESContext* esContext);
+int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShaderFile);
 
 // Create a shader object, load the shader source, and compile the shader
 GLuint LoadShader(const GLchar* shaderSrc, GLenum type);
