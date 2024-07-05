@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "gl-utils.h"
 
 int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, char* vShaderFile, char* fShaderFile) {
@@ -173,6 +174,30 @@ void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[],
     glDrawArrays(primitivesType, 0, indicesCount);
 
     eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
+}
+
+//Rotate a shape using the fragment shader created in Init()
+void RotateShape(ESContext* esContext, GLfloat angle, char* modelViewProjectionUniform) {
+    UserData* userData = esContext->userData;
+
+    // Calculate model-view-projection matrix
+    float radians = angle * 3.14159f / 180.0f;
+    float cosTheta = cos(radians);
+    float sinTheta = sin(radians);
+    float aspect = esContext->width / esContext->height;
+
+    float modelViewProjection[] = {
+        cosTheta,   -sinTheta * aspect, 0.0f, 0.0f,
+        sinTheta,   cosTheta * aspect,  0.0f, 0.0f,
+        0.0f,       0.0f,               1.0f, 0.0f,
+        0.0f,       0.0f,               0.0f, 1.0f
+    };
+
+    // Get the location of the modelViewProjection uniform
+    GLint mvpLoc = glGetUniformLocation(userData->programObject, "modelViewProjection");
+
+    // Pass the rotation matrix to the shader
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, modelViewProjection);
 }
 
 void Run(ESContext* esContext) {

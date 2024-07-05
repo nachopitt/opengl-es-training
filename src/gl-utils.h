@@ -22,6 +22,9 @@ GLuint LoadShader(const GLchar* shaderSrc, GLenum type);
 // Draw a shape using the shader pair created in Init()
 void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType, GLint indicesCount);
 
+//Rotate a shape using the fragment shader created in Init()
+void RotateShape(ESContext* esContext, GLfloat angle, char* modelViewProjectionUniform);
+
 // Start main loop
 void Run(ESContext* esContext);
 
