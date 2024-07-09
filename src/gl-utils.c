@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 #include "gl-utils.h"
 
 int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, char* vShaderFile, char* fShaderFile) {
@@ -176,8 +177,8 @@ void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[],
     eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
 }
 
-//Rotate a shape using the fragment shader created in Init()
-void RotateShape(ESContext* esContext, GLfloat angle, char* modelViewProjectionUniform) {
+//Transform a shape using the fragment shader created in Init()
+void TransformShape(ESContext* esContext, GLfloat angle, GLfloat x_distance, char* modelViewProjectionUniform) {
     UserData* userData = esContext->userData;
 
     // Calculate model-view-projection matrix
@@ -190,7 +191,7 @@ void RotateShape(ESContext* esContext, GLfloat angle, char* modelViewProjectionU
         cosTheta,   -sinTheta * aspect, 0.0f, 0.0f,
         sinTheta,   cosTheta * aspect,  0.0f, 0.0f,
         0.0f,       0.0f,               1.0f, 0.0f,
-        0.0f,       0.0f,               0.0f, 1.0f
+        x_distance, 0.0f,               0.0f, 1.0f
     };
 
     // Get the location of the modelViewProjection uniform
@@ -202,4 +203,13 @@ void RotateShape(ESContext* esContext, GLfloat angle, char* modelViewProjectionU
 
 void Run(ESContext* esContext) {
     esMainLoop(esContext);
+}
+
+// Get the current time in seconds
+float GetCurrentTimeInSeconds() {
+    static clock_t start = 0;
+    if (start == 0) {
+        start = clock();
+    }
+    return (float)(clock() - start) / CLOCKS_PER_SEC;
 }
