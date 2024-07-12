@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     ESContext esContext;
     UserData userData;
 
-    if (Init(&esContext, &userData, "Hello Triangle", 1280, 480, ES_WINDOW_RGB, DrawTriangle, "shaders/basic-color-rotate.vs", "shaders/basic.fs")) {
+    if (Init(&esContext, &userData, "Hello Triangle", 1280, 480, ES_WINDOW_RGB, DrawTriangle, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
         perror("Init context");
         return 1;
     }
