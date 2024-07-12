@@ -47,7 +47,7 @@ LDFLAGS += -lEGL -lGLESv2 -lm -lX11
 else
 ifeq ($(NATIVE_DISPLAY_TYPE), fb)
 CFLAGS += -DUSE_FB=$(FB_NUMBER)
-LDFLAGS += -lGAL -lVSC -lGLESv2
+LDFLAGS += -lGAL -lVSC -lm -lEGL -lGLESv2
 endif
 endif
 
