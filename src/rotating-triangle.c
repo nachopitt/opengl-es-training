@@ -10,7 +10,7 @@ void DrawTriangle(ESContext* esContext) {
     // Rotation angle
     static GLfloat angle = 0.0f;
     GLfloat x_distance = 0.0f;
-    float speed_factor = 2.0f;
+    float speed_factor = 50.0f;
     // Get time in seconds
     float time = GetCurrentTimeInSeconds();
 
@@ -37,7 +37,7 @@ void DrawTriangle(ESContext* esContext) {
     x_distance = sin(time * speed_factor) * 0.5f;
 
     // Call gl-utils's TransformShape function
-    TransformShape(esContext, angle, x_distance, "modelViewProjection");
+    TransformShape(esContext, 0, x_distance, "modelViewProjection");
 
     // Call gl-utils's DrawShape function
     DrawShape(esContext, GL_TRIANGLES, vVertices, 3, GL_FLOAT, vColors, 4, GL_FLOAT, 3);
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     ESContext esContext;
     UserData userData;
 
-    if (Init(&esContext, &userData, "Hello Triangle", 320, 240, ES_WINDOW_RGB, DrawTriangle, "shaders/basic-color-rotate.vs", "shaders/basic.fs")) {
+    if (Init(&esContext, &userData, "Hello Triangle", 1280, 480, ES_WINDOW_RGB, DrawTriangle, "shaders/basic-color-rotate.vs", "shaders/basic.fs")) {
         perror("Init context");
         return 1;
     }
