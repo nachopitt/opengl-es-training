@@ -173,8 +173,6 @@ void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[],
     glEnableVertexAttribArray(1);
 
     glDrawArrays(primitivesType, 0, indicesCount);
-
-    eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
 }
 
 //Transform a shape using the fragment shader created in Init()
