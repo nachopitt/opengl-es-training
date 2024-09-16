@@ -151,9 +151,9 @@ GLuint LoadShader(const GLchar* shaderSrc, GLenum type) {
     return shader;
 }
 
-// Clear the screen to some color
+// Clear the screen with some color
 void ClearScreen(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
-    // Clear the screen to some color
+    // Clear the screen with some color
     glClearColor(red, green, blue, alpha);
 
     // Clear the color buffer

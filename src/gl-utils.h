@@ -19,6 +19,9 @@ int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShader
 // Create a shader object, load the shader source, and compile the shader
 GLuint LoadShader(const GLchar* shaderSrc, GLenum type);
 
+// Clear the screen with some color
+void ClearScreen(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
+
 // Draw a shape using the shader pair created in Init()
 void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType, GLint indicesCount);
 
