@@ -107,8 +107,6 @@ int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShader
     // Store the program object
     userData->programObject = programObject;
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
     return TRUE;
 }
 
@@ -153,15 +151,23 @@ GLuint LoadShader(const GLchar* shaderSrc, GLenum type) {
     return shader;
 }
 
+// Clear the screen to some color
+void ClearScreen(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
+    // Clear the screen to some color
+    glClearColor(red, green, blue, alpha);
+
+    // Clear the color buffer
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
 // Draw a shape using the shader pair created in Init()
 void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType, GLint indicesCount) {
     UserData* userData = esContext->userData;
 
+    ClearScreen(0.0f, 0.0f, 0.0f, 1.0f);
+
     // Set the viewport
     glViewport(0, 0, esContext->width, esContext->height);
-
-    // Clear the color buffer
-    glClear(GL_COLOR_BUFFER_BIT);
 
     // Use the program object
     glUseProgram(userData->programObject);
