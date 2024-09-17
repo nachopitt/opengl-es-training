@@ -5,6 +5,8 @@
 #include <time.h>
 #include "gl-utils.h"
 
+const GLfloat PI = 3.14159f;
+
 int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, char* vShaderFile, char* fShaderFile) {
     esInitContext(esContext);
     esContext->userData = userData;
@@ -186,7 +188,7 @@ void TransformShape(ESContext* esContext, GLfloat angle, GLfloat x_distance, cha
     UserData* userData = esContext->userData;
 
     // Calculate model-view-projection matrix
-    float radians = angle * 3.14159f / 180.0f;
+    float radians = angle * PI / 180.0f;
     float cosTheta = cos(radians);
     float sinTheta = sin(radians);
     float aspect = esContext->width / esContext->height;
@@ -199,7 +201,7 @@ void TransformShape(ESContext* esContext, GLfloat angle, GLfloat x_distance, cha
     };
 
     // Get the location of the modelViewProjection uniform
-    GLint mvpLoc = glGetUniformLocation(userData->programObject, "modelViewProjection");
+    GLint mvpLoc = glGetUniformLocation(userData->programObject, modelViewProjectionUniform);
 
     // Pass the rotation matrix to the shader
     glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, modelViewProjection);

@@ -3,6 +3,8 @@
 
 #include "esUtil.h"
 
+extern const GLfloat PI;
+
 typedef struct {
     // Handle to a program object
     GLuint programObject;
