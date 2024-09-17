@@ -31,6 +31,7 @@ void TransformShape(ESContext* esContext, GLfloat angle, GLfloat x_distance, cha
 // Start main loop
 void Run(ESContext* esContext);
 
+// Get the current time in seconds
 float GetCurrentTimeInSeconds();
 
 #endif // GL_UTILS
