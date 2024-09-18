@@ -11,6 +11,13 @@ typedef struct {
     GLuint programObject;
 } UserData;
 
+typedef struct {
+    // Handle to a shader object
+    GLuint shaderObject;
+    char* shaderFileName;
+    char* shaderSourceCode;
+} Shader;
+
 typedef void (ESCALLBACK *DrawFunction)(ESContext*);
 typedef void (ESCALLBACK *UpdateFunction)(ESContext *, float);
 
