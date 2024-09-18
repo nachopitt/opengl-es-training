@@ -72,6 +72,9 @@ int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShader
     vertexShader = LoadShader(vShaderStr, GL_VERTEX_SHADER);
     fragmentShader = LoadShader(fShaderStr, GL_FRAGMENT_SHADER);
 
+    free(vShaderStr);
+    free(fShaderStr);
+
     // Crete the program object
     programObject = glCreateProgram();
 
