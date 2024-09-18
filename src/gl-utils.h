@@ -4,6 +4,7 @@
 #include "esUtil.h"
 
 extern const GLfloat PI;
+extern float elapsedTime;
 
 typedef struct {
     // Handle to a program object
@@ -34,7 +35,7 @@ void TransformShape(ESContext* esContext, GLfloat angle, GLfloat x_distance, cha
 // Start main loop
 void Run(ESContext* esContext);
 
-// Get the current time in seconds
-float GetCurrentTimeInSeconds();
+// Get elapsed time in seconds
+float GetElapsedTimeInSeconds();
 
 #endif // GL_UTILS

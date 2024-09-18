@@ -6,6 +6,7 @@
 #include "gl-utils.h"
 
 const GLfloat PI = 3.14159f;
+float elapsedTime = 0.0f;
 
 int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, char* vShaderFile, char* fShaderFile) {
     esInitContext(esContext);
@@ -212,11 +213,7 @@ void Run(ESContext* esContext) {
     esMainLoop(esContext);
 }
 
-// Get the current time in seconds
-float GetCurrentTimeInSeconds() {
-    static clock_t start = 0;
-    if (start == 0) {
-        start = clock();
-    }
-    return (float)(clock() - start) / CLOCKS_PER_SEC;
+// Get elapsed time in seconds
+float GetElapsedTimeInSeconds() {
+    return elapsedTime;
 }

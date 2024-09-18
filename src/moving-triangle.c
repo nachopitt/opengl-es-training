@@ -9,6 +9,7 @@
 
 // Get the elapsed time as a delta
 void Update(ESContext* esContext, float deltaTime) {
+    elapsedTime += deltaTime;
 }
 
 // Draw a triangle using the shader pair created in Init()
@@ -16,9 +17,9 @@ void DrawTriangle(ESContext* esContext) {
     // Rotation angle
     static GLfloat angle = 0.0f;
     GLfloat x_distance = 0.0f;
-    float speed_factor = 50.0f;
-    // Get time in seconds
-    float time = GetCurrentTimeInSeconds();
+    float speed_factor = 2.0f;
+    // Get elapsed time in seconds
+    float time = GetElapsedTimeInSeconds();
 
     GLfloat vVertices[] = {
         0.0f, 0.5f, 0.0f,
