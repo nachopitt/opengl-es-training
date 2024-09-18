@@ -7,7 +7,7 @@
 
 const GLfloat PI = 3.14159f;
 
-int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, char* vShaderFile, char* fShaderFile) {
+int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, char* vShaderFile, char* fShaderFile) {
     esInitContext(esContext);
     esContext->userData = userData;
 
@@ -18,6 +18,7 @@ int Init(ESContext* esContext, UserData* userData, const char* title, GLint widt
     }
 
     esRegisterDrawFunc(esContext, drawFunction);
+    esRegisterUpdateFunc(esContext, updateFunction);
 
     return 0;
 }

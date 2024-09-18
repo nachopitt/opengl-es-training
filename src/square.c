@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     ESContext esContext;
     UserData userData;
 
-    if (Init(&esContext, &userData, "Hello Square", 320, 240, ES_WINDOW_RGB, DrawSquare, "shaders/basic-color.vs", "shaders/basic.fs")) {
+    if (Init(&esContext, &userData, "Hello Square", 320, 240, ES_WINDOW_RGB, DrawSquare, NULL, "shaders/basic-color.vs", "shaders/basic.fs")) {
         perror("Init context");
         return 1;
     }

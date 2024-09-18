@@ -7,6 +7,10 @@
 #include "esUtil.h"
 #include "gl-utils.h"
 
+// Get the elapsed time as a delta
+void Update(ESContext* esContext, float deltaTime) {
+}
+
 // Draw a triangle using the shader pair created in Init()
 void DrawTriangle(ESContext* esContext) {
     // Rotation angle
@@ -68,7 +72,7 @@ int main(int argc, char* argv[]) {
     }
 #endif // USE_FB
 
-    if (Init(&esContext, &userData, "Hello Triangle", 1280, 480, ES_WINDOW_RGB, DrawTriangle, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
+    if (Init(&esContext, &userData, "Hello Triangle", 1280, 480, ES_WINDOW_RGB, DrawTriangle, Update,"shaders/basic-color-transform.vs", "shaders/basic.fs")) {
         perror("Init context");
         return 1;
     }
