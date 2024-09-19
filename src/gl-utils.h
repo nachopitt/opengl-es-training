@@ -28,7 +28,7 @@ int Init(ESContext* esContext, UserData* userData, const char* title, GLint widt
 int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShaderFile);
 
 // Create a shader object, load the shader source, and compile the shader
-GLuint LoadShader(const GLchar* shaderSrc, GLenum type);
+GLuint LoadShader(const char* fileName, GLenum type);
 
 // Clear the screen with some color
 void ClearScreen(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);

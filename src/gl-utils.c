@@ -27,53 +27,14 @@ int Init(ESContext* esContext, UserData* userData, const char* title, GLint widt
 // Initialize the shader and program object
 int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShaderFile) {
     UserData* userData = esContext->userData;
-    FILE* vShaderFileHandle;
-    FILE* fShaderFileHandle;
-    long fileSize;
-
-    vShaderFileHandle = fopen(vShaderFile, "r");
-    if (vShaderFileHandle == NULL) {
-        perror(vShaderFile);
-
-        return 0;
-    }
-
-    fseek(vShaderFileHandle, 0, SEEK_END);
-    fileSize = ftell(vShaderFileHandle);
-    fseek(vShaderFileHandle, 0, SEEK_SET);  /* same as rewind(f); */
-
-    GLchar* vShaderStr = malloc(fileSize + 1);
-    memset(vShaderStr, 0, fileSize + 1);
-    fread(vShaderStr, 1, fileSize, vShaderFileHandle);
-    fclose(vShaderFileHandle);
-
-    fShaderFileHandle = fopen(fShaderFile, "r");
-    if (fShaderFileHandle == NULL) {
-        perror(fShaderFile);
-
-        return 0;
-    }
-
-    fseek(fShaderFileHandle, 0, SEEK_END);
-    fileSize = ftell(fShaderFileHandle);
-    fseek(fShaderFileHandle, 0, SEEK_SET);  /* same as rewind(f); */
-
-    GLchar* fShaderStr = malloc(fileSize + 1);
-    memset(fShaderStr, 0, fileSize + 1);
-    fread(fShaderStr, 1, fileSize, fShaderFileHandle);
-    fclose(fShaderFileHandle);
-
     GLuint vertexShader;
     GLuint fragmentShader;
     GLuint programObject;
     GLint linked;
 
     // Load the vertex/fragment shaders
-    vertexShader = LoadShader(vShaderStr, GL_VERTEX_SHADER);
-    fragmentShader = LoadShader(fShaderStr, GL_FRAGMENT_SHADER);
-
-    free(vShaderStr);
-    free(fShaderStr);
+    vertexShader = LoadShader(vShaderFile, GL_VERTEX_SHADER);
+    fragmentShader = LoadShader(fShaderFile, GL_FRAGMENT_SHADER);
 
     // Crete the program object
     programObject = glCreateProgram();
@@ -118,9 +79,11 @@ int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShader
 }
 
 // Create a shader object, load the shader source, and compile the shader
-GLuint LoadShader(const GLchar* shaderSrc, GLenum type) {
+GLuint LoadShader(const char* fileName, GLenum type) {
     GLuint shader;
     GLint compiled;
+    FILE *fileHandle;
+    long fileSize;
 
     // Create the shader object
     shader = glCreateShader(type);
@@ -128,8 +91,27 @@ GLuint LoadShader(const GLchar* shaderSrc, GLenum type) {
     if (shader == 0)
         return 0;
 
+    fileHandle = fopen(fileName, "r");
+    if (fileHandle == NULL)
+    {
+        perror(fileName);
+
+        return 0;
+    }
+
+    fseek(fileHandle, 0, SEEK_END);
+    fileSize = ftell(fileHandle);
+    fseek(fileHandle, 0, SEEK_SET); /* same as rewind(f); */
+
+    GLchar *sourceCode = malloc(fileSize + 1);
+    memset(sourceCode, 0, fileSize + 1);
+    fread(sourceCode, 1, fileSize, fileHandle);
+    fclose(fileHandle);
+
     // Load the shader source
-    glShaderSource(shader, 1, &shaderSrc, NULL);
+    glShaderSource(shader, 1, (const GLchar* const *)&sourceCode, NULL);
+
+    free(sourceCode);
 
     // Compile the shader
     glCompileShader(shader);
