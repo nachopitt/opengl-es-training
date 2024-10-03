@@ -45,9 +45,6 @@ int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShader
     glAttachShader(programObject, vertexShader);
     glAttachShader(programObject, fragmentShader);
 
-    // Bind vPosition to attribute 0
-    glBindAttribLocation(programObject, 0, "vPosition");
-
     // Link the program
     glLinkProgram(programObject);
 
