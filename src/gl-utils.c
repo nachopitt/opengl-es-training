@@ -153,8 +153,6 @@ void ClearScreen(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
 void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType, GLint indicesCount) {
     UserData* userData = esContext->userData;
 
-    ClearScreen(0.0f, 0.0f, 0.0f, 1.0f);
-
     // Set the viewport
     glViewport(0, 0, esContext->width, esContext->height);
 

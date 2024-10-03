@@ -43,6 +43,9 @@ void DrawTriangle(ESContext* esContext) {
     // Move along the x-axis with a sine wave, scaling to keep within bounds
     x_distance = sin(time * speed_factor) * 0.5f;
 
+    // Call gl-utils's ClearScreen function
+    ClearScreen(0.0f, 0.0f, 0.0f, 1.0f);
+
     // Call gl-utils's TransformShape function
     TransformShape(esContext, 0, x_distance, "modelViewProjection");
 

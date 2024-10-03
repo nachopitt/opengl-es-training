@@ -17,6 +17,9 @@ void DrawTriangle(ESContext* esContext) {
         1.0f, 0.0f, 0.0f, 1.0f,
     };
 
+    // Call gl-utils's ClearScreen function
+    ClearScreen(0.0f, 0.0f, 0.0f, 1.0f);
+
     // Call gl-utils's DrawShape function
     DrawShape(esContext, GL_TRIANGLES, vVertices, 3, GL_FLOAT, vColors, 4, GL_FLOAT, 3);
 }
