@@ -36,8 +36,14 @@ void ClearScreen(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 // Draw a shape using the shader pair created in Init()
 void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType, GLint indicesCount);
 
-//Transform a shape using the fragment shader created in Init()
+//Transform a shape using the vertex shader created in Init()
 void TransformShape(ESContext* esContext, GLfloat angle, GLfloat x_distance, char* modelViewProjectionUniform);
+
+// Draw a text string using the shader pair created in Init()
+void DrawTextString(ESContext *esContext, char *text, float x, float y, float size);
+
+// Draw a text character using the shader pair created in Init()
+void DrawTextChar(ESContext *esContext, char ch, float x, float y, float size);
 
 // Start main loop
 void Run(ESContext* esContext);

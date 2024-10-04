@@ -8,6 +8,39 @@
 const GLfloat PI = 3.14159f;
 float elapsedTime = 0.0f;
 
+// The 8x8 monochrome font bitmap for ASCII characters
+unsigned char font8x8_basic[128][8] = {
+    [ 0] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // ASCII 0 (null)
+    [ 1] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // ASCII 1 (space)
+    [65] = {0x18, 0x24, 0x42, 0x7E, 0x42, 0x42, 0x42, 0x00}, // ASCII 65 ('A')
+    [66] = {0x7C, 0x42, 0x42, 0x7C, 0x42, 0x42, 0x7C, 0x00}, // ASCII 66 ('B')
+    [67] = {0x3C, 0x42, 0x40, 0x40, 0x40, 0x42, 0x3C, 0x00}, // ASCII 67 ('C')
+    [68] = {0x7C, 0x42, 0x42, 0x42, 0x42, 0x42, 0x7C, 0x00}, // ASCII 68 ('D')
+    [69] = {0x7E, 0x40, 0x40, 0x7C, 0x40, 0x40, 0x7E, 0x00}, // ASCII 69 ('E')
+    [70] = {0x7E, 0x40, 0x40, 0x7C, 0x40, 0x40, 0x40, 0x00}, // ASCII 70 ('F')
+    [71] = {0x3C, 0x42, 0x40, 0x4E, 0x42, 0x42, 0x3C, 0x00}, // ASCII 71 ('G')
+    [72] = {0x42, 0x42, 0x42, 0x7E, 0x42, 0x42, 0x42, 0x00}, // ASCII 72 ('H')
+    [73] = {0x7E, 0x18, 0x18, 0x18, 0x18, 0x18, 0x7E, 0x00}, // ASCII 73 ('I')
+    [74] = {0x7E, 0x02, 0x02, 0x02, 0x02, 0x42, 0x3C, 0x00}, // ASCII 74 ('J')
+    [75] = {0x42, 0x44, 0x48, 0x70, 0x48, 0x44, 0x42, 0x00}, // ASCII 75 ('K')
+    [76] = {0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x7E, 0x00}, // ASCII 76 ('L')
+    [77] = {0x42, 0x66, 0x5A, 0x5A, 0x42, 0x42, 0x42, 0x00}, // ASCII 77 ('M')
+    [78] = {0x42, 0x62, 0x52, 0x4A, 0x46, 0x42, 0x42, 0x00}, // ASCII 78 ('N')
+    [79] = {0x3C, 0x42, 0x42, 0x42, 0x42, 0x42, 0x3C, 0x00}, // ASCII 79 ('O')
+    [80] = {0x7C, 0x42, 0x42, 0x7C, 0x40, 0x40, 0x40, 0x00}, // ASCII 80 ('P')
+    [81] = {0x3C, 0x42, 0x42, 0x42, 0x52, 0x4A, 0x3C, 0x00}, // ASCII 81 ('Q')
+    [82] = {0x7C, 0x42, 0x42, 0x7C, 0x48, 0x44, 0x42, 0x00}, // ASCII 82 ('R')
+    [83] = {0x3C, 0x42, 0x40, 0x3C, 0x02, 0x42, 0x3C, 0x00}, // ASCII 83 ('S')
+    [84] = {0x7E, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x00}, // ASCII 84 ('T')
+    [85] = {0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x3C, 0x00}, // ASCII 85 ('U')
+    [86] = {0x42, 0x42, 0x42, 0x42, 0x42, 0x24, 0x18, 0x00}, // ASCII 86 ('V')
+    [87] = {0x42, 0x42, 0x42, 0x5A, 0x5A, 0x66, 0x42, 0x00}, // ASCII 87 ('W')
+    [88] = {0x42, 0x42, 0x24, 0x18, 0x24, 0x42, 0x42, 0x00}, // ASCII 88 ('X')
+    [89] = {0x42, 0x42, 0x24, 0x18, 0x18, 0x18, 0x18, 0x00}, // ASCII 89 ('Y')
+    [90] = {0x7E, 0x02, 0x04, 0x18, 0x20, 0x40, 0x7E, 0x00}, // ASCII 90 ('Z')
+    // More characters can be added as needed...
+};
+
 int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, char* vShaderFile, char* fShaderFile) {
     esInitContext(esContext);
     esContext->userData = userData;
@@ -187,6 +220,64 @@ void TransformShape(ESContext* esContext, GLfloat angle, GLfloat x_distance, cha
 
     // Pass the rotation matrix to the shader
     glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, modelViewProjection);
+}
+
+void DrawTextString(ESContext *esContext, char *text, float x, float y, float size) {
+    UserData *userData = esContext->userData;
+
+    // Set the viewport
+    glViewport(0, 0, esContext->width, esContext->height);
+
+    // Use the program object
+    glUseProgram(userData->programObject);
+
+    for (int i = 0; text[i] != '\0'; i++) {
+        DrawTextChar(esContext, text[i], x + i * (size * 8), y, size);
+    }
+}
+
+// Function to draw a single character
+void DrawTextChar(ESContext *esContext, char ch, float x, float y, float size) {
+    UserData *userData = esContext->userData;
+
+    unsigned char *bitmap = font8x8_basic[(int)ch];
+
+    // Get attribute and uniform locations
+    GLint positionAttribute = glGetAttribLocation(userData->programObject, "position");
+
+    // Loop through each row of the 8x8 bitmap
+    for (int row = 0; row < 8; row++)
+    {
+        unsigned char row_data = bitmap[row];
+
+        // Loop through each bit (column) in the row
+        for (int col = 0; col < 8; col++)
+        {
+            if (row_data & (1 << (7 - col)))
+            {
+                // Set the position for this pixel
+                // Adjust positions for NDC (-1 to 1 range)
+                float xpos = x + col * size;
+                float ypos = y - row * size;
+
+                GLfloat quadVertices[] = {
+                    xpos, ypos,               // Bottom left
+                    xpos + size, ypos,        // Bottom right
+                    xpos, ypos + size,        // Top left
+                    xpos + size, ypos + size, // Top right
+                    xpos + size, ypos,        // Bottom right
+                    xpos, ypos + size         // Top left
+                };
+
+                // Bind the vertex data
+                glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, GL_FALSE, 0, quadVertices);
+                glEnableVertexAttribArray(positionAttribute);
+
+                // Draw the character quad (two triangles forming a square)
+                glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            }
+        }
+    }
 }
 
 void Run(ESContext* esContext) {
