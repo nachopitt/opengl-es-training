@@ -20,9 +20,14 @@ typedef struct {
 
 typedef void (ESCALLBACK *DrawFunction)(ESContext*);
 typedef void (ESCALLBACK *UpdateFunction)(ESContext *, float);
+typedef void (ESCALLBACK *KeyFunction)(ESContext *, unsigned char, int, int);
+typedef void (ESCALLBACK *WindowResizeFunction)(ESContext *, int, int);
 
-// Initialize context, window, shaders and drawing function
-int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, char* vShaderFile, char* fShaderFile);
+// Initialize context, window, shaders and callback functions
+int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, KeyFunction keyFunction, WindowResizeFunction windowResizeFunction, char* vShaderFile, char* fShaderFile);
+
+// Set the viewport in case it has changed
+void SetViewport(ESContext* esContext);
 
 // Initialize the shader and program object
 int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShaderFile);

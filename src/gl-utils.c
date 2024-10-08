@@ -41,7 +41,7 @@ unsigned char font8x8_basic[128][8] = {
     // More characters can be added as needed...
 };
 
-int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, char* vShaderFile, char* fShaderFile) {
+int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, KeyFunction keyFunction, WindowResizeFunction windowResizeFunction, char* vShaderFile, char* fShaderFile) {
     esInitContext(esContext);
     esContext->userData = userData;
 
@@ -53,8 +53,15 @@ int Init(ESContext* esContext, UserData* userData, const char* title, GLint widt
 
     esRegisterDrawFunc(esContext, drawFunction);
     esRegisterUpdateFunc(esContext, updateFunction);
+    esRegisterKeyFunc(esContext, keyFunction);
+    esRegisterWindowResizeFunc(esContext, windowResizeFunction);
 
     return 0;
+}
+
+void SetViewport(ESContext* esContext) {
+    // Set the viewport
+    glViewport(0, 0, esContext->width, esContext->height);
 }
 
 // Initialize the shader and program object
@@ -183,9 +190,6 @@ void ClearScreen(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
 void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[], GLint vertexComponentSize, GLenum vertexComponentType, GLfloat vColors[], GLint colorComponentSize, GLenum colorComponentType, GLint indicesCount) {
     UserData* userData = esContext->userData;
 
-    // Set the viewport
-    glViewport(0, 0, esContext->width, esContext->height);
-
     // Use the program object
     glUseProgram(userData->programObject);
 
@@ -224,9 +228,6 @@ void TransformShape(ESContext* esContext, GLfloat angle, GLfloat x_distance, cha
 
 void DrawTextString(ESContext *esContext, char *text, float x, float y, float size) {
     UserData *userData = esContext->userData;
-
-    // Set the viewport
-    glViewport(0, 0, esContext->width, esContext->height);
 
     // Use the program object
     glUseProgram(userData->programObject);

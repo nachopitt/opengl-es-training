@@ -43,6 +43,8 @@ void DrawTriangle(ESContext* esContext) {
     // Move along the x-axis with a sine wave, scaling to keep within bounds
     x_distance = sin(time * speed_factor) * 0.5f;
 
+    SetViewport(esContext);
+
     // Call gl-utils's ClearScreen function
     ClearScreen(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -76,7 +78,7 @@ int main(int argc, char* argv[]) {
     }
 #endif // USE_FB
 
-    if (Init(&esContext, &userData, "Hello Triangle", 1280, 480, ES_WINDOW_RGB, DrawTriangle, Update,"shaders/basic-color-transform.vs", "shaders/basic.fs")) {
+    if (Init(&esContext, &userData, "Hello Triangle", 1280, 480, ES_WINDOW_RGB, DrawTriangle, Update, NULL, NULL, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
         perror("Init context");
         return 1;
     }
