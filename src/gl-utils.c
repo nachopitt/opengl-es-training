@@ -261,12 +261,10 @@ void DrawTextChar(ESContext *esContext, char ch, float x, float y, float size) {
                 float ypos = y - row * size;
 
                 GLfloat quadVertices[] = {
-                    xpos, ypos,               // Bottom left
-                    xpos + size, ypos,        // Bottom right
                     xpos, ypos + size,        // Top left
                     xpos + size, ypos + size, // Top right
+                    xpos, ypos,               // Bottom left
                     xpos + size, ypos,        // Bottom right
-                    xpos, ypos + size         // Top left
                 };
 
                 // Bind the vertex data
