@@ -4,6 +4,7 @@
 #include <math.h>
 #include <time.h>
 #include "gl-utils.h"
+#include "linmath.h"
 
 const GLfloat PI = 3.14159f;
 float elapsedTime = 0.0f;
@@ -200,6 +201,25 @@ void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[],
     glEnableVertexAttribArray(1);
 
     glDrawArrays(primitivesType, 0, indicesCount);
+}
+
+// Project a shape using the vertex shader created in Init()
+void ProjectShape(ESContext* esContext, char* modelViewProjectionUniform) {
+    UserData *userData = esContext->userData;
+
+    // Set up projection matrix
+    float aspect_ratio = (float)esContext->width / (float)esContext->height;
+    float orthoWidth = 10.0f; // Set width of your 2D projection
+    float orthoHeight = orthoWidth / aspect_ratio;
+
+    mat4x4 projection;
+    mat4x4_ortho(projection, -orthoWidth, orthoWidth, -orthoHeight, orthoHeight, -1.0f, 1.0f);
+
+    // Get the location of the modelViewProjection uniform
+    GLint mvpLoc = glGetUniformLocation(userData->programObject, modelViewProjectionUniform);
+
+    // Pass the rotation matrix to the shader
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, (const GLfloat *)projection);
 }
 
 // Transform a shape using the vertex shader created in Init()
