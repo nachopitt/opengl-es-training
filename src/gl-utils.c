@@ -209,11 +209,9 @@ void ProjectShape(ESContext* esContext, char* modelViewProjectionUniform) {
 
     // Set up projection matrix
     float aspect_ratio = (float)esContext->width / (float)esContext->height;
-    float orthoWidth = 10.0f; // Set width of your 2D projection
-    float orthoHeight = orthoWidth / aspect_ratio;
 
     mat4x4 projection;
-    mat4x4_ortho(projection, -orthoWidth, orthoWidth, -orthoHeight, orthoHeight, -1.0f, 1.0f);
+    mat4x4_ortho(projection, -aspect_ratio, aspect_ratio, -1.0f, 1.0f, -1.0f, 1.0f);
 
     // Get the location of the modelViewProjection uniform
     GLint mvpLoc = glGetUniformLocation(userData->programObject, modelViewProjectionUniform);
@@ -278,11 +276,10 @@ void DrawTextChar(ESContext *esContext, char ch, float x, float y, float size) {
             {
                 // Set the position for this pixel
                 // Adjust positions for NDC (-1 to 1 range)
-                float aspect_ratio = esContext->width / esContext->height;
-                float x0 = (x + size * (col + 0)) * (aspect_ratio > 1 ? 1.0f / aspect_ratio : 1.0f); // Left
-                float x1 = (x + size * (col + 1)) * (aspect_ratio > 1 ? 1.0f / aspect_ratio : 1.0f); // Right
-                float y0 = (y - size * (row + 1)) * (aspect_ratio < 1 ? aspect_ratio : 1.0f); // Top
-                float y1 = (y - size * (row + 0)) * (aspect_ratio < 1 ? aspect_ratio : 1.0f); // Bottom
+                float x0 = (x + size * (col + 0)); // Left
+                float x1 = (x + size * (col + 1)); // Right
+                float y0 = (y - size * (row + 0)); // Top
+                float y1 = (y - size * (row + 1)); // Bottom
 
                 GLfloat quadVertices[] = {
                     x0, y0, // Top left
