@@ -198,7 +198,7 @@ void DrawShape(ESContext* esContext, GLenum primitivesType, GLfloat vVertices[],
     glDrawArrays(primitivesType, 0, indicesCount);
 }
 
-//Transform a shape using the fragment shader created in Init()
+// Transform a shape using the vertex shader created in Init()
 void TransformShape(ESContext* esContext, GLfloat angle, GLfloat x_distance, char* modelViewProjectionUniform) {
     UserData* userData = esContext->userData;
 
@@ -232,7 +232,7 @@ void DrawTextString(ESContext *esContext, char *text, float x, float y, float si
     glUseProgram(userData->programObject);
 
     for (int i = 0; text[i] != '\0'; i++) {
-        DrawTextChar(esContext, text[i], x + i * (size * 8), y, size);
+        DrawTextChar(esContext, text[i], x + (i * size * 8), y, size);
     }
 }
 
@@ -257,14 +257,17 @@ void DrawTextChar(ESContext *esContext, char ch, float x, float y, float size) {
             {
                 // Set the position for this pixel
                 // Adjust positions for NDC (-1 to 1 range)
-                float xpos = x + col * size;
-                float ypos = y - row * size;
+                float aspect_ratio = esContext->width / esContext->height;
+                float x0 = (x + size * (col + 0)) * (aspect_ratio > 1 ? 1.0f / aspect_ratio : 1.0f); // Left
+                float x1 = (x + size * (col + 1)) * (aspect_ratio > 1 ? 1.0f / aspect_ratio : 1.0f); // Right
+                float y0 = (y - size * (row + 1)) * (aspect_ratio < 1 ? aspect_ratio : 1.0f); // Top
+                float y1 = (y - size * (row + 0)) * (aspect_ratio < 1 ? aspect_ratio : 1.0f); // Bottom
 
                 GLfloat quadVertices[] = {
-                    xpos, ypos + size,        // Top left
-                    xpos + size, ypos + size, // Top right
-                    xpos, ypos,               // Bottom left
-                    xpos + size, ypos,        // Bottom right
+                    x0, y0, // Top left
+                    x1, y0, // Top right
+                    x0, y1, // Bottom left
+                    x1, y1, // Bottom right
                 };
 
                 // Bind the vertex data
