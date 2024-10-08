@@ -91,6 +91,7 @@ typedef struct _escontext
    void (ESCALLBACK *drawFunc) ( struct _escontext * );
    void (ESCALLBACK *keyFunc) ( struct _escontext *, unsigned char, int, int );
    void (ESCALLBACK *updateFunc) ( struct _escontext *, float deltaTime );
+   void (ESCALLBACK *windowResizeFunc) (struct _escontext *, int width, int height);
 } ESContext;
 
 
@@ -145,8 +146,15 @@ void ESUTIL_API esRegisterUpdateFunc ( ESContext *esContext, void (ESCALLBACK *u
 /// \param esContext Application context
 /// \param keyFunc Key callback function for application processing of keyboard input
 //
-void ESUTIL_API esRegisterKeyFunc ( ESContext *esContext, 
-                                    void (ESCALLBACK *drawFunc) ( ESContext*, unsigned char, int, int ) );
+void ESUTIL_API esRegisterKeyFunc ( ESContext *esContext, void (ESCALLBACK *keyFunc) ( ESContext*, unsigned char, int, int ) );
+
+//
+/// \brief Register window resize callback function
+/// \param esContext Application context
+/// \param windowResizeFunc Window resize callback function for application processing of window resize events
+//
+void ESUTIL_API esRegisterWindowResizeFunc(ESContext *esContext, void(ESCALLBACK *windowResizeFunc)(ESContext *, int, int));
+
 //
 /// \brief Log a message to the debug output for the platform
 /// \param formatStr Format string for error log.  
