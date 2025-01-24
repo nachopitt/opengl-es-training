@@ -35,11 +35,12 @@ OBJ := $(OBJ:$(ES_FRAMEWORK_DIR)/%.c=$(ES_FRAMEWORK_OBJ_DIR)/%.o)
 
 NATIVE_DISPLAY_TYPE ?= x11
 
-CC := $(CROSS_COMPILE)gcc
+CC ?= $(CROSS_COMPILE)gcc
 
-CPPFLAGS := -MMD -MP
-CFLAGS := -Wall -g -O0 -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR) $(shell pkg-config gstreamer-1.0 --cflags)
-LDFLAGS := $(shell pkg-config gstreamer-1.0 --libs)
+CPPFLAGS += -MMD -MP
+CFLAGS ?= -Wall -g -O0 
+CFLAGS += -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR) $(shell pkg-config gstreamer-1.0 --cflags)
+LDFLAGS ?= $(shell pkg-config gstreamer-1.0 --libs)
 
 ifeq ($(NATIVE_DISPLAY_TYPE), x11)
 CFLAGS += -DUSE_X11
@@ -48,6 +49,9 @@ else
 ifeq ($(NATIVE_DISPLAY_TYPE), fb)
 CFLAGS += -DUSE_FB=$(FB_NUMBER)
 LDFLAGS += -lGAL -lVSC -lm -lEGL -lGLESv2
+else
+CFLAGS += -DUSE_DRM
+LDFLAGS += -lEGL -lGLESv2 -lm
 endif
 endif
 
