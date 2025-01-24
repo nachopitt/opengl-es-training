@@ -87,4 +87,14 @@ else
 	$(RMDIR) $(OBJ_DIR)
 endif
 
+install:
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 $(BIN_DIR)/triangle $(DESTDIR)$(PREFIX)/bin/triangle
+	install -m 0755 $(BIN_DIR)/moving-triangle $(DESTDIR)$(PREFIX)/bin/moving-triangle
+	install -m 0755 $(BIN_DIR)/square $(DESTDIR)$(PREFIX)/bin/square
+	install -m 0755 $(BIN_DIR)/perfect-square $(DESTDIR)$(PREFIX)/bin/perfect-square
+	install -m 0755 $(BIN_DIR)/hello-world-text $(DESTDIR)$(PREFIX)/bin/hello-world-text
+	install -m 0755 $(BIN_DIR)/gstreamer-tutorial-01-hello-world $(DESTDIR)$(PREFIX)/bin/gstreamer-tutorial-01-hello-world
+	install -m 0755 $(BIN_DIR)/gstreamer-tutorial-02-gstreamer-concepts $(DESTDIR)$(PREFIX)/bin/gstreamer-tutorial-02-gstreamer-concepts
+
 -include $(OBJ:.o=.d)
