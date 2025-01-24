@@ -64,6 +64,8 @@ EGLBoolean CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
     display = eglGetDisplay((EGLNativeDisplayType)x_display);
 #elif defined(USE_FB)
     display = eglGetDisplay(native_display);
+#else
+    display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 #endif //USE_X11
     if ( display == EGL_NO_DISPLAY )
     {
@@ -304,6 +306,19 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
         EGL_ALPHA_SIZE,     EGL_DONT_CARE,
         EGL_DEPTH_SIZE,     0,
         EGL_SURFACE_TYPE,   EGL_WINDOW_BIT,
+        EGL_NONE
+    };
+#else
+    EGLint attribList[] = {
+        EGL_SURFACE_TYPE,   EGL_WINDOW_BIT,
+        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,  // Request OpenGL ES 2.0
+        EGL_RED_SIZE,       8,
+        EGL_GREEN_SIZE,     8,
+        EGL_BLUE_SIZE,      8,
+        EGL_ALPHA_SIZE,     8,                    // Set alpha size if needed
+        EGL_DEPTH_SIZE,     16,                   // Enable depth buffer (16-bit)
+        EGL_STENCIL_SIZE,   8,                    // Optional: Stencil buffer
+        EGL_SAMPLES,        4,                    // Optional: Enable 4x MSAA
         EGL_NONE
     };
 #endif //USE_X11
