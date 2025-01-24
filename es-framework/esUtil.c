@@ -234,7 +234,8 @@ GLboolean userInterrupt(ESContext *esContext)
     return userinterrupt;
 }
 
-#elif defined(USE_FB)
+#else
+#if defined(USE_FB)
 EGLBoolean FBCreate(ESContext *esContext) {
     native_display = (EGLNativeDisplayType)fbGetDisplayByIndex(USE_FB);
     if (native_display == NULL) {
@@ -244,11 +245,11 @@ EGLBoolean FBCreate(ESContext *esContext) {
     esContext->hWnd = (EGLNativeWindowType)fbCreateWindow(native_display, 0, 0, 0, 0);
     return EGL_TRUE;
 }
-
+#endif // USE_FB
 GLboolean userInterrupt(ESContext *esContext) {
     return GL_FALSE;
 }
-#endif //USE_X11
+#endif // USE_X11
 
 //////////////////////////////////////////////////////////////////
 //
