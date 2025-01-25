@@ -80,8 +80,10 @@ int CompileAndLinkShaders(ESContext* esContext, char* vShaderFile, char* fShader
     // Crete the program object
     programObject = glCreateProgram();
 
-    if (programObject == 0)
+    if (programObject == 0) {
+        printf("Error creating program\n");
         return 0;
+    }
 
     glAttachShader(programObject, vertexShader);
     glAttachShader(programObject, fragmentShader);
@@ -126,12 +128,13 @@ GLuint LoadShader(const char* fileName, GLenum type) {
     // Create the shader object
     shader = glCreateShader(type);
 
-    if (shader == 0)
+    if (shader == 0) {
+        printf("Error creating shader type %s\n", SHADER_TYPE_STR(type));
         return 0;
+    }
 
     fileHandle = fopen(fileName, "r");
-    if (fileHandle == NULL)
-    {
+    if (fileHandle == NULL) {
         perror(fileName);
 
         return 0;

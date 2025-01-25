@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     UserData userData;
 
     if (Init(&esContext, &userData, "Hello Square", 320, 240, ES_WINDOW_RGB, DrawSquare, NULL, NULL, NULL, "shaders/basic-color.vs", "shaders/basic.fs")) {
-        perror("Init context");
+        printf("Context initialization failed\n");
         return 1;
     }
 

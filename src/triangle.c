@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     UserData userData;
 
     if (Init(&esContext, &userData, "Hello Triangle", 320, 240, ES_WINDOW_RGB, DrawTriangle, NULL, NULL, NULL, "shaders/basic-color.vs", "shaders/basic.fs")) {
-        perror("Init context");
+        printf("Context initialization failed\n");
         return 1;
     }
 

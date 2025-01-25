@@ -3,6 +3,8 @@
 
 #include "esUtil.h"
 
+#define SHADER_TYPE_STR(type) (type == GL_VERTEX_SHADER ? "GL_VERTEX_SHADER" : (type == GL_FRAGMENT_SHADER ? "GL_FRAGMENT_SHADER" : "UNKNOWN"))
+
 extern const GLfloat PI;
 extern float elapsedTime;
 

@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
     if (Init(&esContext, &userData, "Hello Perfect Square", 320, 240, ES_WINDOW_RGB, DrawPerfectSquare, NULL, NULL, HandleWindowResize, "shaders/basic-color-transform.vs", "shaders/basic.fs"))
     {
-        perror("Init context");
+        printf("Context initialization failed\n");
         return 1;
     }
 

@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
 #endif // USE_FB
 
     if (Init(&esContext, &userData, "Hello Triangle", 1280, 480, ES_WINDOW_RGB, DrawTriangle, Update, NULL, NULL, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
-        perror("Init context");
+        printf("Context initialization failed\n");
         return 1;
     }
 

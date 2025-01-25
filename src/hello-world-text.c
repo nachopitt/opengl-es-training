@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     UserData userData;
 
     if (Init(&esContext, &userData, "Hello World Text String!", 1280, 480, ES_WINDOW_RGB, DrawHelloWorldText, NULL, NULL, HandleWindowResize, "shaders/text-vert.glsl", "shaders/text-frag.glsl")) {
-        perror("Init context");
+        printf("Context initialization failed\n");
         return 1;
     }
 
