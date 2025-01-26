@@ -45,14 +45,12 @@ LDFLAGS += $(shell pkg-config gstreamer-1.0 --libs)
 ifeq ($(NATIVE_DISPLAY_TYPE), x11)
 CFLAGS += -DUSE_X11
 LDFLAGS += -lEGL -lGLESv2 -lm -lX11
-else
-ifeq ($(NATIVE_DISPLAY_TYPE), fb)
+else ifeq ($(NATIVE_DISPLAY_TYPE), fb)
 CFLAGS += -DUSE_FB=$(FB_NUMBER)
 LDFLAGS += -lGAL -lVSC -lm -lEGL -lGLESv2
-else
-CFLAGS += -DUSE_DRM
-LDFLAGS += -lEGL -lGLESv2 -lm
-endif
+else ifeq ($(NATIVE_DISPLAY_TYPE), drm)
+CFLAGS += -DUSE_DRM $(shell pkg-config libdrm --cflags)
+LDFLAGS += -lEGL -lGLESv2 -lm -lgbm $(shell pkg-config libdrm --libs)
 endif
 
 ifneq ($(GPU_PKG_CONFIG),)

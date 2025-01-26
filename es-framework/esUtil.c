@@ -39,6 +39,15 @@ static Display *x_display = NULL;
 #include <EGL/eglvivante.h>
 
 static EGLNativeDisplayType* native_display = NULL;
+#elif defined(USE_DRM)
+#include <fcntl.h>
+#include <xf86drm.h>
+#include <xf86drmMode.h>
+#include <gbm.h>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+
+static EGLDisplay egl_display;
 #endif //USE_X11
 
 ///
@@ -64,8 +73,8 @@ EGLBoolean CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
     display = eglGetDisplay((EGLNativeDisplayType)x_display);
 #elif defined(USE_FB)
     display = eglGetDisplay(native_display);
-#else
-    display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+#elif defined(USE_DRM)
+    display = eglGetDisplay(egl_display);
 #endif //USE_X11
     if ( display == EGL_NO_DISPLAY )
     {
@@ -245,6 +254,110 @@ EGLBoolean FBCreate(ESContext *esContext) {
     esContext->hWnd = (EGLNativeWindowType)fbCreateWindow(native_display, 0, 0, 0, 0);
     return EGL_TRUE;
 }
+#elif defined(USE_DRM)
+EGLBoolean DRMCreate(ESContext *esContext) {
+    int drm_fd;
+    drmModeModeInfo mode_info;
+    drmModeConnector *connector;
+    drmModeCrtc *crtc;
+    struct gbm_device *gbm_dev;
+    struct gbm_surface *gbm_surface;
+
+    // Open the DRM device (Renesas typically uses /dev/dri/card0)
+    drm_fd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
+    if (drm_fd < 0)
+    {
+        fprintf(stderr, "Failed to open DRM device\n");
+        return EGL_FALSE;
+    }
+
+    // Get DRM resources
+    drmModeRes *resources = drmModeGetResources(drm_fd);
+    if (!resources)
+    {
+        perror("Failed to get DRM resources");
+        return EGL_FALSE;
+    }
+
+    // Find a connected connector
+    for (int i = 0; i < resources->count_connectors; i++)
+    {
+        connector = drmModeGetConnector(drm_fd, resources->connectors[i]);
+        if (connector && connector->connection == DRM_MODE_CONNECTED)
+        {
+            break;
+        }
+        drmModeFreeConnector(connector);
+    }
+
+    if (!connector || connector->connection != DRM_MODE_CONNECTED)
+    {
+        fprintf(stderr, "No connected DRM connector found\n");
+        return EGL_FALSE;
+    }
+
+    // Use the first mode in the connector as the default
+    mode_info = connector->modes[0];
+
+    // Find the CRTC
+    for (int i = 0; i < resources->count_crtcs; i++)
+    {
+        if (resources->crtcs[i] & connector->encoders[0])
+        {
+            crtc = drmModeGetCrtc(drm_fd, resources->crtcs[i]);
+            break;
+        }
+    }
+
+    if (!crtc)
+    {
+        fprintf(stderr, "Failed to find a suitable CRTC\n");
+        return EGL_FALSE;
+    }
+
+    drmModeFreeResources(resources);
+
+    printf("DRM setup complete: mode %s, resolution %dx%d\n",
+           mode_info.name, mode_info.hdisplay, mode_info.vdisplay);
+
+    // Create a GBM device
+    gbm_dev = gbm_create_device(drm_fd);
+    if (!gbm_dev)
+    {
+        fprintf(stderr, "Failed to create GBM device\n");
+        return EGL_FALSE;
+    }
+
+    // Create a GBM surface
+    gbm_surface = gbm_surface_create(gbm_dev,
+                                     mode_info.hdisplay,
+                                     mode_info.vdisplay,
+                                     GBM_FORMAT_XRGB8888,
+                                     GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
+    if (!gbm_surface)
+    {
+        fprintf(stderr, "Failed to create GBM surface\n");
+        return EGL_FALSE;
+    }
+
+    // Get an EGL display
+    PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
+        (PFNEGLGETPLATFORMDISPLAYEXTPROC)eglGetProcAddress("eglGetPlatformDisplayEXT");
+
+    egl_display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gbm_dev, NULL);
+    if (egl_display == EGL_NO_DISPLAY)
+    {
+        fprintf(stderr, "Failed to get EGL display\n");
+        return EGL_FALSE;
+    }
+
+    // Pass the EGL surface as the native window handle
+    esContext->hWnd = (EGLNativeWindowType)gbm_surface;
+
+    printf("GBM setup complete\n");
+    return EGL_TRUE;
+}
+
 #endif // USE_FB
 GLboolean userInterrupt(ESContext *esContext) {
     return GL_FALSE;
@@ -336,6 +449,8 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
     if ( !WinCreate ( esContext, title) )
 #elif defined(USE_FB)
     if (!FBCreate(esContext))
+#elif defined(USE_DRM)
+    if (!DRMCreate(esContext))
 #endif //USE_X11
     {
         return GL_FALSE;
