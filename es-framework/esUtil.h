@@ -103,6 +103,8 @@ typedef struct _escontext
 
    struct gbm_device *gbm_dev;
    struct gbm_surface *gbm_surface;
+   struct gbm_bo *gbm_bo;
+   uint32_t gbm_fb;
 #endif //USE_DRM
 
    /// Callbacks

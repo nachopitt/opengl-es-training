@@ -484,6 +484,23 @@ void ESUTIL_API esMainLoop ( ESContext *esContext )
 
         eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
 
+#if defined(USE_DRM)
+        struct gbm_bo *bo = gbm_surface_lock_front_buffer(esContext->gbm_surface);
+        uint32_t handle = gbm_bo_get_handle(bo).u32;
+        uint32_t pitch = gbm_bo_get_stride(bo);
+        uint32_t fb;
+
+        drmModeAddFB(esContext->drm_fd, esContext->mode_info.hdisplay, esContext->mode_info.vdisplay, 24, 32, pitch, handle, &fb);
+        drmModeSetCrtc(esContext->drm_fd, esContext->crtc->crtc_id, fb, 0, 0, &esContext->connector->connector_id, 1, &esContext->mode_info);
+
+        if (esContext->gbm_bo) {
+            drmModeRmFB(esContext->drm_fd, esContext->gbm_fb);
+            gbm_surface_release_buffer(esContext->gbm_surface, esContext->gbm_bo);
+        }
+        esContext->gbm_bo = bo;
+        esContext->gbm_fb = fb;
+#endif //USE_DRM
+
         totaltime += deltatime;
         frames++;
         if (totaltime >  2.0f)
