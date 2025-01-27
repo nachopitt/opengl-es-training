@@ -49,8 +49,8 @@ else ifeq ($(NATIVE_DISPLAY_TYPE), fb)
 CFLAGS += -DUSE_FB=$(FB_NUMBER)
 LDFLAGS += -lGAL -lVSC -lm -lEGL -lGLESv2
 else ifeq ($(NATIVE_DISPLAY_TYPE), drm)
-CFLAGS += -DUSE_DRM $(shell pkg-config libdrm --cflags)
-LDFLAGS += -lEGL -lGLESv2 -lm -lgbm $(shell pkg-config libdrm --libs)
+CFLAGS += -DUSE_DRM $(shell pkg-config libdrm gbm --cflags)
+LDFLAGS += -lEGL -lGLESv2 -lm $(shell pkg-config libdrm gbm --libs)
 endif
 
 ifneq ($(GPU_PKG_CONFIG),)
