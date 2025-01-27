@@ -331,7 +331,7 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     esContext->gbm_surface = gbm_surface_create(esContext->gbm_dev,
                                      esContext->mode_info.hdisplay,
                                      esContext->mode_info.vdisplay,
-                                     GBM_FORMAT_XRGB8888,
+                                     GBM_BO_FORMAT_XRGB8888,
                                      GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
     if (!esContext->gbm_surface)
     {
