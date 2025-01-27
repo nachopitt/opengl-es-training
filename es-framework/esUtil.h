@@ -23,6 +23,12 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 
+#if defined(USE_DRM)
+#include <xf86drm.h>
+#include <xf86drmMode.h>
+#include <gbm.h>
+#endif //USE_DRM
+
 #ifdef __cplusplus
 
 extern "C" {
@@ -86,6 +92,18 @@ typedef struct _escontext
 
    /// EGL surface
    EGLSurface  eglSurface;
+
+   ///
+#if defined(USE_DRM)
+   int drm_fd;
+
+   drmModeModeInfo mode_info;
+   drmModeConnector *connector;
+   drmModeCrtc *crtc;
+
+   struct gbm_device *gbm_dev;
+   struct gbm_surface *gbm_surface;
+#endif //USE_DRM
 
    /// Callbacks
    void (ESCALLBACK *drawFunc) ( struct _escontext * );

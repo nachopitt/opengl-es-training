@@ -46,8 +46,6 @@ static EGLNativeDisplayType* native_display = NULL;
 #include <gbm.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-
-static struct gbm_device *gbm_dev;
 #endif //USE_X11
 
 ///
@@ -55,9 +53,7 @@ static struct gbm_device *gbm_dev;
 //
 //    Creates an EGL rendering context and all associated elements
 //
-EGLBoolean CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
-        EGLContext* eglContext, EGLSurface* eglSurface,
-        EGLint attribList[])
+EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
 {
     EGLint numConfigs;
     EGLint majorVersion;
@@ -79,8 +75,8 @@ EGLBoolean CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
 #elif defined(USE_DRM)
     // Get an EGL display
     // PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = (PFNEGLGETPLATFORMDISPLAYEXTPROC)eglGetProcAddress("eglGetPlatformDisplayEXT");
-    // display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gbm_dev, NULL);
-    display = eglGetDisplay((EGLNativeDisplayType)gbm_dev);
+    // display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, esContext->gbm_dev, NULL);
+    display = eglGetDisplay((EGLNativeDisplayType)esContext->gbm_dev);
 #endif //USE_X11
     if ( display == EGL_NO_DISPLAY )
     {
@@ -106,7 +102,7 @@ EGLBoolean CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
     }
 
     // Create a surface
-    surface = eglCreateWindowSurface(display, config, (EGLNativeWindowType)hWnd, NULL);
+    surface = eglCreateWindowSurface(display, config, (EGLNativeWindowType)esContext->hWnd, NULL);
     if ( surface == EGL_NO_SURFACE )
     {
         return EGL_FALSE;
@@ -125,9 +121,9 @@ EGLBoolean CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
         return EGL_FALSE;
     }
 
-    *eglDisplay = display;
-    *eglSurface = surface;
-    *eglContext = context;
+    esContext->eglDisplay = display;
+    esContext->eglSurface = surface;
+    esContext->eglContext = context;
     return EGL_TRUE;
 }
 
@@ -262,22 +258,18 @@ EGLBoolean FBCreate(ESContext *esContext) {
 }
 #elif defined(USE_DRM)
 EGLBoolean DRMCreate(ESContext *esContext) {
-    int drm_fd;
-    drmModeModeInfo mode_info;
     drmModeConnector *connector;
-    drmModeCrtc *crtc;
-    struct gbm_surface *gbm_surface;
 
     // Open the DRM device (Renesas typically uses /dev/dri/card0)
-    drm_fd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
-    if (drm_fd < 0)
+    esContext->drm_fd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
+    if (esContext->drm_fd < 0)
     {
         fprintf(stderr, "Failed to open DRM device\n");
         return EGL_FALSE;
     }
 
     // Get DRM resources
-    drmModeRes *resources = drmModeGetResources(drm_fd);
+    drmModeRes *resources = drmModeGetResources(esContext->drm_fd);
     if (!resources)
     {
         perror("Failed to get DRM resources");
@@ -287,12 +279,14 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     // Find a connected connector
     for (int i = 0; i < resources->count_connectors; i++)
     {
-        connector = drmModeGetConnector(drm_fd, resources->connectors[i]);
+        connector = drmModeGetConnector(esContext->drm_fd, resources->connectors[i]);
         if (connector && connector->connection == DRM_MODE_CONNECTED)
         {
+            esContext->connector = connector;
             break;
         }
         drmModeFreeConnector(connector);
+        connector = NULL;
     }
 
     if (!connector || connector->connection != DRM_MODE_CONNECTED)
@@ -302,19 +296,19 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     }
 
     // Use the first mode in the connector as the default
-    mode_info = connector->modes[0];
+    esContext->mode_info = connector->modes[0];
 
     // Find the CRTC
     for (int i = 0; i < resources->count_crtcs; i++)
     {
         if (resources->crtcs[i] & connector->encoders[0])
         {
-            crtc = drmModeGetCrtc(drm_fd, resources->crtcs[i]);
+            esContext->crtc = drmModeGetCrtc(esContext->drm_fd, resources->crtcs[i]);
             break;
         }
     }
 
-    if (!crtc)
+    if (!esContext->crtc)
     {
         fprintf(stderr, "Failed to find a suitable CRTC\n");
         return EGL_FALSE;
@@ -323,30 +317,30 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     drmModeFreeResources(resources);
 
     printf("DRM setup complete: mode %s, resolution %dx%d, connector_id %d\n",
-           mode_info.name, mode_info.hdisplay, mode_info.vdisplay, connector->connector_id);
+           esContext->mode_info.name, esContext->mode_info.hdisplay, esContext->mode_info.vdisplay, connector->connector_id);
 
     // Create a GBM device
-    gbm_dev = gbm_create_device(drm_fd);
-    if (!gbm_dev)
+    esContext->gbm_dev = gbm_create_device(esContext->drm_fd);
+    if (!esContext->gbm_dev)
     {
         fprintf(stderr, "Failed to create GBM device\n");
         return EGL_FALSE;
     }
 
     // Create a GBM surface
-    gbm_surface = gbm_surface_create(gbm_dev,
-                                     mode_info.hdisplay,
-                                     mode_info.vdisplay,
+    esContext->gbm_surface = gbm_surface_create(esContext->gbm_dev,
+                                     esContext->mode_info.hdisplay,
+                                     esContext->mode_info.vdisplay,
                                      GBM_FORMAT_XRGB8888,
                                      GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-    if (!gbm_surface)
+    if (!esContext->gbm_surface)
     {
         fprintf(stderr, "Failed to create GBM surface\n");
         return EGL_FALSE;
     }
 
     // Pass the EGL surface as the native window handle
-    esContext->hWnd = (EGLNativeWindowType)gbm_surface;
+    esContext->hWnd = (EGLNativeWindowType)esContext->gbm_surface;
 
     printf("GBM setup complete\n");
     return EGL_TRUE;
@@ -451,11 +445,7 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
     }
 
 
-    if ( !CreateEGLContext ( esContext->hWnd,
-                &esContext->eglDisplay,
-                &esContext->eglContext,
-                &esContext->eglSurface,
-                attribList) )
+    if ( !CreateEGLContext ( esContext, attribList) )
     {
         return GL_FALSE;
     }
