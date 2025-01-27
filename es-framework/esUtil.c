@@ -423,9 +423,9 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
         EGL_GREEN_SIZE,     8,
         EGL_BLUE_SIZE,      8,
         EGL_ALPHA_SIZE,     8,                    // Set alpha size if needed
-        EGL_DEPTH_SIZE,     16,                   // Enable depth buffer (16-bit)
+        EGL_DEPTH_SIZE,     8,                   // Enable depth buffer (16-bit)
         EGL_STENCIL_SIZE,   8,                    // Optional: Stencil buffer
-        EGL_SAMPLES,        4,                    // Optional: Enable 4x MSAA
+        EGL_SAMPLES,        0,                    // Optional: Enable 4x MSAA
         EGL_NONE
     };
 #endif //USE_X11
