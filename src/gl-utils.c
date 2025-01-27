@@ -46,7 +46,11 @@ int Init(ESContext* esContext, UserData* userData, const char* title, GLint widt
     esInitContext(esContext);
     esContext->userData = userData;
 
-    esCreateWindow(esContext, title, width, height, flags);
+    if (!esCreateWindow(esContext, title, width, height, flags)) {
+        printf("Could not create window\n");
+
+        return 1;
+    }
 
     if (!CompileAndLinkShaders(esContext, vShaderFile, fShaderFile)) {
         return 1;
