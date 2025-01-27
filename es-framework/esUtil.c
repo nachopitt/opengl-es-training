@@ -47,7 +47,7 @@ static EGLNativeDisplayType* native_display = NULL;
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-static EGLDisplay egl_display;
+static struct gbm_device *gbm_dev;
 #endif //USE_X11
 
 ///
@@ -74,7 +74,9 @@ EGLBoolean CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
 #elif defined(USE_FB)
     display = eglGetDisplay(native_display);
 #elif defined(USE_DRM)
-    display = eglGetDisplay(egl_display);
+    // Get an EGL display
+    PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = (PFNEGLGETPLATFORMDISPLAYEXTPROC)eglGetProcAddress("eglGetPlatformDisplayEXT"); 
+    display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gbm_dev, NULL);
 #endif //USE_X11
     if ( display == EGL_NO_DISPLAY )
     {
@@ -260,7 +262,6 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     drmModeModeInfo mode_info;
     drmModeConnector *connector;
     drmModeCrtc *crtc;
-    struct gbm_device *gbm_dev;
     struct gbm_surface *gbm_surface;
 
     // Open the DRM device (Renesas typically uses /dev/dri/card0)
@@ -337,17 +338,6 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     if (!gbm_surface)
     {
         fprintf(stderr, "Failed to create GBM surface\n");
-        return EGL_FALSE;
-    }
-
-    // Get an EGL display
-    PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
-        (PFNEGLGETPLATFORMDISPLAYEXTPROC)eglGetProcAddress("eglGetPlatformDisplayEXT");
-
-    egl_display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gbm_dev, NULL);
-    if (egl_display == EGL_NO_DISPLAY)
-    {
-        fprintf(stderr, "Failed to get EGL display\n");
         return EGL_FALSE;
     }
 
