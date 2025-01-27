@@ -321,8 +321,8 @@ EGLBoolean DRMCreate(ESContext *esContext) {
 
     drmModeFreeResources(resources);
 
-    printf("DRM setup complete: mode %s, resolution %dx%d\n",
-           mode_info.name, mode_info.hdisplay, mode_info.vdisplay);
+    printf("DRM setup complete: mode %s, resolution %dx%d, connector_id %d\n",
+           mode_info.name, mode_info.hdisplay, mode_info.vdisplay, connector->connector_id);
 
     // Create a GBM device
     gbm_dev = gbm_create_device(drm_fd);
