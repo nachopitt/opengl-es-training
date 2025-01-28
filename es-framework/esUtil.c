@@ -26,6 +26,7 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include "esUtil.h"
+#include <pthread.h>
 
 #ifdef USE_X11
 #include  <X11/Xlib.h>
@@ -357,6 +358,50 @@ GLboolean userInterrupt(ESContext *esContext) {
 //
 //
 
+static pthread_t esThread;
+
+static void* esThreadRoutine(void* arg) {
+    ESContext* esContext = (ESContext*)arg;
+
+#if defined(USE_DRM)
+    drmVBlank vbl;
+    long vblank_tval_sec;
+    long vblank_tval_usec;
+    unsigned long vblank_count = 0;
+    long vblank_diff_ms = 0;
+    int ret;
+
+    while (1) {
+        // Clear the drmVBlank structure
+        memset(&vbl, 0, sizeof(vbl));
+
+        // Configure the vbl request
+        vbl.request.type = DRM_VBLANK_RELATIVE;  // Wait for a relative vblank
+        vbl.request.sequence = 1;  // Wait for the next vblank
+
+        // Wait for the VBlank event
+        ret = drmWaitVBlank(esContext->drm_fd, &vbl);
+        if (ret) {
+            perror("drmWaitVBlank failed");
+            continue;
+        }
+
+        if (vblank_count) {
+            vblank_diff_ms = (vbl.reply.tval_sec - vblank_tval_sec) * 1000 + (vbl.reply.tval_usec - vblank_tval_usec) / 1000.0;
+            printf("VBlank event, vblank difference: %ld\n", vblank_diff_ms);
+        }
+
+        vblank_count++;
+        vblank_tval_sec = vbl.reply.tval_sec;
+        vblank_tval_usec = vbl.reply.tval_usec;
+    }
+#else
+    (void)esContext;
+#endif //USE_DRM
+
+    return NULL;
+}
+
 ///
 //  esInitContext()
 //
@@ -469,6 +514,8 @@ void ESUTIL_API esMainLoop ( ESContext *esContext )
     unsigned int frames = 0;
 
     gettimeofday ( &t1 , &tz );
+
+    pthread_create(&esThread, NULL, esThreadRoutine, (void*)esContext);
 
     while(userInterrupt(esContext) == GL_FALSE)
     {
