@@ -80,24 +80,28 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
 #endif //USE_X11
     if ( display == EGL_NO_DISPLAY )
     {
+        printf("display is EGL_NO_DISPLAY\n");
         return EGL_FALSE;
     }
 
     // Initialize EGL
     if ( !eglInitialize(display, &majorVersion, &minorVersion) )
     {
+        printf("eglInitialize failed\n");
         return EGL_FALSE;
     }
 
     // Get configs
     if ( !eglGetConfigs(display, NULL, 0, &numConfigs) )
     {
+        printf("eglGetConfigs failed\n");
         return EGL_FALSE;
     }
 
     // Choose config
     if ( !eglChooseConfig(display, attribList, &config, 1, &numConfigs) )
     {
+        printf("eglChooseConfig failed\n");
         return EGL_FALSE;
     }
 
@@ -105,6 +109,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     surface = eglCreateWindowSurface(display, config, (EGLNativeWindowType)esContext->hWnd, NULL);
     if ( surface == EGL_NO_SURFACE )
     {
+        printf("eglCreateWindowSurface failed\n");
         return EGL_FALSE;
     }
 
@@ -112,18 +117,23 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     context = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttribs );
     if ( context == EGL_NO_CONTEXT )
     {
+        printf("eglCreateContext failed\n");
         return EGL_FALSE;
     }
 
     // Make the context current
     if ( !eglMakeCurrent(display, surface, surface, context) )
     {
+        printf("eglMakeCurrent failed\n");
         return EGL_FALSE;
     }
 
     esContext->eglDisplay = display;
     esContext->eglSurface = surface;
     esContext->eglContext = context;
+
+    printf("CreateEGLContext complete\n");
+
     return EGL_TRUE;
 }
 
@@ -503,10 +513,11 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
 
     if ( !CreateEGLContext ( esContext, attribList) )
     {
+        printf("CreateEGLContext failed\n");
         return GL_FALSE;
     }
 
-
+    printf("esCreateWindow success\n");
     return GL_TRUE;
 }
 
