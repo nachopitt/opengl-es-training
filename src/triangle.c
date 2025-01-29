@@ -31,7 +31,18 @@ int main(int argc, char* argv[]) {
     ESContext esContext;
     UserData userData;
 
-    if (Init(&esContext, &userData, "Hello Triangle", 320, 240, ES_WINDOW_RGB, DrawTriangle, NULL, NULL, NULL, "shaders/basic-color.vs", "shaders/basic.fs")) {
+    int width = 320;
+    int height = 240;
+
+    if (argc > 1) {
+        width = atoi(argv[1]);
+    }
+
+    if (argc > 2) {
+        height = atoi(argv[2]);
+    }
+
+    if (Init(&esContext, &userData, "Hello Triangle", width, height, ES_WINDOW_RGB, DrawTriangle, NULL, NULL, NULL, "shaders/basic-color.vs", "shaders/basic.fs")) {
         printf("Context initialization failed\n");
         return 1;
     }

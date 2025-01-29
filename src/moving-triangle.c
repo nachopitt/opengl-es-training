@@ -59,7 +59,10 @@ int main(int argc, char* argv[]) {
     ESContext esContext;
     UserData userData;
 
+    int argc_window_size_offset = 0;
 #ifdef USE_FB
+    argc_window_size_offset = 1;
+
     if (argc > 1) {
         long int fb_multi_buffer = 1;
 
@@ -78,7 +81,18 @@ int main(int argc, char* argv[]) {
     }
 #endif // USE_FB
 
-    if (Init(&esContext, &userData, "Hello Triangle", 1280, 480, ES_WINDOW_RGB, DrawTriangle, Update, NULL, NULL, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
+    int width = 1280;
+    int height = 480;
+
+    if (argc > argc_window_size_offset + 1) {
+        width = atoi(argv[argc_window_size_offset + 1]);
+    }
+
+    if (argc > argc_window_size_offset + 2) {
+        height = atoi(argv[2]);
+    }
+
+    if (Init(&esContext, &userData, "Hello Triangle", width, height, ES_WINDOW_RGB, DrawTriangle, Update, NULL, NULL, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
         printf("Context initialization failed\n");
         return 1;
     }

@@ -43,7 +43,18 @@ int main(int argc, char* argv[]) {
     ESContext esContext;
     UserData userData;
 
-    if (Init(&esContext, &userData, "Hello Perfect Square", 320, 240, ES_WINDOW_RGB, DrawPerfectSquare, NULL, NULL, HandleWindowResize, "shaders/basic-color-transform.vs", "shaders/basic.fs"))
+    int width = 320;
+    int height = 240;
+
+    if (argc > 1) {
+        width = atoi(argv[1]);
+    }
+
+    if (argc > 2) {
+        height = atoi(argv[2]);
+    }
+
+    if (Init(&esContext, &userData, "Hello Perfect Square", width, height, ES_WINDOW_RGB, DrawPerfectSquare, NULL, NULL, HandleWindowResize, "shaders/basic-color-transform.vs", "shaders/basic.fs"))
     {
         printf("Context initialization failed\n");
         return 1;

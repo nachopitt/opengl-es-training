@@ -34,7 +34,18 @@ int main(int argc, char* argv[]) {
     ESContext esContext;
     UserData userData;
 
-    if (Init(&esContext, &userData, "Hello World Text String!", 1280, 480, ES_WINDOW_RGB, DrawHelloWorldText, NULL, NULL, HandleWindowResize, "shaders/text-vert.glsl", "shaders/text-frag.glsl")) {
+    int width = 1280;
+    int height = 480;
+
+    if (argc > 1) {
+        width = atoi(argv[1]);
+    }
+
+    if (argc > 2) {
+        height = atoi(argv[2]);
+    }
+
+    if (Init(&esContext, &userData, "Hello World Text String!", width, height, ES_WINDOW_RGB, DrawHelloWorldText, NULL, NULL, HandleWindowResize, "shaders/text-vert.glsl", "shaders/text-frag.glsl")) {
         printf("Context initialization failed\n");
         return 1;
     }

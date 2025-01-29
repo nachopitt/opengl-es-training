@@ -66,7 +66,18 @@ int main(int argc, char *argv[])
         1.0f, 0.0f, 0.0f, 1.0f,
     };
 
-    if (Init(&esContext, (UserData*)&userData, "Hello World VBO Triangle!", 320, 240, ES_WINDOW_RGB, onDraw, NULL, NULL, onWindowResize, "shaders/basic-color.vs", "shaders/basic.fs"))
+    int width = 320;
+    int height = 240;
+
+    if (argc > 1) {
+        width = atoi(argv[1]);
+    }
+
+    if (argc > 2) {
+        height = atoi(argv[2]);
+    }
+
+    if (Init(&esContext, (UserData*)&userData, "Hello World VBO Triangle!", width, height, ES_WINDOW_RGB, onDraw, NULL, NULL, onWindowResize, "shaders/basic-color.vs", "shaders/basic.fs"))
     {
         perror("Init context");
         return 1;
