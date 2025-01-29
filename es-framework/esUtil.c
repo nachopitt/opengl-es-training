@@ -76,7 +76,12 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
 #elif defined(USE_DRM)
     // Get an EGL display
     PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = (PFNEGLGETPLATFORMDISPLAYEXTPROC)eglGetProcAddress("eglGetPlatformDisplayEXT");
-    display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, esContext->gbm_dev, NULL);
+    if (eglGetPlatformDisplayEXT != NULL) {
+        display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, esContext->gbm_dev, NULL);
+    }
+    else {
+        display = eglGetDisplay(esContext->gbm_dev);
+    }
 #endif //USE_X11
     if ( display == EGL_NO_DISPLAY )
     {
