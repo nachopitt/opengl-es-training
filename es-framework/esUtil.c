@@ -429,7 +429,7 @@ static void* esThreadRoutine(void* arg) {
         ret = drmWaitVBlank(esContext->drm_fd, &vbl);
         if (ret) {
             perror("drmWaitVBlank failed");
-            continue;
+            break;
         }
 
         if (vblank_count) {
