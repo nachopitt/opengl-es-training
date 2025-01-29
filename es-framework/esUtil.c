@@ -344,14 +344,15 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     esContext->encoder = drmModeGetEncoder(esContext->drm_fd, connector->encoder_id);
 
     // Find the CRTC
-    for (int i = 0; i < resources->count_crtcs; i++)
-    {
-        if (resources->crtcs[i] & connector->encoders[0])
-        {
-            esContext->crtc = drmModeGetCrtc(esContext->drm_fd, resources->crtcs[i]);
-            break;
-        }
-    }
+    // for (int i = 0; i < resources->count_crtcs; i++)
+    // {
+    //     if (resources->crtcs[i] & connector->encoders[0])
+    //     {
+    //         esContext->crtc = drmModeGetCrtc(esContext->drm_fd, resources->crtcs[i]);
+    //         break;
+    //     }
+    // }
+    esContext->crtc = drmModeGetCrtc(esContext->drm_fd, esContext->encoder->crtc_id);
 
     if (!esContext->crtc)
     {
