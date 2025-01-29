@@ -99,6 +99,7 @@ typedef struct _escontext
 
    drmModeModeInfo* mode_info;
    drmModeConnector* connector;
+   drmModeEncoder* encoder;
    drmModeCrtc *crtc;
 
    struct gbm_device* gbm_dev;
