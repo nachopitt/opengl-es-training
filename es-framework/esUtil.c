@@ -67,6 +67,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
         EGL_CONTEXT_CLIENT_VERSION, 2,
         EGL_NONE
     };
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
 
     // Get Display
 #ifdef USE_X11
@@ -75,19 +76,25 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     display = eglGetDisplay(native_display);
 #elif defined(USE_DRM)
     // Get an EGL display
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
     PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = (PFNEGLGETPLATFORMDISPLAYEXTPROC)eglGetProcAddress("eglGetPlatformDisplayEXT");
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
+
     if (eglGetPlatformDisplayEXT != NULL) {
         display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, esContext->gbm_dev, NULL);
     }
     else {
         display = eglGetDisplay(esContext->gbm_dev);
     }
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
 #endif //USE_X11
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
     if ( display == EGL_NO_DISPLAY )
     {
         printf("display is EGL_NO_DISPLAY\n");
         return EGL_FALSE;
     }
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
 
     // Initialize EGL
     if ( !eglInitialize(display, &majorVersion, &minorVersion) )
@@ -95,6 +102,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
         printf("eglInitialize failed\n");
         return EGL_FALSE;
     }
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
 
     // Get configs
     if ( !eglGetConfigs(display, NULL, 0, &numConfigs) )
@@ -102,6 +110,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
         printf("eglGetConfigs failed\n");
         return EGL_FALSE;
     }
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
 
     // Choose config
     if ( !eglChooseConfig(display, attribList, &config, 1, &numConfigs) )
@@ -110,6 +119,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
         return EGL_FALSE;
     }
 
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
     // Create a surface
     surface = eglCreateWindowSurface(display, config, (EGLNativeWindowType)esContext->hWnd, NULL);
     if ( surface == EGL_NO_SURFACE )
@@ -118,6 +128,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
         return EGL_FALSE;
     }
 
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
     // Create a GL context
     context = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttribs );
     if ( context == EGL_NO_CONTEXT )
@@ -126,6 +137,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
         return EGL_FALSE;
     }
 
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
     // Make the context current
     if ( !eglMakeCurrent(display, surface, surface, context) )
     {
@@ -133,8 +145,11 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
         return EGL_FALSE;
     }
 
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
     esContext->eglDisplay = display;
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
     esContext->eglSurface = surface;
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
     esContext->eglContext = context;
 
     printf("CreateEGLContext complete\n");
@@ -498,6 +513,7 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
 
     if ( esContext == NULL )
     {
+        printf("Invalid esContext\n");
         return GL_FALSE;
     }
 
@@ -512,6 +528,7 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
     if (!DRMCreate(esContext))
 #endif //USE_X11
     {
+        printf("Window creation failed\n");
         return GL_FALSE;
     }
 
