@@ -340,6 +340,9 @@ EGLBoolean DRMCreate(ESContext *esContext) {
         esContext->mode_info = connector->modes;
     }
 
+    // Find a suitable encoder for the connector
+    esContext->encoder = drmModeGetEncoder(esContext->drm_fd, connector->encoder_id);
+
     // Find the CRTC
     for (int i = 0; i < resources->count_crtcs; i++)
     {
