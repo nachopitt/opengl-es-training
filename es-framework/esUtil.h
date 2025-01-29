@@ -97,13 +97,13 @@ typedef struct _escontext
 #if defined(USE_DRM)
    int drm_fd;
 
-   drmModeModeInfo mode_info;
-   drmModeConnector *connector;
+   drmModeModeInfo* mode_info;
+   drmModeConnector* connector;
    drmModeCrtc *crtc;
 
-   struct gbm_device *gbm_dev;
-   struct gbm_surface *gbm_surface;
-   struct gbm_bo *gbm_bo;
+   struct gbm_device* gbm_dev;
+   struct gbm_surface* gbm_surface;
+   struct gbm_bo* gbm_bo;
    uint32_t gbm_fb;
 #endif //USE_DRM
 

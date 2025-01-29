@@ -295,8 +295,20 @@ EGLBoolean DRMCreate(ESContext *esContext) {
         return EGL_FALSE;
     }
 
+    // Find a suitable connector mode
+    for (int i = 0; i < connector->count_modes; i++)
+    {
+        drmModeModeInfo* mode = connector->modes + i;
+        if (mode->hdisplay == esContext->width && mode->vdisplay == esContext->height) {
+            esContext->mode_info = mode;
+            break;
+        }
+    }
+
     // Use the first mode in the connector as the default
-    esContext->mode_info = connector->modes[0];
+    if (esContext->mode_info == NULL) {
+        esContext->mode_info = connector->modes;
+    }
 
     // Find the CRTC
     for (int i = 0; i < resources->count_crtcs; i++)
@@ -317,7 +329,7 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     drmModeFreeResources(resources);
 
     printf("DRM setup complete: mode %s, resolution %dx%d, connector_id %d\n",
-           esContext->mode_info.name, esContext->mode_info.hdisplay, esContext->mode_info.vdisplay, connector->connector_id);
+           esContext->mode_info->name, esContext->mode_info->hdisplay, esContext->mode_info->vdisplay, connector->connector_id);
 
     // Create a GBM device
     esContext->gbm_dev = gbm_create_device(esContext->drm_fd);
@@ -329,8 +341,8 @@ EGLBoolean DRMCreate(ESContext *esContext) {
 
     // Create a GBM surface
     esContext->gbm_surface = gbm_surface_create(esContext->gbm_dev,
-                                     esContext->mode_info.hdisplay,
-                                     esContext->mode_info.vdisplay,
+                                     esContext->mode_info->hdisplay,
+                                     esContext->mode_info->vdisplay,
                                      GBM_BO_FORMAT_XRGB8888,
                                      GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
     if (!esContext->gbm_surface)
@@ -531,20 +543,36 @@ void ESUTIL_API esMainLoop ( ESContext *esContext )
         eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
 
 #if defined(USE_DRM)
-        struct gbm_bo *bo = gbm_surface_lock_front_buffer(esContext->gbm_surface);
-        uint32_t handle = gbm_bo_get_handle(bo).u32;
-        uint32_t pitch = gbm_bo_get_stride(bo);
-        uint32_t fb;
+        struct gbm_bo* bo = esContext->gbm_bo;
+        uint32_t fb = esContext->gbm_fb;
 
-        drmModeAddFB(esContext->drm_fd, esContext->mode_info.hdisplay, esContext->mode_info.vdisplay, 24, 32, pitch, handle, &fb);
-        drmModeSetCrtc(esContext->drm_fd, esContext->crtc->crtc_id, fb, 0, 0, &esContext->connector->connector_id, 1, &esContext->mode_info);
+        esContext->gbm_bo = gbm_surface_lock_front_buffer(esContext->gbm_surface);
 
-        if (esContext->gbm_bo) {
-            drmModeRmFB(esContext->drm_fd, esContext->gbm_fb);
-            gbm_surface_release_buffer(esContext->gbm_surface, esContext->gbm_bo);
+        drmModeAddFB(
+                esContext->drm_fd,
+                esContext->mode_info->hdisplay,
+                esContext->mode_info->vdisplay,
+                24,
+                32,
+                gbm_bo_get_stride(esContext->gbm_bo),
+                gbm_bo_get_handle(esContext->gbm_bo).u32,
+                &esContext->gbm_fb
+        );
+        drmModeSetCrtc(
+                esContext->drm_fd,
+                esContext->crtc->crtc_id,
+                esContext->gbm_fb,
+                0,
+                0,
+                &esContext->connector->connector_id,
+                1,
+                esContext->mode_info
+        );
+
+        if (bo != NULL) {
+            drmModeRmFB(esContext->drm_fd, fb);
+            gbm_surface_release_buffer(esContext->gbm_surface, bo);
         }
-        esContext->gbm_bo = bo;
-        esContext->gbm_fb = fb;
 #endif //USE_DRM
 
         totaltime += deltatime;
