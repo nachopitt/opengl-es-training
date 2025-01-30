@@ -51,7 +51,7 @@ LDFLAGS += -lGAL -lVSC -lm -lEGL -lGLESv2
 else ifeq ($(NATIVE_DISPLAY_TYPE), drm)
 CPPFLAGS += -DUSE_DRM
 CFLAGS += $(shell pkg-config libdrm gbm --cflags)
-LDFLAGS += -lEGL -lGLESv2 -lm $(shell pkg-config libdrm gbm --libs)
+LDFLAGS += $(shell pkg-config libdrm gbm --libs) -lEGL -lGLESv2 -lm
 endif
 
 ifneq ($(GPU_PKG_CONFIG),)
