@@ -408,13 +408,11 @@ int main()
         {
             fprintf(stderr, "Failed to open file triangle.raw for writing!\n");
         }
+
+        // Free copied pixels
+        free(buffer);
 #endif //ENABLE_DISPLAY_RENDERING
     }
-
-#ifndef ENABLE_DISPLAY_RENDERING
-    // Free copied pixels
-    free(buffer);
-#endif //ENABLE_DISPLAY_RENDERING
 
     // Cleanup
     eglDestroyContext(display, context);
