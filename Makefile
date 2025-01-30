@@ -25,7 +25,7 @@ RMDIR := $(RM)
 MKDIR := mkdir -p
 endif
 
-TARGETS := triangle moving-triangle square perfect-square hello-world-text vbo-triangle egl-khr-platform-gbm triangle-rpi4 gstreamer-tutorial-01-hello-world gstreamer-tutorial-02-gstreamer-concepts
+TARGETS := triangle moving-triangle square perfect-square hello-world-text vbo-triangle egl-khr-platform-gbm triangle-rpi4 linux-drm-opengles-robertkirkman linux-drm-opengles-miouyouyou gstreamer-tutorial-01-hello-world gstreamer-tutorial-02-gstreamer-concepts
 
 BINS := $(TARGETS:%=$(BIN_DIR)/%)
 SRC := $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_DIR)/esUtil.c
