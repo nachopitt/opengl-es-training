@@ -254,7 +254,8 @@ get_window(struct my_config config)
         abort();
     }
 
-#ifdef EGL_KHR_platform_gbm
+//#ifdef EGL_KHR_platform_gbm
+#if 0
     window.egl = eglCreatePlatformWindowSurface(config.dpy.egl,
             config.egl,
             window.gbm,
