@@ -84,7 +84,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
         display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, esContext->gbm_dev, NULL);
     }
     else {
-        display = eglGetDisplay(esContext->gbm_dev);
+        display = eglGetDisplay((EGLNativeDisplayType)esContext->gbm_dev);
     }
     printf("%s:%u\n", __FUNCTION__, __LINE__);
 #endif //USE_X11
