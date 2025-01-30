@@ -8,8 +8,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#define ENABLE_DISPLAY_RENDERING
-
 // The following code related to DRM/GBM was adapted from the following sources:
 // https://github.com/eyelash/tutorials/blob/master/drm-gbm.c
 // and
