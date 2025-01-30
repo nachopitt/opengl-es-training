@@ -43,13 +43,14 @@ CFLAGS += -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR) $(shell pkg-config gstreamer-1.0 --
 LDFLAGS += $(shell pkg-config gstreamer-1.0 --libs)
 
 ifeq ($(NATIVE_DISPLAY_TYPE), x11)
-CFLAGS += -DUSE_X11
+CPPFLAGS += -DUSE_X11
 LDFLAGS += -lEGL -lGLESv2 -lm -lX11
 else ifeq ($(NATIVE_DISPLAY_TYPE), fb)
-CFLAGS += -DUSE_FB=$(FB_NUMBER)
+CPPFLAGS += -DUSE_FB=$(FB_NUMBER)
 LDFLAGS += -lGAL -lVSC -lm -lEGL -lGLESv2
 else ifeq ($(NATIVE_DISPLAY_TYPE), drm)
-CFLAGS += -DUSE_DRM $(shell pkg-config libdrm gbm --cflags)
+CPPFLAGS += -DUSE_DRM
+CFLAGS += $(shell pkg-config libdrm gbm --cflags)
 LDFLAGS += -lEGL -lGLESv2 -lm $(shell pkg-config libdrm gbm --libs)
 endif
 
