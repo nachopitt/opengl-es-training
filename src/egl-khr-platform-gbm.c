@@ -120,7 +120,6 @@
 #include <fcntl.h>
 
 #include <EGL/egl.h>
-#include <EGL/eglext.h>
 #include <gbm.h>
 
 struct my_display {
