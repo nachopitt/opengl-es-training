@@ -37,7 +37,7 @@ NATIVE_DISPLAY_TYPE ?= x11
 
 CC ?= $(CROSS_COMPILE)gcc
 
-CPPFLAGS += -MMD -MP
+CPPFLAGS += -MMD -MP -DEGL_EGLEXT_PROTOTYPES
 CFLAGS ?= -Wall -g -O0
 CFLAGS += -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR) $(shell pkg-config gstreamer-1.0 --cflags)
 LDFLAGS += $(shell pkg-config gstreamer-1.0 --libs)
