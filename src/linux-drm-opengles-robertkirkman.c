@@ -414,6 +414,11 @@ static int init_gl(void)
 
     gl.display = eglGetDisplay(gbm.dev);
 
+    if (gl.display == EGL_NO_DISPLAY) {
+        printf("Unable to retrieve a suitable EGL display\n");
+        return -1;
+    }
+
     if (!eglInitialize(gl.display, &major, &minor)) {
         printf("failed to initialize\n");
         return -1;
