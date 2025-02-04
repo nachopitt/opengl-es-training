@@ -29,24 +29,26 @@
 #include <pthread.h>
 
 #ifdef USE_X11
-#include  <X11/Xlib.h>
-#include  <X11/Xatom.h>
-#include  <X11/Xutil.h>
+#   include  <X11/Xlib.h>
+#   include  <X11/Xatom.h>
+#   include  <X11/Xutil.h>
 
 // X11 related local variables
 static Display *x_display = NULL;
 #elif defined(USE_FB)
-#include <GLES2/gl2ext.h>
-#include <EGL/eglvivante.h>
+#   include <GLES2/gl2ext.h>
+#   include <EGL/eglvivante.h>
 
 static EGLNativeDisplayType* native_display = NULL;
 #elif defined(USE_DRM)
-#include <fcntl.h>
-#include <xf86drm.h>
-#include <xf86drmMode.h>
-#include <gbm.h>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
+#   include <fcntl.h>
+#   include <xf86drm.h>
+#   include <xf86drmMode.h>
+#   include <EGL/egl.h>
+#   include <EGL/eglext.h>
+#   ifdef USE_GBM
+#       include <gbm.h>
+#   endif //USE_GBM
 #endif //USE_X11
 
 ///
@@ -76,6 +78,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     display = eglGetDisplay(native_display);
 #elif defined(USE_DRM)
     // Get an EGL display
+#   ifdef USE_GBM
     printf("%s:%u\n", __FUNCTION__, __LINE__);
     PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = (PFNEGLGETPLATFORMDISPLAYEXTPROC)eglGetProcAddress("eglGetPlatformDisplayEXT");
     printf("%s:%u\n", __FUNCTION__, __LINE__);
@@ -86,6 +89,10 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     else {
         display = eglGetDisplay((EGLNativeDisplayType)esContext->gbm_dev);
     }
+#   else
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
+    display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+#   endif //USE_GBM
     printf("%s:%u\n", __FUNCTION__, __LINE__);
 #endif //USE_X11
     printf("%s:%u\n", __FUNCTION__, __LINE__);
@@ -365,6 +372,7 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     printf("DRM setup complete: mode %s, resolution %dx%d, connector_id %d\n",
            esContext->mode_info->name, esContext->mode_info->hdisplay, esContext->mode_info->vdisplay, connector->connector_id);
 
+#ifdef USE_GBM
     // Create a GBM device
     esContext->gbm_dev = gbm_create_device(esContext->drm_fd);
     if (!esContext->gbm_dev)
@@ -387,6 +395,9 @@ EGLBoolean DRMCreate(ESContext *esContext) {
 
     // Pass the EGL surface as the native window handle
     esContext->hWnd = (EGLNativeWindowType)esContext->gbm_surface;
+#else
+    esContext->hWnd = (EGLNativeWindowType)0;
+#endif //USE_GBM
 
     printf("GBM setup complete\n");
     return EGL_TRUE;
@@ -579,7 +590,7 @@ void ESUTIL_API esMainLoop ( ESContext *esContext )
 
         eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
 
-#if defined(USE_DRM)
+#if defined(USE_GBM)
         struct gbm_bo* bo = esContext->gbm_bo;
         uint32_t fb = esContext->gbm_fb;
 
@@ -610,7 +621,7 @@ void ESUTIL_API esMainLoop ( ESContext *esContext )
             drmModeRmFB(esContext->drm_fd, fb);
             gbm_surface_release_buffer(esContext->gbm_surface, bo);
         }
-#endif //USE_DRM
+#endif //USE_GBM
 
         totaltime += deltatime;
         frames++;

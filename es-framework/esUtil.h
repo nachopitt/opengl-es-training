@@ -23,10 +23,12 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 
-#if defined(USE_DRM)
-#include <xf86drm.h>
-#include <xf86drmMode.h>
-#include <gbm.h>
+#ifdef USE_DRM
+#  include <xf86drm.h>
+#  include <xf86drmMode.h>
+#  ifdef USE_GBM
+#     include <gbm.h>
+#  endif //USE_GBM
 #endif //USE_DRM
 
 #ifdef __cplusplus
@@ -86,7 +88,7 @@ typedef struct _escontext
 
    /// EGL display
    EGLDisplay  eglDisplay;
-      
+
    /// EGL context
    EGLContext  eglContext;
 
@@ -94,18 +96,19 @@ typedef struct _escontext
    EGLSurface  eglSurface;
 
    ///
-#if defined(USE_DRM)
+#ifdef USE_DRM
    int drm_fd;
 
    drmModeModeInfo* mode_info;
    drmModeConnector* connector;
    drmModeEncoder* encoder;
    drmModeCrtc *crtc;
-
+#  ifdef USE_GBM
    struct gbm_device* gbm_dev;
    struct gbm_surface* gbm_surface;
    struct gbm_bo* gbm_bo;
    uint32_t gbm_fb;
+#  endif //USE_GBM
 #endif //USE_DRM
 
    /// Callbacks

@@ -33,7 +33,8 @@ SRC := $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_DIR)/esUtil.c
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJ := $(OBJ:$(ES_FRAMEWORK_DIR)/%.c=$(ES_FRAMEWORK_OBJ_DIR)/%.o)
 
-NATIVE_DISPLAY_TYPE ?= x11
+# x11, fb, drm, gbm
+NATIVE_PLATFORM ?= x11
 
 CC ?= $(CROSS_COMPILE)gcc
 
@@ -42,16 +43,22 @@ CFLAGS ?= -Wall -g -O0
 CFLAGS += -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR) $(shell pkg-config gstreamer-1.0 --cflags)
 LDFLAGS += $(shell pkg-config gstreamer-1.0 --libs)
 
-ifeq ($(NATIVE_DISPLAY_TYPE), x11)
+ifeq ($(NATIVE_PLATFORM), x11)
 CPPFLAGS += -DUSE_X11
 LDFLAGS += -lEGL -lGLESv2 -lm -lX11
-else ifeq ($(NATIVE_DISPLAY_TYPE), fb)
+else ifeq ($(NATIVE_PLATFORM), fb)
 CPPFLAGS += -DUSE_FB=$(FB_NUMBER)
 LDFLAGS += -lGAL -lVSC -lm -lEGL -lGLESv2
-else ifeq ($(NATIVE_DISPLAY_TYPE), drm)
+else ifneq (,$(filter $(NATIVE_PLATFORM),drm gbm))
 CPPFLAGS += -DUSE_DRM
-CFLAGS += $(shell pkg-config libdrm gbm --cflags)
-LDFLAGS += $(shell pkg-config libdrm gbm --libs) -lEGL -lGLESv2 -lm
+CFLAGS += $(shell pkg-config libdrm --cflags)
+LDFLAGS += $(shell pkg-config libdrm --libs)
+ifeq ($(NATIVE_PLATFORM), gbm)
+CPPFLAGS += -DUSE_GBM
+CFLAGS += $(shell pkg-config gbm --cflags)
+LDFLAGS += $(shell pkg-config gbm --libs)
+endif
+LDFLAGS += -lEGL -lGLESv2 -lm
 endif
 
 ifneq ($(GPU_PKG_CONFIG),)
