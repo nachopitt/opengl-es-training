@@ -46,10 +46,61 @@ static EGLNativeDisplayType* native_display = NULL;
 #   include <xf86drmMode.h>
 #   include <EGL/egl.h>
 #   include <EGL/eglext.h>
+static EGLint native_window = 0;
 #   ifdef USE_GBM
 #       include <gbm.h>
 #   endif //USE_GBM
 #endif //USE_X11
+
+void eglErrorStr(EGLint eglError) {
+    switch(eglError) {
+        case EGL_SUCCESS:
+            printf("The last function succeeded without error.\n");
+            break;
+        case EGL_NOT_INITIALIZED:
+            printf("EGL is not initialized, or could not be initialized, for the specified EGL display connection.\n");
+            break;
+        case EGL_BAD_ACCESS:
+            printf("EGL cannot access a requested resource (for example a context is bound in another thread).\n");
+            break;
+        case EGL_BAD_ALLOC:
+            printf("EGL failed to allocate resources for the requested operation.\n");
+            break;
+        case EGL_BAD_ATTRIBUTE:
+            printf("An unrecognized attribute or attribute value was passed in the attribute list.\n");
+            break;
+        case EGL_BAD_CONTEXT:
+            printf("An EGLContext argument does not name a valid EGL rendering context.\n");
+            break;
+        case EGL_BAD_CONFIG:
+            printf("An EGLConfig argument does not name a valid EGL frame buffer configuration.\n");
+            break;
+        case EGL_BAD_CURRENT_SURFACE:
+            printf("The current surface of the calling thread is a window, pixel buffer or pixmap that is no longer valid.\n");
+            break;
+        case EGL_BAD_DISPLAY:
+            printf("An EGLDisplay argument does not name a valid EGL display connection.\n");
+            break;
+        case EGL_BAD_SURFACE:
+            printf("An EGLSurface argument does not name a valid surface (window, pixel buffer or pixmap) configured for GL rendering.\n");
+            break;
+        case EGL_BAD_MATCH:
+            printf("Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).\n");
+            break;
+        case EGL_BAD_PARAMETER:
+            printf("One or more argument values are invalid.\n");
+            break;
+        case EGL_BAD_NATIVE_PIXMAP:
+            printf("A NativePixmapType argument does not refer to a valid native pixmap.\n");
+            break;
+        case EGL_BAD_NATIVE_WINDOW:
+            printf("A NativeWindowType argument does not refer to a valid native window.\n");
+            break;
+        case EGL_CONTEXT_LOST:
+            printf("A power management event has occurred. The application must destroy all contexts and reinitialise OpenGL ES state and objects to continue rendering.\n");
+            break;
+    }
+}
 
 ///
 // CreateEGLContext()
@@ -106,7 +157,9 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     // Initialize EGL
     if ( !eglInitialize(display, &majorVersion, &minorVersion) )
     {
-        printf("eglInitialize failed\n");
+        EGLint error = eglGetError();
+        printf("eglInitialize failed, eglError: %d\n", error);
+        eglErrorStr(error);
         return EGL_FALSE;
     }
     printf("%s:%u\n", __FUNCTION__, __LINE__);
@@ -396,7 +449,7 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     // Pass the EGL surface as the native window handle
     esContext->hWnd = (EGLNativeWindowType)esContext->gbm_surface;
 #else
-    esContext->hWnd = (EGLNativeWindowType)0;
+    esContext->hWnd = (EGLNativeWindowType)&(native_window);
 #endif //USE_GBM
 
     printf("GBM setup complete\n");
