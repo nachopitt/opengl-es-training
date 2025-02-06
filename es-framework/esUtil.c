@@ -448,11 +448,12 @@ EGLBoolean DRMCreate(ESContext *esContext) {
 
     // Pass the EGL surface as the native window handle
     esContext->hWnd = (EGLNativeWindowType)esContext->gbm_surface;
+
+    printf("GBM setup complete\n");
 #else
     esContext->hWnd = (EGLNativeWindowType)&(native_window);
 #endif //USE_GBM
 
-    printf("GBM setup complete\n");
     return EGL_TRUE;
 }
 
