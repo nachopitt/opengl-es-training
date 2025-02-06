@@ -110,8 +110,8 @@ void eglErrorStr(EGLint eglError) {
 EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
 {
     EGLint numConfigs;
-    EGLint majorVersion;
-    EGLint minorVersion;
+    EGLint majorVersion = 0;
+    EGLint minorVersion = 0;
     EGLDisplay display;
     EGLContext context;
     EGLSurface surface;
@@ -142,7 +142,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     }
 #   else
     printf("%s:%u\n", __FUNCTION__, __LINE__);
-    display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    display = eglGetDisplay((EGLNativeDisplayType)EGL_DEFAULT_DISPLAY);
 #   endif //USE_GBM
     printf("%s:%u\n", __FUNCTION__, __LINE__);
 #endif //USE_X11
