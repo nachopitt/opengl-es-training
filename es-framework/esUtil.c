@@ -46,9 +46,10 @@ static EGLNativeDisplayType* native_display = NULL;
 #   include <xf86drmMode.h>
 #   include <EGL/egl.h>
 #   include <EGL/eglext.h>
-static EGLint native_window = 0;
 #   ifdef USE_GBM
 #       include <gbm.h>
+#   else
+static EGLint native_window = 0;
 #   endif //USE_GBM
 #endif //USE_X11
 
