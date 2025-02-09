@@ -59,40 +59,57 @@ int main(int argc, char* argv[]) {
     ESContext esContext;
     UserData userData;
 
-    int argc_window_size_offset = 0;
+    int width = 1280;
+    int height = 480;
+    char fb_multi_buffer[12] = "";
+#ifdef USE_DRM
+    char device[] = "/dev/dri/card0";
+#else
+    char device[] = "";
+#endif
+
+    int option_arg_index = 1;
+    while (option_arg_index < argc) {
+        if (strcmp(argv[option_arg_index], "--width") == 0) {
+            width = atoi(argv[++option_arg_index]);
+        }
+        else if (strcmp(argv[option_arg_index], "--height") == 0) {
+            height = atoi(argv[++option_arg_index]);
+        }
+        else if (strcmp(argv[option_arg_index], "--device") == 0) {
+            option_arg_index++;
+            snprintf(device, strlen(argv[option_arg_index]) + 1, "%s", argv[option_arg_index]);
+        }
+        else if (strcmp(argv[option_arg_index], "--fb-multi-buffer") == 0) {
+            option_arg_index++;
+            snprintf(fb_multi_buffer, strlen(argv[option_arg_index]) + 1, "%s", argv[option_arg_index]);
+        }
+
+        option_arg_index++;
+    }
+
 #ifdef USE_FB
-    argc_window_size_offset = 1;
+    if (fb_multi_buffer[0] != '\0') {
+        long int fb_multi_buffer_number = 1;
 
-    if (argc > 1) {
-        long int fb_multi_buffer = 1;
-
-        fb_multi_buffer = strtol(argv[1], NULL, 10);
-        if (fb_multi_buffer && fb_multi_buffer >= 1 && fb_multi_buffer <= 3) {
-            if (setenv("FB_MULTI_BUFFER", argv[1], 1) != 0) {
-                fprintf(stderr, "setenv FB_MULTI_BUFFER=%ld error: %s\n", fb_multi_buffer, strerror(errno));
+        fb_multi_buffer_number = strtol(fb_multi_buffer, NULL, 10);
+        if (fb_multi_buffer_number && fb_multi_buffer_number >= 1 && fb_multi_buffer_number <= 3) {
+            if (setenv("FB_MULTI_BUFFER", fb_multi_buffer, 1) != 0) {
+                fprintf(stderr, "setenv FB_MULTI_BUFFER=%ld error: %s\n", fb_multi_buffer_number, strerror(errno));
             }
             else {
-                printf("setenv FB_MULTI_BUFFER=%ld\n", fb_multi_buffer);
+                printf("setenv FB_MULTI_BUFFER=%ld\n", fb_multi_buffer_number);
             }
         }
         else {
-            printf("Could not perform string to integer conversion on %s, no setenv call will be performed\n", argv[1]);
+            printf("Could not perform string to integer conversion on %s, no setenv call will be performed\n", fb_multi_buffer);
         }
     }
 #endif // USE_FB
 
-    int width = 1280;
-    int height = 480;
+    printf("Application parameters: \n\tWidth=%d\n\tHeight=%d\n\tDevice=%s\n\tFB_MULTI_BUFFER=%s\n", width, height, device, fb_multi_buffer);
 
-    if (argc > argc_window_size_offset + 1) {
-        width = atoi(argv[argc_window_size_offset + 1]);
-    }
-
-    if (argc > argc_window_size_offset + 2) {
-        height = atoi(argv[2]);
-    }
-
-    if (Init(&esContext, &userData, "Hello Triangle", width, height, ES_WINDOW_RGB, DrawTriangle, Update, NULL, NULL, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
+    if (Init(&esContext, &userData, "Hello Triangle", width, height, device, ES_WINDOW_RGB, DrawTriangle, Update, NULL, NULL, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
         printf("Context initialization failed\n");
         return 1;
     }

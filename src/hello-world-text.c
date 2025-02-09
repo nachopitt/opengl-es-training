@@ -36,16 +36,31 @@ int main(int argc, char* argv[]) {
 
     int width = 1280;
     int height = 480;
+#ifdef USE_DRM
+    char device[] = "/dev/dri/card0";
+#else
+    char device[] = "";
+#endif
 
-    if (argc > 1) {
-        width = atoi(argv[1]);
+    int option_arg_index = 1;
+    while (option_arg_index < argc) {
+        if (strcmp(argv[option_arg_index], "--width") == 0) {
+            width = atoi(argv[++option_arg_index]);
+        }
+        else if (strcmp(argv[option_arg_index], "--height") == 0) {
+            height = atoi(argv[++option_arg_index]);
+        }
+        else if (strcmp(argv[option_arg_index], "--device") == 0) {
+            option_arg_index++;
+            snprintf(device, strlen(argv[option_arg_index]) + 1, "%s", argv[option_arg_index]);
+        }
+
+        option_arg_index++;
     }
 
-    if (argc > 2) {
-        height = atoi(argv[2]);
-    }
+    printf("Application parameters: \n\tWidth=%d\n\tHeight=%d\n\tDevice=%s\n", width, height, device);
 
-    if (Init(&esContext, &userData, "Hello World Text String!", width, height, ES_WINDOW_RGB, DrawHelloWorldText, NULL, NULL, HandleWindowResize, "shaders/text-vert.glsl", "shaders/text-frag.glsl")) {
+    if (Init(&esContext, &userData, "Hello World Text String!", width, height, device, ES_WINDOW_RGB, DrawHelloWorldText, NULL, NULL, HandleWindowResize, "shaders/text-vert.glsl", "shaders/text-frag.glsl")) {
         printf("Context initialization failed\n");
         return 1;
     }

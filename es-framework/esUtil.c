@@ -351,10 +351,12 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     drmModeConnector *connector;
 
     // Open the DRM device (Renesas typically uses /dev/dri/card0)
-    esContext->drm_fd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
+    printf("Opening DRM device %s\n", esContext->device);
+
+    esContext->drm_fd = open(esContext->device, O_RDWR | O_CLOEXEC);
     if (esContext->drm_fd < 0)
     {
-        fprintf(stderr, "Failed to open DRM device\n");
+        fprintf(stderr, "Failed to open DRM device %s\n", esContext->device);
         return EGL_FALSE;
     }
 
@@ -540,7 +542,7 @@ void ESUTIL_API esInitContext ( ESContext *esContext )
 //          ES_WINDOW_STENCIL     - specifies that a stencil buffer should be created
 //          ES_WINDOW_MULTISAMPLE - specifies that a multi-sample buffer should be created
 //
-GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, GLint width, GLint height, GLuint flags )
+GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, GLint width, GLint height, const char device[], GLuint flags )
 {
 #ifdef USE_X11
     EGLint attribList[] =
@@ -588,6 +590,7 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
 
     esContext->width = width;
     esContext->height = height;
+    snprintf(esContext->device, strlen(device) + 1, "%s", device);
 
 #ifdef USE_X11
     if ( !WinCreate ( esContext, title) )

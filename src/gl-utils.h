@@ -26,7 +26,7 @@ typedef void (ESCALLBACK *KeyFunction)(ESContext *, unsigned char, int, int);
 typedef void (ESCALLBACK *WindowResizeFunction)(ESContext *, int, int);
 
 // Initialize context, window, shaders and callback functions
-int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, KeyFunction keyFunction, WindowResizeFunction windowResizeFunction, char* vShaderFile, char* fShaderFile);
+int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, const char device[], GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, KeyFunction keyFunction, WindowResizeFunction windowResizeFunction, char* vShaderFile, char* fShaderFile);
 
 // Set the viewport in case it has changed
 void SetViewport(ESContext* esContext);
