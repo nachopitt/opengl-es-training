@@ -33,6 +33,10 @@
 #  endif //USE_GBM
 #endif //USE_DRM
 
+#if defined(__RENESAS_RCAR__)
+#  include "EGL/eglext_REL.h"
+#endif //__RENESAS_RCAR__
+
 #ifdef __cplusplus
 
 extern "C" {
