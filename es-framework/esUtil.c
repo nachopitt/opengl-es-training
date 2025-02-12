@@ -386,11 +386,11 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     // Open the DRM device (Renesas typically uses /dev/dri/card0)
     printf("Opening DRM device %s\n", esContext->device);
 
-#ifdef __RENESAS_RCAR__
+#ifdef USE_DRM_OPEN
     esContext->drm_fd = drmOpen(esContext->device, NULL);
 #else
     esContext->drm_fd = open(esContext->device, O_RDWR | O_CLOEXEC);
-#endif //__RENESAS_RCAR__
+#endif //USE_DRM_OPEN
 
     if (esContext->drm_fd < 0)
     {
