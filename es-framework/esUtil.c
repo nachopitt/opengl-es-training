@@ -399,7 +399,7 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     esContext->hPix.format      = EGL_NATIVE_PIXFORMAT_ARGB8888_REL;
     esContext->hPix.stride      = esContext->width;
     esContext->hPix.usage       = 0;
-    esContext->hPix.pixelData   = esContext->kms_map_buff;
+    esContext->hPix.pixelData   = esContext->kms_map_buf;
 #   endif //__RENESAS_RCAR__
 #endif //USE_KMS
 
