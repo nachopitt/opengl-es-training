@@ -46,10 +46,10 @@ static EGLNativeDisplayType* native_display = NULL;
 #   include <xf86drmMode.h>
 #   include <EGL/egl.h>
 #   include <EGL/eglext.h>
-#   ifdef USE_GBM
+#   if defined(USE_GBM)
 #       include <gbm.h>
-#   else
-static EGLint native_window = 0;
+#   elif defined(USE_KMS)
+#       include <libkms/libkms.h>
 #   endif //USE_GBM
 #endif //USE_X11
 
@@ -143,7 +143,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     }
 #   else
     printf("%s:%u\n", __FUNCTION__, __LINE__);
-    display = eglGetDisplay((EGLNativeDisplayType)EGL_DEFAULT_DISPLAY);
+    display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 #   endif //USE_GBM
     printf("%s:%u\n", __FUNCTION__, __LINE__);
 #endif //USE_X11
@@ -181,12 +181,25 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     }
 
     printf("%s:%u\n", __FUNCTION__, __LINE__);
-    // Create a surface
-    surface = eglCreateWindowSurface(display, config, (EGLNativeWindowType)esContext->hWnd, NULL);
+    // Create a window surface
+    surface = eglCreateWindowSurface(display, config, esContext->hWnd, NULL);
     if ( surface == EGL_NO_SURFACE )
     {
         printf("eglCreateWindowSurface failed\n");
-        return EGL_FALSE;
+
+        // Create a pixmap surface
+#ifdef __RENESAS_RCAR__
+        surface = eglCreatePixmapSurface(display, config, (EGLNativePixmapType)&esContext->hPix, NULL);
+#else
+        surface = eglCreatePixmapSurface(display, config, esContext->hPix, NULL);
+#endif //__RENESAS_RCAR__
+        if ( surface == EGL_NO_SURFACE )
+        {
+            printf("eglCreatePixmapSurface failed\n");
+            return EGL_FALSE;
+        }
+
+        printf("%s:%u\n", __FUNCTION__, __LINE__);
     }
 
     printf("%s:%u\n", __FUNCTION__, __LINE__);
@@ -354,12 +367,41 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     // Open the DRM device (Renesas typically uses /dev/dri/card0)
     printf("Opening DRM device %s\n", esContext->device);
 
+#ifdef __RENESAS_RCAR__
+    esContext->drm_fd = drmOpen(esContext->device, NULL);
+#else
     esContext->drm_fd = open(esContext->device, O_RDWR | O_CLOEXEC);
+#endif //__RENESAS_RCAR__
+
     if (esContext->drm_fd < 0)
     {
         fprintf(stderr, "Failed to open DRM device %s\n", esContext->device);
         return EGL_FALSE;
     }
+
+#ifdef USE_KMS
+    unsigned kms_bo_attribs[] = {
+        KMS_WIDTH,      esContext->width,
+        KMS_HEIGHT,     esContext->height,
+        KMS_BO_TYPE,    KMS_BO_TYPE_SCANOUT_X8R8G8B8,
+        KMS_TERMINATE_PROP_LIST
+    };
+
+    drmDropMaster(esContext->drm_fd);
+
+    kms_create(esContext->drm_fd, &esContext->kms);
+    kms_bo_create(esContext->kms, kms_bo_attribs, &esContext->kms_bo);
+    kms_bo_map(esContext->kms_bo, &esContext->kms_map_buf);
+
+#   ifdef __RENESAS_RCAR__
+    esContext->hPix.width       = esContext->width;
+    esContext->hPix.height      = esContext->height;
+    esContext->hPix.format      = EGL_NATIVE_PIXFORMAT_ARGB8888_REL;
+    esContext->hPix.stride      = esContext->width;
+    esContext->hPix.usage       = 0;
+    esContext->hPix.pixelData   = esContext->kms_map_buff;
+#   endif //__RENESAS_RCAR__
+#endif //USE_KMS
 
     // Get DRM resources
     drmModeRes *resources = drmModeGetResources(esContext->drm_fd);
@@ -428,7 +470,7 @@ EGLBoolean DRMCreate(ESContext *esContext) {
     printf("DRM setup complete: mode %s, resolution %dx%d, connector_id %d\n",
            esContext->mode_info->name, esContext->mode_info->hdisplay, esContext->mode_info->vdisplay, connector->connector_id);
 
-#ifdef USE_GBM
+#if defined(USE_GBM)
     // Create a GBM device
     esContext->gbm_dev = gbm_create_device(esContext->drm_fd);
     if (!esContext->gbm_dev)
@@ -454,7 +496,7 @@ EGLBoolean DRMCreate(ESContext *esContext) {
 
     printf("GBM setup complete\n");
 #else
-    esContext->hWnd = (EGLNativeWindowType)&(native_window);
+    esContext->hWnd = 0;
 #endif //USE_GBM
 
     return EGL_TRUE;

@@ -2,3 +2,6 @@ obj
 bin
 *.o
 .vscode
+drm
+drm_build
+drm_install

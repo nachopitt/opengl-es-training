@@ -23,11 +23,13 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 
-#ifdef USE_DRM
+#if defined(USE_DRM)
 #  include <xf86drm.h>
 #  include <xf86drmMode.h>
-#  ifdef USE_GBM
+#  if defined(USE_GBM)
 #     include <gbm.h>
+#  elif defined(USE_KMS)
+#     include <libkms/libkms.h>
 #  endif //USE_GBM
 #endif //USE_DRM
 
@@ -86,6 +88,13 @@ typedef struct _escontext
    /// Window handle
    EGLNativeWindowType  hWnd;
 
+   /// Pixmap handle
+#ifdef __RENESAS_RCAR__
+   EGLNativePixmapTypeREL hPix;
+#else
+   EGLNativePixmapType  hPix;
+#endif //__RENESAS_RCAR__
+
    /// EGL display
    EGLDisplay  eglDisplay;
 
@@ -106,11 +115,15 @@ typedef struct _escontext
    drmModeConnector* connector;
    drmModeEncoder* encoder;
    drmModeCrtc *crtc;
-#  ifdef USE_GBM
+#  if defined(USE_GBM)
    struct gbm_device* gbm_dev;
    struct gbm_surface* gbm_surface;
    struct gbm_bo* gbm_bo;
    uint32_t gbm_fb;
+#  elif defined(USE_KMS)
+   struct kms_driver *kms;
+   struct kms_bo *kms_bo;
+   void *kms_map_buf;
 #  endif //USE_GBM
 #endif //USE_DRM
 
