@@ -115,7 +115,10 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     EGLint minorVersion = 0;
     EGLDisplay display;
     EGLContext context;
-    EGLSurface surface;
+    EGLSurface windowSurface;
+#ifdef USE_KMS
+    EGLSurface pixmapSurface;
+#endif //USE_KMS
     EGLConfig config;
     EGLint contextAttribs[] = {
         EGL_CONTEXT_CLIENT_VERSION, 2,
@@ -143,7 +146,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     }
 #   else
     printf("%s:%u\n", __FUNCTION__, __LINE__);
-    display = eglGetDisplay((NativeDisplayType)EGL_DEFAULT_DISPLAY);
+    display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 #   endif //USE_GBM
     printf("%s:%u\n", __FUNCTION__, __LINE__);
 #endif //USE_X11
@@ -192,26 +195,27 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
 
     printf("%s:%u\n", __FUNCTION__, __LINE__);
     // Create a window surface
-    NativeWindowType window  = 0;
-    surface = eglCreateWindowSurface(display, config, window, NULL);
-    if ( surface == EGL_NO_SURFACE )
+    windowSurface = eglCreateWindowSurface(display, config, esContext->hWnd, NULL);
+    if ( windowSurface == EGL_NO_SURFACE )
     {
         printf("eglCreateWindowSurface failed\n");
-
-        // Create a pixmap surface
-#ifdef __RENESAS_RCAR__
-        surface = eglCreatePixmapSurface(display, config, (EGLNativePixmapType)&esContext->hPix, NULL);
-#else
-        surface = eglCreatePixmapSurface(display, config, esContext->hPix, NULL);
-#endif //__RENESAS_RCAR__
-        if ( surface == EGL_NO_SURFACE )
-        {
-            printf("eglCreatePixmapSurface failed\n");
-            return EGL_FALSE;
-        }
-
-        printf("%s:%u\n", __FUNCTION__, __LINE__);
+        return EGL_FALSE;
     }
+
+#ifdef USE_KMS
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
+    // Create a pixmap surface
+    #ifdef __RENESAS_RCAR__
+    pixmapSurface = eglCreatePixmapSurface(display, config, (EGLNativePixmapType)&esContext->hPix, NULL);
+    #else
+    pixmapSurface = eglCreatePixmapSurface(display, config, esContext->hPix, NULL);
+    #endif //__RENESAS_RCAR__
+    if ( pixmapSurface == EGL_NO_SURFACE )
+    {
+        printf("eglCreatePixmapSurface failed\n");
+        return EGL_FALSE;
+    }
+#endif //USE_KMS
 
     printf("%s:%u\n", __FUNCTION__, __LINE__);
     // Create a GL context
@@ -224,7 +228,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
 
     printf("%s:%u\n", __FUNCTION__, __LINE__);
     // Make the context current
-    if ( !eglMakeCurrent(display, surface, surface, context) )
+    if ( !eglMakeCurrent(display, windowSurface, windowSurface, context) )
     {
         printf("eglMakeCurrent failed\n");
         return EGL_FALSE;
@@ -233,7 +237,11 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     printf("%s:%u\n", __FUNCTION__, __LINE__);
     esContext->eglDisplay = display;
     printf("%s:%u\n", __FUNCTION__, __LINE__);
-    esContext->eglSurface = surface;
+    esContext->eglWindowSurface = windowSurface;
+#ifdef USE_KMS
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
+    esContext->eglPixmapSurface = pixmapSurface;
+#endif //USE_KMS
     printf("%s:%u\n", __FUNCTION__, __LINE__);
     esContext->eglContext = context;
 
@@ -707,7 +715,7 @@ void ESUTIL_API esMainLoop ( ESContext *esContext )
         if (esContext->drawFunc != NULL)
             esContext->drawFunc(esContext);
 
-        eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
+        eglSwapBuffers(esContext->eglDisplay, esContext->eglWindowSurface);
 
 #if defined(USE_GBM)
         struct gbm_bo* bo = esContext->gbm_bo;

@@ -105,8 +105,13 @@ typedef struct _escontext
    /// EGL context
    EGLContext  eglContext;
 
-   /// EGL surface
-   EGLSurface  eglSurface;
+   /// EGL window surface
+   EGLSurface  eglWindowSurface;
+
+#ifdef USE_KMS
+   /// EGL pixmap surface
+   EGLSurface  eglPixmapSurface;
+#endif //USE_KMS
 
    /// Device
    char device[50];
