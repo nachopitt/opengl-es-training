@@ -621,14 +621,14 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
         EGL_SURFACE_TYPE,   EGL_WINDOW_BIT,
         EGL_NONE
     };
-// #elif defined(__RENESAS_RCAR__)
-//     EGLint attribList[] = {
-//         EGL_BUFFER_SIZE,        32,
-//         EGL_DEPTH_SIZE,         8,
-//         EGL_SURFACE_TYPE,       EGL_WINDOW_BIT | EGL_PIXMAP_BIT,
-//         EGL_RENDERABLE_TYPE,    EGL_OPENGL_ES2_BIT,
-//         EGL_NONE
-//     };
+#elif defined(__RENESAS_RCAR__)
+    EGLint attribList[] = {
+        EGL_BUFFER_SIZE,        32,
+        EGL_DEPTH_SIZE,         8,
+        EGL_SURFACE_TYPE,       EGL_WINDOW_BIT | EGL_PIXMAP_BIT,
+        EGL_RENDERABLE_TYPE,    EGL_OPENGL_ES2_BIT,
+        EGL_NONE
+    };
 #else
     EGLint attribList[] = {
         EGL_SURFACE_TYPE,   EGL_WINDOW_BIT,
