@@ -124,7 +124,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     printf("%s:%u\n", __FUNCTION__, __LINE__);
 
     // Get Display
-#ifdef USE_X11
+#if defined(USE_X11)
     display = eglGetDisplay((EGLNativeDisplayType)x_display);
 #elif defined(USE_FB)
     display = eglGetDisplay(native_display);
@@ -143,7 +143,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     }
 #   else
     printf("%s:%u\n", __FUNCTION__, __LINE__);
-    display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    display = eglGetDisplay((NativeDisplayType)EGL_DEFAULT_DISPLAY);
 #   endif //USE_GBM
     printf("%s:%u\n", __FUNCTION__, __LINE__);
 #endif //USE_X11
@@ -160,6 +160,16 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
     {
         EGLint error = eglGetError();
         printf("eglInitialize failed, eglError: %d\n", error);
+        eglErrorStr(error);
+        return EGL_FALSE;
+    }
+    printf("%s:%u\n", __FUNCTION__, __LINE__);
+
+    // Bind OpenGLES API
+    if (!eglBindAPI(EGL_OPENGL_ES_API))
+    {
+        EGLint error = eglGetError();
+        printf("eglBindAPI failed, eglError: %d\n", error);
         eglErrorStr(error);
         return EGL_FALSE;
     }
@@ -182,7 +192,8 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
 
     printf("%s:%u\n", __FUNCTION__, __LINE__);
     // Create a window surface
-    surface = eglCreateWindowSurface(display, config, esContext->hWnd, NULL);
+    NativeWindowType window  = 0;
+    surface = eglCreateWindowSurface(display, config, window, NULL);
     if ( surface == EGL_NO_SURFACE )
     {
         printf("eglCreateWindowSurface failed\n");
@@ -610,6 +621,14 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char* title, G
         EGL_SURFACE_TYPE,   EGL_WINDOW_BIT,
         EGL_NONE
     };
+// #elif defined(__RENESAS_RCAR__)
+//     EGLint attribList[] = {
+//         EGL_BUFFER_SIZE,        32,
+//         EGL_DEPTH_SIZE,         8,
+//         EGL_SURFACE_TYPE,       EGL_WINDOW_BIT | EGL_PIXMAP_BIT,
+//         EGL_RENDERABLE_TYPE,    EGL_OPENGL_ES2_BIT,
+//         EGL_NONE
+//     };
 #else
     EGLint attribList[] = {
         EGL_SURFACE_TYPE,   EGL_WINDOW_BIT,
