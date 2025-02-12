@@ -694,7 +694,7 @@ void ESUTIL_API esMainLoop ( ESContext *esContext )
 
     gettimeofday ( &t1 , &tz );
 
-    pthread_create(&esThread, NULL, esThreadRoutine, (void*)esContext);
+    // pthread_create(&esThread, NULL, esThreadRoutine, (void*)esContext);
 
     while(userInterrupt(esContext) == GL_FALSE)
     {
