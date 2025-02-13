@@ -90,7 +90,18 @@ int main(int argc, char *argv[])
         option_arg_index++;
     }
 
-    printf("Application parameters: \n\tWidth=%d\n\tHeight=%d\n\tDevice=%s\n", width, height, device);
+    printf("Application parameters:\n");
+    printf("    width=%d\n", width);
+    printf("    height=%d\n", height);
+    printf("    device=%s\n", device);
+    printf("    NATIVE_PLATFORM_NAME=%s\n", NATIVE_PLATFORM_NAME);
+#if defined(USE_FB)
+    printf("    USE_FB=%d\n", USE_FB);
+#elif defined(USE_DRM) && defined(USE_DRM_OPEN)
+    printf("    USE_DRM_OPEN=%d\n", 1);
+#elif !defined(USE_DRM_OPEN)
+    printf("    USE_DRM_OPEN=%d\n", 0);
+#endif //USE_FB
 
     if (Init(&esContext, (UserData*)&userData, "Hello World VBO Triangle!", width, height, device, ES_WINDOW_RGB, onDraw, NULL, NULL, onWindowResize, "shaders/basic-color.vs", "shaders/basic.fs"))
     {

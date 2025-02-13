@@ -107,7 +107,19 @@ int main(int argc, char* argv[]) {
     }
 #endif // USE_FB
 
-    printf("Application parameters: \n\tWidth=%d\n\tHeight=%d\n\tDevice=%s\n\tFB_MULTI_BUFFER=%s\n", width, height, device, fb_multi_buffer);
+    printf("Application parameters:\n");
+    printf("    width=%d\n", width);
+    printf("    height=%d\n", height);
+    printf("    device=%s\n", device);
+    printf("    FB_MULTI_BUFFER=%s\n", fb_multi_buffer);
+    printf("    NATIVE_PLATFORM_NAME=%s\n", NATIVE_PLATFORM_NAME);
+#if defined(USE_FB)
+    printf("    USE_FB=%d\n", USE_FB);
+#elif defined(USE_DRM) && defined(USE_DRM_OPEN)
+    printf("    USE_DRM_OPEN=%d\n", 1);
+#elif !defined(USE_DRM_OPEN)
+    printf("    USE_DRM_OPEN=%d\n", 0);
+#endif //USE_FB
 
     if (Init(&esContext, &userData, "Hello Triangle", width, height, device, ES_WINDOW_RGB, DrawTriangle, Update, NULL, NULL, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
         printf("Context initialization failed\n");

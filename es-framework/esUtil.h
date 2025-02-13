@@ -37,6 +37,22 @@
 #  include "EGL/eglext_REL.h"
 #endif //__RENESAS_RCAR__
 
+#if defined(USE_DRM) && defined(USE_GBM)
+#   define NATIVE_PLATFORM_NAME "DRM + GBM"
+#elif defined(USE_DRM) && defined(USE_KMS)
+#   define NATIVE_PLATFORM_NAME "DRM + KMS"
+#elif defined(USE_DRM)
+#   define NATIVE_PLATFORM_NAME "DRM"
+#elif defined(USE_X11)
+#   define NATIVE_PLATFORM_NAME "X11"
+#elif defined(USE_FB)
+#   define NATIVE_PLATFORM_NAME "FB"
+#elif defined(USE_WAYLAND)
+#   define NATIVE_PLATFORM_NAME "Wayland"
+#else
+#   define NATIVE_PLATFORM_NAME "Unknown Platform"
+#endif
+
 #ifdef __cplusplus
 
 extern "C" {
