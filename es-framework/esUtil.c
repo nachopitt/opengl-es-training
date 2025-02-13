@@ -121,7 +121,7 @@ EGLBoolean CreateEGLContext (ESContext* esContext, EGLint attribList[])
 #endif //USE_KMS
     EGLConfig config;
     EGLint contextAttribs[] = {
-        EGL_CONTEXT_CLIENT_VERSION, 2,
+        EGL_CONTEXT_CLIENT_VERSION, 3,
         EGL_NONE
     };
     printf("%s:%u\n", __FUNCTION__, __LINE__);
