@@ -54,9 +54,13 @@ int main(int argc, char* argv[]) {
         height = atoi(argv[2]);
     }
 
-    if (Init(&esContext, &userData, "Hello Perfect Square", width, height, ES_WINDOW_RGB, DrawPerfectSquare, NULL, NULL, HandleWindowResize, "shaders/basic-color-transform.vs", "shaders/basic.fs"))
+    if (Init(&esContext, &userData, "Hello Perfect Square", width, height, ES_WINDOW_RGB, DrawPerfectSquare, NULL, NULL, HandleWindowResize))
     {
         printf("Context initialization failed\n");
+        return 1;
+    }
+
+    if (!CompileAndLinkShaders(&esContext, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
         return 1;
     }
 

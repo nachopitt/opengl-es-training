@@ -42,8 +42,12 @@ int main(int argc, char* argv[]) {
         height = atoi(argv[2]);
     }
 
-    if (Init(&esContext, &userData, "Hello Triangle", width, height, ES_WINDOW_RGB, DrawTriangle, NULL, NULL, NULL, "shaders/basic-color.vs", "shaders/basic.fs")) {
+    if (Init(&esContext, &userData, "Hello Triangle", width, height, ES_WINDOW_RGB, DrawTriangle, NULL, NULL, NULL)) {
         printf("Context initialization failed\n");
+        return 1;
+    }
+
+    if (!CompileAndLinkShaders(&esContext, "shaders/basic-color.vs", "shaders/basic.fs")) {
         return 1;
     }
 

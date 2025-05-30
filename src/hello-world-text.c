@@ -45,8 +45,12 @@ int main(int argc, char* argv[]) {
         height = atoi(argv[2]);
     }
 
-    if (Init(&esContext, &userData, "Hello World Text String!", width, height, ES_WINDOW_RGB, DrawHelloWorldText, NULL, NULL, HandleWindowResize, "shaders/text-vert.glsl", "shaders/text-frag.glsl")) {
+    if (Init(&esContext, &userData, "Hello World Text String!", width, height, ES_WINDOW_RGB, DrawHelloWorldText, NULL, NULL, HandleWindowResize)) {
         printf("Context initialization failed\n");
+        return 1;
+    }
+
+    if (!CompileAndLinkShaders(&esContext, "shaders/text-vert.glsl", "shaders/text-frag.glsl")) {
         return 1;
     }
 

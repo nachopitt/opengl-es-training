@@ -42,17 +42,13 @@ unsigned char font8x8_basic[128][8] = {
     // More characters can be added as needed...
 };
 
-int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, KeyFunction keyFunction, WindowResizeFunction windowResizeFunction, char* vShaderFile, char* fShaderFile) {
+int Init(ESContext* esContext, UserData* userData, const char* title, GLint width, GLint height, GLuint flags, DrawFunction drawFunction, UpdateFunction updateFunction, KeyFunction keyFunction, WindowResizeFunction windowResizeFunction) {
     esInitContext(esContext);
     esContext->userData = userData;
 
     if (!esCreateWindow(esContext, title, width, height, flags)) {
         printf("Could not create window\n");
 
-        return 1;
-    }
-
-    if (!CompileAndLinkShaders(esContext, vShaderFile, fShaderFile)) {
         return 1;
     }
 

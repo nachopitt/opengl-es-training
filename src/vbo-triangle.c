@@ -77,9 +77,13 @@ int main(int argc, char *argv[])
         height = atoi(argv[2]);
     }
 
-    if (Init(&esContext, (UserData*)&userData, "Hello World VBO Triangle!", width, height, ES_WINDOW_RGB, onDraw, NULL, NULL, onWindowResize, "shaders/basic-color.vs", "shaders/basic.fs"))
+    if (Init(&esContext, (UserData*)&userData, "Hello World VBO Triangle!", width, height, ES_WINDOW_RGB, onDraw, NULL, NULL, onWindowResize))
     {
         perror("Init context");
+        return 1;
+    }
+
+    if (!CompileAndLinkShaders(&esContext, "shaders/basic-color.vs", "shaders/basic.fs")) {
         return 1;
     }
 
