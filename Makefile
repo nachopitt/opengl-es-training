@@ -9,6 +9,8 @@ RENDIX_DIR := rendix/source
 RENDIX_INC_DIR := rendix/include
 RENDIX_OBJ_DIR := $(OBJ_DIR)/rendix
 
+GLM_DIR := glm
+
 ifeq '$(findstring ;,$(PATH))' ';'
 UNAME := Windows
 else
@@ -36,13 +38,18 @@ RENDIX_TARGETS := rendix-triangle
 BINS := $(TARGETS:%=$(BIN_DIR)/%)
 RENDIX_BINS := $(RENDIX_TARGETS:%=$(BIN_DIR)/%)
 SRC := $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_DIR)/esUtil.c
-RENDIX_SRC := $(RENDIX_DIR)/shaders/Shader.cpp \
-    $(RENDIX_DIR)/shaders/ShaderProgram.cpp
+RENDIX_SRC := \
+    $(RENDIX_DIR)/core/Engine.cpp \
+    $(RENDIX_DIR)/rendering/Mesh.cpp \
+    $(RENDIX_DIR)/rendering/Renderer.cpp \
+    $(RENDIX_DIR)/shaders/Shader.cpp \
+    $(RENDIX_DIR)/shaders/ShaderProgram.cpp \
+    $(RENDIX_DIR)/texturing/Texture.cpp
 
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJ := $(OBJ:$(ES_FRAMEWORK_DIR)/%.c=$(ES_FRAMEWORK_OBJ_DIR)/%.o)
 RENDIX_OBJ := $(RENDIX_SRC:$(RENDIX_DIR)/%.cpp=$(RENDIX_OBJ_DIR)/%.o)
-RENDIX_OBJ_SUBDIRS := $(foreach subdir,shaders,$(RENDIX_OBJ_DIR)/$(subdir))
+RENDIX_OBJ_SUBDIRS := $(foreach subdir,core rendering shaders texturing,$(RENDIX_OBJ_DIR)/$(subdir))
 
 NATIVE_DISPLAY_TYPE ?= x11
 
@@ -52,7 +59,7 @@ CPPFLAGS += -MMD -MP
 CFLAGS ?= -Wall -g -O0
 CFLAGS += -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR) $(shell pkg-config gstreamer-1.0 --cflags)
 CXXFLAGS ?= -Wall -g -O0
-CXXFLAGS += -I$(RENDIX_INC_DIR) -I$(RENDIX_DIR) -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR)
+CXXFLAGS += -I$(RENDIX_INC_DIR) -I$(RENDIX_DIR) -I$(GLM_DIR) -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR)
 LDFLAGS += $(shell pkg-config gstreamer-1.0 --libs)
 
 ifeq ($(NATIVE_DISPLAY_TYPE), x11)
