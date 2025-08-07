@@ -16,7 +16,7 @@ namespace rendix::core
         ~Engine() = default;
         bool Init(GLint width, GLint height, const std::string &windowTitleName, GLuint flags);
         void SetApplication(Application *application);
-        void Run();
+        int Run();
 
         static void OnDraw(ESContext *esContext);
         static void OnKey(ESContext *esContext, unsigned char key, int x, int y);

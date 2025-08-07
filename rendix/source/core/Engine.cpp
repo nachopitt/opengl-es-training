@@ -63,8 +63,10 @@ namespace rendix::core {
         }
     }
 
-    void Engine::Run()
+    int Engine::Run()
     {
         esMainLoop(&esContext);
+
+        return 0;
     }
 }
