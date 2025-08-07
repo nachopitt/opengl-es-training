@@ -5,6 +5,7 @@
 
 #include "esUtil.h"
 #include "core/Application.h"
+#include "core/WindowManager.h"
 
 namespace rendix::core
 {
@@ -13,7 +14,7 @@ namespace rendix::core
     public:
         Engine();
         ~Engine() = default;
-        void Init(GLint width, GLint height, const std::string &windowTitleName, GLuint flags);
+        bool Init(GLint width, GLint height, const std::string &windowTitleName, GLuint flags);
         void SetApplication(Application *application);
         void Run();
 
@@ -24,6 +25,7 @@ namespace rendix::core
 
     protected:
         ESContext esContext;
+        WindowManager windowManager;
         Application *application;
     };
 }

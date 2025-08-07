@@ -41,6 +41,7 @@ SRC := $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_DIR)/esUtil.c
 RENDIX_SRC := \
     $(RENDIX_DIR)/core/Application.cpp \
     $(RENDIX_DIR)/core/Engine.cpp \
+    $(RENDIX_DIR)/core/WindowManager.cpp \
     $(RENDIX_DIR)/rendering/Mesh.cpp \
     $(RENDIX_DIR)/rendering/Renderer.cpp \
     $(RENDIX_DIR)/shaders/Shader.cpp \
