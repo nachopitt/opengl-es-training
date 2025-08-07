@@ -25,7 +25,7 @@ namespace rendix::core {
         Engine *_this = static_cast<Engine *>(esContext->userData);
 
         if (_this->application) {
-            _this->application->OnDraw(esContext);
+            _this->application->OnDraw();
         }
     }
 
@@ -34,7 +34,7 @@ namespace rendix::core {
         Engine *_this = static_cast<Engine *>(esContext->userData);
         if (_this->application)
         {
-            _this->application->OnKey(esContext, key, x, y);
+            _this->application->OnKey(key, x, y);
         }
     }
 
@@ -43,7 +43,7 @@ namespace rendix::core {
         Engine *_this = static_cast<Engine *>(esContext->userData);
         if (_this->application)
         {
-            _this->application->OnUpdate(esContext, deltaTime);
+            _this->application->OnUpdate(deltaTime);
         }
     }
 
@@ -52,7 +52,7 @@ namespace rendix::core {
         Engine *_this = static_cast<Engine *>(esContext->userData);
         if (_this->application)
         {
-            _this->application->OnWindowResize(esContext, width, height);
+            _this->application->OnWindowResize(width, height);
         }
     }
 

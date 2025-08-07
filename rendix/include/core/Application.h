@@ -9,10 +9,10 @@ namespace rendix::core {
     public:
         virtual ~Application() = default;
 
-        virtual void OnDraw(ESContext *ESContext) const = 0;
-        virtual void OnKey(ESContext *ESContext, unsigned char key, int x, int y) const = 0;
-        virtual void OnUpdate(ESContext *ESContext, float deltaTime) const = 0;
-        virtual void OnWindowResize(ESContext *ESContext, int width, int height) const = 0;
+        virtual void OnDraw() const;
+        virtual void OnKey(unsigned char key, int x, int y) const;
+        virtual void OnUpdate(float deltaTime) const;
+        virtual void OnWindowResize(int width, int height) const;
     };
 
 } // namespace rendix::rendering
