@@ -1,8 +1,10 @@
 #include "shaders/Shader.h"
 #include "shaders/ShaderProgram.h"
+#include "core/Engine.h"
 
 int main(int argc, char* argv[])
 {
+    rendix::core::Engine engine;
     rendix::shaders::Shader vertexShader(GL_VERTEX_SHADER);
     rendix::shaders::Shader fragmentShader(GL_FRAGMENT_SHADER);
     rendix::shaders::ShaderProgram shaderProgram;
@@ -18,5 +20,7 @@ int main(int argc, char* argv[])
 
     shaderProgram.LinkShaders();
 
-    return 0;
+    engine.Init(640, 480, "Rendix Triangle OpenGL ES example", ES_WINDOW_RGB);
+
+    return engine.Run();
 }
