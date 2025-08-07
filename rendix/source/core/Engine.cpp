@@ -3,8 +3,11 @@
 
 namespace rendix::core {
 
-    Engine::Engine():
-        application(nullptr)
+    Engine::Engine() : application(std::unique_ptr<Application>(new Application))
+    {
+    }
+
+    Engine::Engine(std::unique_ptr<Application> application) : application(std::move(application))
     {
     }
 
