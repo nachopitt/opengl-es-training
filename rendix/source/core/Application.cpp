@@ -12,11 +12,18 @@ namespace rendix::core {
     }
 
     void Application::OnKey(unsigned char key, int x, int y) const {
-        std::cout << "Application OnWindowResize: key" << static_cast<int>(key) << ", x: " << x << "y: " << y << std::endl;
+        std::cout << "Application OnKey: key" << static_cast<int>(key) << ", x: " << x << "y: " << y << std::endl;
     }
 
     void Application::OnUpdate(float deltaTime) const {
-        std::cout << "Application OnWindowResize: deltaTime" << deltaTime << std::endl;
+        static float totaltime = 0;
+
+        totaltime += deltaTime;
+        if (totaltime > 2.0f)
+        {
+            std::cout << "Application OnUpdate: deltaTime" << deltaTime << std::endl;
+            totaltime -= 2.0f;
+        }
     }
 
     void Application::OnWindowResize(int width, int height) const {
