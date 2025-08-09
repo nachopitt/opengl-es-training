@@ -21,6 +21,8 @@ namespace rendix::rendering
             void SetClearColor(float r, float g, float b, float a);
             // Clear screen.
             void Clear();
+            // Resize screen
+            void Resize(int width, int height);
     };
 }
 
