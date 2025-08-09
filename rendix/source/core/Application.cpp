@@ -29,9 +29,9 @@ namespace rendix::core {
         }
     }
 
-    void Application::OnKey(unsigned char key) const
+    void Application::OnKey(unsigned char key, bool pressed) const
     {
-        std::cout << "Application OnKey: key: " << static_cast<int>(key) << std::endl;
+        std::cout << "Application OnKey: key: " << static_cast<int>(key) << ", pressed:"  << pressed << std::endl;
     }
 
     void Application::OnMouse(int x, int y) const

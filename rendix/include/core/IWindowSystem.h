@@ -24,7 +24,7 @@ namespace rendix::core
         events::Event<> onRender;
         events::Event<float /*delta*/> onUpdate;
         events::Event<int /*width*/, int /*height*/> onResize;
-        events::Event<int /*key*/, bool /*pressed*/> onKey;
+        events::Event<unsigned char /*key*/, bool /*pressed*/> onKey;
         events::Event<int /*x*/, int /*y*/> onMouse;
     };
 }

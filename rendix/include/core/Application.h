@@ -12,7 +12,7 @@ namespace rendix::core {
         virtual void OnInit() const;
         virtual void OnRender() const;
         virtual void OnUpdate(float deltaTime) const;
-        virtual void OnKey(unsigned char key) const;
+        virtual void OnKey(unsigned char key, bool pressed) const;
         virtual void OnMouse(int x, int y) const;
         virtual void OnWindowResize(int width, int height) const;
         virtual void OnShutdown() const;
