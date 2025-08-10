@@ -17,10 +17,12 @@ namespace rendix::core {
         void SwapBuffers() override;
         void PollEvents() override;
         bool ShouldClose() override;
-        int Run() override;
+        std::unique_ptr<main_loop::IMainLoopStrategy> GetMainLoop() override;
 
         int GetWidth() const override;
         int GetHeight() const override;
+
+        ESContext& GetContext();
 
         static void OnDraw(ESContext *esContext);
         static void OnKey(ESContext *esContext, unsigned char key, int x, int y);

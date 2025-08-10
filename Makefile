@@ -42,6 +42,7 @@ RENDIX_SRC := \
     $(RENDIX_DIR)/core/Application.cpp \
     $(RENDIX_DIR)/core/Engine.cpp \
     $(RENDIX_DIR)/core/ESUtilWindowSystem.cpp \
+    $(RENDIX_DIR)/main_loop/ESUtilMainLoopStrategy.cpp \
     $(RENDIX_DIR)/rendering/Mesh.cpp \
     $(RENDIX_DIR)/rendering/Renderer.cpp \
     $(RENDIX_DIR)/shaders/Shader.cpp \
@@ -51,7 +52,7 @@ RENDIX_SRC := \
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJ := $(OBJ:$(ES_FRAMEWORK_DIR)/%.c=$(ES_FRAMEWORK_OBJ_DIR)/%.o)
 RENDIX_OBJ := $(RENDIX_SRC:$(RENDIX_DIR)/%.cpp=$(RENDIX_OBJ_DIR)/%.o)
-RENDIX_OBJ_SUBDIRS := $(foreach subdir,core rendering shaders texturing,$(RENDIX_OBJ_DIR)/$(subdir))
+RENDIX_OBJ_SUBDIRS := $(foreach subdir,core main_loop rendering shaders texturing,$(RENDIX_OBJ_DIR)/$(subdir))
 
 NATIVE_DISPLAY_TYPE ?= x11
 

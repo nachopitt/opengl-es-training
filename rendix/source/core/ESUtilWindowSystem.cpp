@@ -1,4 +1,5 @@
 #include "core/ESUtilWindowSystem.h"
+#include "main_loop/ESUtilMainLoopStrategy.h"
 #include <string>
 #include "esUtil.h"
 
@@ -39,10 +40,9 @@ namespace rendix::core {
         return shouldClose;
     }
 
-    int ESUtilWindowSystem::Run() {
-        esMainLoop(&esContext);
-
-        return 0;
+    std::unique_ptr<main_loop::IMainLoopStrategy> ESUtilWindowSystem::GetMainLoop()
+    {
+        return std::unique_ptr<main_loop::IMainLoopStrategy>(new main_loop::ESUtilMainLoopStrategy);
     }
 
     int ESUtilWindowSystem::GetWidth() const {
@@ -51,6 +51,10 @@ namespace rendix::core {
 
     int ESUtilWindowSystem::GetHeight() const {
         return esContext.height;
+    }
+
+    ESContext &ESUtilWindowSystem::GetContext() {
+        return esContext;
     }
 
     void ESUtilWindowSystem::OnDraw(ESContext *esContext)

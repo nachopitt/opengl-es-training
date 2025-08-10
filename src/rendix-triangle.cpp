@@ -1,7 +1,7 @@
 #include "shaders/Shader.h"
 #include "shaders/ShaderProgram.h"
-#include "core/Engine.h"
 #include "core/ESUtilWindowSystem.h"
+#include "core/Engine.h"
 
 int main(int argc, char* argv[])
 {
@@ -24,5 +24,7 @@ int main(int argc, char* argv[])
 
     engine.Init(640, 480, "Rendix Triangle OpenGL ES example");
 
-    return engine.Run();
+    engine.Run();
+
+    return 0;
 }

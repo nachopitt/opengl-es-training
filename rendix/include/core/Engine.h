@@ -17,7 +17,11 @@ namespace rendix::core
         Engine(IWindowSystem *windowSystem, std::unique_ptr<Application> application);
         ~Engine() = default;
         bool Init(int width, int height, const std::string &windowTitleName);
-        int Run();
+        void Run();
+
+        // Events
+        events::Event<> onInit;
+        events::Event<> onShutdown;
 
     protected:
         IWindowSystem *windowSystem;

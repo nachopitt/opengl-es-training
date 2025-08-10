@@ -3,7 +3,9 @@
 
 #include <string>
 #include <functional>
+#include <memory>
 #include "events/Event.h"
+#include "main_loop/IMainLoopStrategy.h"
 
 namespace rendix::core
 {
@@ -15,7 +17,7 @@ namespace rendix::core
         virtual void SwapBuffers() = 0;
         virtual void PollEvents() = 0;
         virtual bool ShouldClose() = 0;
-        virtual int Run() = 0;
+        virtual std::unique_ptr<main_loop::IMainLoopStrategy> GetMainLoop() = 0;
 
         virtual int GetWidth() const = 0;
         virtual int GetHeight() const = 0;
@@ -23,9 +25,9 @@ namespace rendix::core
         // Events
         events::Event<> onRender;
         events::Event<float /*delta*/> onUpdate;
-        events::Event<int /*width*/, int /*height*/> onResize;
         events::Event<unsigned char /*key*/, bool /*pressed*/> onKey;
         events::Event<int /*x*/, int /*y*/> onMouse;
+        events::Event<int /*width*/, int /*height*/> onResize;
     };
 }
 
