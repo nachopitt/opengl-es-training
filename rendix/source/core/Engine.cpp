@@ -15,26 +15,26 @@ namespace rendix::core {
     bool Engine::Init(int width, int height, const std::string &windowTitleName)
     {
         onInit.Subscribe([this]() {
-            application->OnInit();
+            application->OnInit(*this);
         });
         onShutdown.Subscribe([this]() {
-            application->OnShutdown();
+            application->OnShutdown(*this);
         });
 
         windowSystem->onRender.Subscribe([this]() {
-            application->OnRender();
+            application->OnRender(*this);
         });
         windowSystem->onUpdate.Subscribe([this](float delta) {
-            application->OnUpdate(delta);
+            application->OnUpdate(*this, delta);
         });
         windowSystem->onKey.Subscribe([this](unsigned char key, bool pressed) {
-            application->OnKey(key, pressed);
+            application->OnKey(*this, key, pressed);
         });
         windowSystem->onMouse.Subscribe([this](int x, int y) {
-            application->OnMouse(x, y);
+            application->OnMouse(*this, x, y);
         });
         windowSystem->onResize.Subscribe([this](int width, int height) {
-            application->OnWindowResize(width, height);
+            application->OnWindowResize(*this, width, height);
         });
 
         if (!windowSystem->CreateWindow(width, height, windowTitleName))

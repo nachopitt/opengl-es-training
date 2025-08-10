@@ -1,14 +1,15 @@
 #include "core/Application.h"
 #include <iostream>
+#include "core/Engine.h"
 
 namespace rendix::core {
 
-    void Application::OnInit() const
+    void Application::OnInit(Engine &engine) const
     {
         std::cout << "Application OnInit" << std::endl;
     }
 
-    void Application::OnRender() const
+    void Application::OnRender(Engine &engine) const
     {
         GLfloat vertices[] = {
             0.0f, 0.5f, 0.0f,
@@ -17,7 +18,7 @@ namespace rendix::core {
         };
     }
 
-    void Application::OnUpdate(float deltaTime) const
+    void Application::OnUpdate(Engine &engine, float deltaTime) const
     {
         static float totaltime = 0;
 
@@ -29,22 +30,22 @@ namespace rendix::core {
         }
     }
 
-    void Application::OnKey(unsigned char key, bool pressed) const
+    void Application::OnKey(Engine &engine, unsigned char key, bool pressed) const
     {
         std::cout << "Application OnKey: key: " << static_cast<int>(key) << ", pressed:"  << pressed << std::endl;
     }
 
-    void Application::OnMouse(int x, int y) const
+    void Application::OnMouse(Engine &engine, int x, int y) const
     {
         std::cout << "Application OnMouse: x: " << x << "y: " << y << std::endl;
     }
 
-    void Application::OnWindowResize(int width, int height) const
+    void Application::OnWindowResize(Engine &engine, int width, int height) const
     {
         std::cout << "Application OnWindowResize: width: " << width << ", height: " << height << std::endl;
     }
 
-    void Application::OnShutdown() const
+    void Application::OnShutdown(Engine &engine) const
     {
         std::cout << "Application OnShutdown" << std::endl;
     }
