@@ -8,7 +8,7 @@ namespace rendix::core {
     {
     }
 
-    Engine::Engine(IWindowSystem *windowSystem, std::unique_ptr<Application> application) : windowSystem(windowSystem), application(std::move(application))
+    Engine::Engine(IWindowSystem *windowSystem, Application *application) : windowSystem(windowSystem), application(application)
     {
     }
 

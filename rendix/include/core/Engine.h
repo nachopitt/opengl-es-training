@@ -14,7 +14,7 @@ namespace rendix::core
     {
     public:
         Engine(IWindowSystem *windowSystem);
-        Engine(IWindowSystem *windowSystem, std::unique_ptr<Application> application);
+        Engine(IWindowSystem *windowSystem, Application *application);
         ~Engine() = default;
         bool Init(int width, int height, const std::string &windowTitleName);
         void Run();
@@ -25,7 +25,7 @@ namespace rendix::core
 
     protected:
         IWindowSystem *windowSystem;
-        std::unique_ptr<Application> application;
+        Application* application;
     };
 }
 
