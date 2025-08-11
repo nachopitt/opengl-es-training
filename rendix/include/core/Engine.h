@@ -17,7 +17,7 @@ namespace rendix::core
         Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer);
         Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer, Application *application);
         ~Engine() = default;
-        bool Init(int width, int height, const std::string &windowTitleName);
+        bool Init();
         void Run();
         IWindowSystem &GetWindowSystem() const;
         rendering::IRenderer &GetRenderer() const;

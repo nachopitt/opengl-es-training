@@ -4,9 +4,57 @@
 
 namespace rendix::core {
 
+    Application::Application(): vertexShader(GL_VERTEX_SHADER), fragmentShader(GL_FRAGMENT_SHADER)
+    {
+    }
+
     void Application::OnInit(Engine &engine)
     {
         std::cout << "Application OnInit" << std::endl;
+
+        std::string vertexShaderStr = R"(
+attribute vec4 position;
+void main()
+{
+   gl_Position = position;
+})";
+        std::string fragmentShaderStr = R"(
+void main()
+{
+   gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+})";
+
+        if (!vertexShader.LoadFromString(vertexShaderStr))
+        {
+            std::cerr << "Error loading vertex shader" << std::endl;
+        }
+        if (!fragmentShader.LoadFromString(fragmentShaderStr))
+        {
+            std::cerr << "Error loading fragment shader" << std::endl;
+        }
+
+        if (!vertexShader.Compile())
+        {
+            std::cerr << "Error compiling vertex shader" << std::endl;
+        }
+        if (!fragmentShader.Compile())
+        {
+            std::cerr << "Error compiling fragment shader" << std::endl;
+        }
+
+        if (!shaderProgram.AttachShader(vertexShader))
+        {
+            std::cerr << "Error attaching vertex shader to shader program" << std::endl;
+        }
+        if (!shaderProgram.AttachShader(fragmentShader))
+        {
+            std::cerr << "Error attaching fragment shader to shader program" << std::endl;
+        }
+
+        if (!shaderProgram.LinkShaders())
+        {
+            std::cerr << "Error linking vertex and fragment shaders into the shader program" << std::endl;
+        }
     }
 
     void Application::OnRender(Engine &engine)
@@ -19,6 +67,13 @@ namespace rendix::core {
 
         engine.GetRenderer().SetClearColor(1.0f, 0.58f, 0.0f, 1.0f);
         engine.GetRenderer().Clear();
+
+        glUseProgram(shaderProgram.GetShaderProgramId());
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+        glEnableVertexAttribArray(0);
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
     }
 
     void Application::OnUpdate(Engine &engine, float deltaTime)

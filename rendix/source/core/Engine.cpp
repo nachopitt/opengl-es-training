@@ -12,7 +12,7 @@ namespace rendix::core {
     {
     }
 
-    bool Engine::Init(int width, int height, const std::string &windowTitleName)
+    bool Engine::Init()
     {
         onInit.Subscribe([this]() {
             application->OnInit(*this);
@@ -36,13 +36,6 @@ namespace rendix::core {
         windowSystem->onResize.Subscribe([this](int width, int height) {
             application->OnWindowResize(*this, width, height);
         });
-
-        if (!windowSystem->CreateWindow(width, height, windowTitleName))
-        {
-            std::cout << "Window creation failed" << std::endl;
-
-            return false;
-        }
 
         onInit.Notify();
 
