@@ -4,12 +4,12 @@
 
 namespace rendix::core {
 
-    void Application::OnInit(Engine &engine) const
+    void Application::OnInit(Engine &engine)
     {
         std::cout << "Application OnInit" << std::endl;
     }
 
-    void Application::OnRender(Engine &engine) const
+    void Application::OnRender(Engine &engine)
     {
         GLfloat vertices[] = {
             0.0f, 0.5f, 0.0f,
@@ -21,7 +21,7 @@ namespace rendix::core {
         engine.GetRenderer().Clear();
     }
 
-    void Application::OnUpdate(Engine &engine, float deltaTime) const
+    void Application::OnUpdate(Engine &engine, float deltaTime)
     {
         static float totaltime = 0;
 
@@ -33,22 +33,22 @@ namespace rendix::core {
         }
     }
 
-    void Application::OnKey(Engine &engine, unsigned char key, bool pressed) const
+    void Application::OnKey(Engine &engine, unsigned char key, bool pressed)
     {
         std::cout << "Application OnKey: key: " << static_cast<int>(key) << ", pressed:"  << pressed << std::endl;
     }
 
-    void Application::OnMouse(Engine &engine, int x, int y) const
+    void Application::OnMouse(Engine &engine, int x, int y)
     {
         std::cout << "Application OnMouse: x: " << x << ", y: " << y << std::endl;
     }
 
-    void Application::OnWindowResize(Engine &engine, int width, int height) const
+    void Application::OnWindowResize(Engine &engine, int width, int height)
     {
         std::cout << "Application OnWindowResize: width: " << width << ", height: " << height << std::endl;
     }
 
-    void Application::OnShutdown(Engine &engine) const
+    void Application::OnShutdown(Engine &engine)
     {
         std::cout << "Application OnShutdown" << std::endl;
     }
