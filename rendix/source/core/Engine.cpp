@@ -1,6 +1,7 @@
 #include "core/Engine.h"
 #include <iostream>
 #include <chrono>
+#include "core/Application.h"
 
 namespace rendix::core {
 
@@ -8,7 +9,7 @@ namespace rendix::core {
     {
     }
 
-    Engine::Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer, Application *application) : windowSystem(windowSystem), renderer(renderer), application(application)
+    Engine::Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer, IApplication *application) : windowSystem(windowSystem), renderer(renderer), application(application)
     {
     }
 

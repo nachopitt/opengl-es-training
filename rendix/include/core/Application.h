@@ -1,6 +1,7 @@
 #ifndef RENDIX_CORE_APPLICATION_H
 #define RENDIX_CORE_APPLICATION_H
 
+#include "core/IApplication.h"
 #include "shaders/Shader.h"
 #include "shaders/ShaderProgram.h"
 
@@ -8,7 +9,7 @@ namespace rendix::core {
 
     class Engine;
 
-    class Application {
+    class Application : public IApplication {
     public:
         Application();
         virtual ~Application() = default;

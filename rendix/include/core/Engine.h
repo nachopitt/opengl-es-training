@@ -4,7 +4,7 @@
 #include <string>
 
 #include "esUtil.h"
-#include "core/Application.h"
+#include "core/IApplication.h"
 #include "core/IWindowSystem.h"
 #include "rendering/IRenderer.h"
 #include <memory>
@@ -15,7 +15,7 @@ namespace rendix::core
     {
     public:
         Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer);
-        Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer, Application *application);
+        Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer, IApplication *application);
         ~Engine() = default;
         bool Init();
         void Run();
@@ -29,7 +29,7 @@ namespace rendix::core
     protected:
         IWindowSystem *windowSystem;
         rendering::IRenderer *renderer;
-        Application* application;
+        IApplication* application;
     };
 }
 

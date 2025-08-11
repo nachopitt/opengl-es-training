@@ -2,12 +2,15 @@ SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
 
-ES_FRAMEWORK_DIR := es-framework
-ES_FRAMEWORK_OBJ_DIR := $(OBJ_DIR)/$(ES_FRAMEWORK_DIR)
+ES_FRAMEWORK_SRC_DIR := es-framework
+ES_FRAMEWORK_OBJ_DIR := $(OBJ_DIR)/$(ES_FRAMEWORK_SRC_DIR)
 
-RENDIX_DIR := rendix/source
+RENDIX_SRC_DIR := rendix/source
 RENDIX_INC_DIR := rendix/include
 RENDIX_OBJ_DIR := $(OBJ_DIR)/rendix
+
+rendix-triangle_SRC_DIR := $(SRC_DIR)/rendix-triangle
+rendix-triangle_OBJ_DIR := $(OBJ_DIR)/rendix-triangle
 
 GLM_DIR := glm
 
@@ -37,22 +40,27 @@ RENDIX_TARGETS := rendix-triangle
 
 BINS := $(TARGETS:%=$(BIN_DIR)/%)
 RENDIX_BINS := $(RENDIX_TARGETS:%=$(BIN_DIR)/%)
-SRC := $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_DIR)/esUtil.c
+SRC := $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_SRC_DIR)/esUtil.c
 RENDIX_SRC := \
-    $(RENDIX_DIR)/core/Application.cpp \
-    $(RENDIX_DIR)/core/Engine.cpp \
-    $(RENDIX_DIR)/core/ESUtilWindowSystem.cpp \
-    $(RENDIX_DIR)/main_loop/ESUtilMainLoopStrategy.cpp \
-    $(RENDIX_DIR)/rendering/Mesh.cpp \
-    $(RENDIX_DIR)/rendering/OpenGLESRenderer.cpp \
-    $(RENDIX_DIR)/shaders/Shader.cpp \
-    $(RENDIX_DIR)/shaders/ShaderProgram.cpp \
-    $(RENDIX_DIR)/texturing/Texture.cpp
+    $(RENDIX_SRC_DIR)/core/Application.cpp \
+    $(RENDIX_SRC_DIR)/core/Engine.cpp \
+    $(RENDIX_SRC_DIR)/core/ESUtilWindowSystem.cpp \
+    $(RENDIX_SRC_DIR)/main_loop/ESUtilMainLoopStrategy.cpp \
+    $(RENDIX_SRC_DIR)/rendering/Mesh.cpp \
+    $(RENDIX_SRC_DIR)/rendering/OpenGLESRenderer.cpp \
+    $(RENDIX_SRC_DIR)/shaders/Shader.cpp \
+    $(RENDIX_SRC_DIR)/shaders/ShaderProgram.cpp \
+    $(RENDIX_SRC_DIR)/texturing/Texture.cpp
+
+rendix-triangle_SRC := \
+    $(rendix-triangle_SRC_DIR)/RendixTriangleApplication.cpp
 
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-OBJ := $(OBJ:$(ES_FRAMEWORK_DIR)/%.c=$(ES_FRAMEWORK_OBJ_DIR)/%.o)
-RENDIX_OBJ := $(RENDIX_SRC:$(RENDIX_DIR)/%.cpp=$(RENDIX_OBJ_DIR)/%.o)
+OBJ := $(OBJ:$(ES_FRAMEWORK_SRC_DIR)/%.c=$(ES_FRAMEWORK_OBJ_DIR)/%.o)
+RENDIX_OBJ := $(RENDIX_SRC:$(RENDIX_SRC_DIR)/%.cpp=$(RENDIX_OBJ_DIR)/%.o)
 RENDIX_OBJ_SUBDIRS := $(foreach subdir,core main_loop rendering shaders texturing,$(RENDIX_OBJ_DIR)/$(subdir))
+
+rendix-triangle_OBJ := $(rendix-triangle_SRC:$(rendix-triangle_SRC_DIR)/%.cpp=$(rendix-triangle_OBJ_DIR)/%.o)
 
 NATIVE_DISPLAY_TYPE ?= x11
 
@@ -60,9 +68,9 @@ CC ?= $(CROSS_COMPILE)gcc
 
 CPPFLAGS += -MMD -MP
 CFLAGS ?= -Wall -g -O0
-CFLAGS += -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR) $(shell pkg-config gstreamer-1.0 --cflags)
+CFLAGS += -I$(ES_FRAMEWORK_SRC_DIR) -I$(SRC_DIR) $(shell pkg-config gstreamer-1.0 --cflags)
 CXXFLAGS ?= -Wall -g -O0
-CXXFLAGS += -I$(RENDIX_INC_DIR) -I$(RENDIX_DIR) -I$(GLM_DIR) -I$(ES_FRAMEWORK_DIR) -I$(SRC_DIR)
+CXXFLAGS += -I$(RENDIX_INC_DIR) -I$(RENDIX_SRC_DIR) -I$(GLM_DIR) -I$(ES_FRAMEWORK_SRC_DIR) -I$(SRC_DIR)
 LDFLAGS += $(shell pkg-config gstreamer-1.0 --libs)
 
 ifeq ($(NATIVE_DISPLAY_TYPE), x11)
@@ -82,10 +90,10 @@ LDFLAGS += $(shell pkg-config $(GPU_PKG_CONFIG) --define-prefix=$(dir $(GPU_PKG_
 endif
 
 # PHONY targets
-.PHONY: all clean $(TARGETS) $(RENDIX_TARGETS) rendix
+.PHONY: all clean $(TARGETS) $(RENDIX_TARGETS)
 
 # All PHONY target, default target
-all: $(TARGETS) $(RENDIX_TARGETS) rendix
+all: $(TARGETS) $(RENDIX_TARGETS)
 
 # All PHONY targets except all, clean and rendix
 $(TARGETS) $(RENDIX_TARGETS): %: $(BIN_DIR)/%
@@ -101,16 +109,15 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 # C compiling stage target, es-framework C files
-$(ES_FRAMEWORK_OBJ_DIR)/%.o: $(ES_FRAMEWORK_DIR)/%.c | $(ES_FRAMEWORK_OBJ_DIR)
+$(ES_FRAMEWORK_OBJ_DIR)/%.o: $(ES_FRAMEWORK_SRC_DIR)/%.c | $(ES_FRAMEWORK_OBJ_DIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 # CPP targets
 
-# Special PHONY CPP rendix target
-rendix: $(RENDIX_OBJ) $(OBJ)
-
 # CPP linking stage target, main CPP files
-$(RENDIX_BINS): $(BIN_DIR)/%: $(OBJ_DIR)/%.o $(RENDIX_OBJ) $(OBJ) | $(BIN_DIR)
+$(RENDIX_TARGETS): %: $(BIN_DIR)/%
+
+$(BIN_DIR)/rendix-triangle: $(RENDIX_OBJ) $(OBJ) $(rendix-triangle_OBJ) $(OBJ_DIR)/rendix-triangle.o | $(BIN_DIR)
 	$(CXX) $^ -o $@ $(CXXFLAGS) $(LDFLAGS)
 
 # CPP compiling stage target, main CPP files
@@ -118,11 +125,14 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 # CPP compiling stage target, rendix CPP files
-$(RENDIX_OBJ_DIR)/%.o: $(RENDIX_DIR)/%.cpp | $(RENDIX_OBJ_SUBDIRS)
+$(RENDIX_OBJ_DIR)/%.o: $(RENDIX_SRC_DIR)/%.cpp | $(RENDIX_OBJ_SUBDIRS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+$(rendix-triangle_OBJ_DIR)/%.o: $(rendix-triangle_SRC_DIR)/%.cpp | $(rendix-triangle_OBJ_DIR)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 # Create output directories target
-$(BIN_DIR) $(OBJ_DIR) $(ES_FRAMEWORK_OBJ_DIR) $(RENDIX_OBJ_SUBDIRS):
+$(BIN_DIR) $(OBJ_DIR) $(ES_FRAMEWORK_OBJ_DIR) $(RENDIX_OBJ_SUBDIRS) $(rendix-triangle_OBJ_DIR):
 	$(MKDIR) $@
 
 # PHONY clean target
