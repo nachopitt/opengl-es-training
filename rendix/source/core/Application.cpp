@@ -60,9 +60,10 @@ void main()
     void Application::OnRender(Engine &engine)
     {
         GLfloat vertices[] = {
-            0.0f, 0.5f, 0.0f,
             -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
+            -0.5f, +0.5f, 0.0f,
+            +0.5f, -0.5f, 0.0f,
+            +0.5f, +0.5f, 0.0f,
         };
 
         engine.GetRenderer().SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -73,7 +74,7 @@ void main()
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
         glEnableVertexAttribArray(0);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 
     void Application::OnUpdate(Engine &engine, float deltaTime)
