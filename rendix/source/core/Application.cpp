@@ -16,6 +16,9 @@ namespace rendix::core {
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
         };
+
+        engine.GetRenderer().SetClearColor(1.0f, 0.58f, 0.0f, 1.0f);
+        engine.GetRenderer().Clear();
     }
 
     void Application::OnUpdate(Engine &engine, float deltaTime) const
