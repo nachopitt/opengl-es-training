@@ -21,7 +21,7 @@ void main()
         std::string fragmentShaderStr = R"(
 void main()
 {
-   gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+   gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 })";
 
         if (!vertexShader.LoadFromString(vertexShaderStr))
@@ -65,7 +65,7 @@ void main()
             0.5f, -0.5f, 0.0f,
         };
 
-        engine.GetRenderer().SetClearColor(1.0f, 0.58f, 0.0f, 1.0f);
+        engine.GetRenderer().SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         engine.GetRenderer().Clear();
 
         glUseProgram(shaderProgram.GetShaderProgramId());
