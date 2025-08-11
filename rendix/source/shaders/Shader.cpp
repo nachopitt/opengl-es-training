@@ -18,7 +18,9 @@ GLuint rendix::shaders::Shader::GetShaderId() const
 bool rendix::shaders::Shader::LoadFromString(const std::string& sourceCode)
 {
     // Load the shader source
-    glShaderSource(shaderId, 1, (const GLchar *const *)sourceCode.c_str(), NULL);
+    const char *src = sourceCode.c_str();
+
+    glShaderSource(shaderId, 1, &src, NULL);
 
     return true;
 }
