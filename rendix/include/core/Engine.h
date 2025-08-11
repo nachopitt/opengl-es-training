@@ -6,6 +6,7 @@
 #include "esUtil.h"
 #include "core/Application.h"
 #include "core/IWindowSystem.h"
+#include "rendering/IRenderer.h"
 #include <memory>
 
 namespace rendix::core
@@ -13,11 +14,13 @@ namespace rendix::core
     class Engine
     {
     public:
-        Engine(IWindowSystem *windowSystem);
-        Engine(IWindowSystem *windowSystem, Application *application);
+        Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer);
+        Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer, Application *application);
         ~Engine() = default;
         bool Init(int width, int height, const std::string &windowTitleName);
         void Run();
+        IWindowSystem &GetWindowSystem() const;
+        rendering::IRenderer &GetRenderer() const;
 
         // Events
         events::Event<> onInit;
@@ -25,6 +28,7 @@ namespace rendix::core
 
     protected:
         IWindowSystem *windowSystem;
+        rendering::IRenderer *renderer;
         Application* application;
     };
 }

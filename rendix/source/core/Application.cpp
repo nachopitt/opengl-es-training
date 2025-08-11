@@ -37,7 +37,7 @@ namespace rendix::core {
 
     void Application::OnMouse(Engine &engine, int x, int y) const
     {
-        std::cout << "Application OnMouse: x: " << x << "y: " << y << std::endl;
+        std::cout << "Application OnMouse: x: " << x << ", y: " << y << std::endl;
     }
 
     void Application::OnWindowResize(Engine &engine, int width, int height) const

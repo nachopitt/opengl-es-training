@@ -4,11 +4,11 @@
 
 namespace rendix::core {
 
-    Engine::Engine(IWindowSystem *windowSystem) : windowSystem(windowSystem), application(new Application)
+    Engine::Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer) : windowSystem(windowSystem), renderer(renderer), application(new Application)
     {
     }
 
-    Engine::Engine(IWindowSystem *windowSystem, Application *application) : windowSystem(windowSystem), application(application)
+    Engine::Engine(IWindowSystem *windowSystem, rendering::IRenderer *renderer, Application *application) : windowSystem(windowSystem), renderer(renderer), application(application)
     {
     }
 
@@ -71,5 +71,15 @@ namespace rendix::core {
                 windowSystem->PollEvents();
             }
         }
+
+        onShutdown.Notify();
+    }
+
+    IWindowSystem &Engine::GetWindowSystem() const {
+        return *windowSystem;
+    }
+
+    rendering::IRenderer &Engine::GetRenderer() const {
+        return *renderer;
     }
 }
