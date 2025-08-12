@@ -2,10 +2,12 @@
 #define RENDIX_TRIANGLE_APPLICATION_H
 
 #include "core/IApplication.h"
+#include "shaders/Shader.h"
+#include "shaders/ShaderProgram.h"
 
 class RendixTriangleApplication : public rendix::core::IApplication {
 public:
-    RendixTriangleApplication() = default;
+    RendixTriangleApplication();
     ~RendixTriangleApplication() = default;
 
     void OnInit(rendix::core::Engine &engine) override;
@@ -15,6 +17,11 @@ public:
     void OnMouse(rendix::core::Engine &engine, int x, int y) override;
     void OnWindowResize(rendix::core::Engine &engine, int width, int height) override;
     void OnShutdown(rendix::core::Engine &engine) override;
+
+protected:
+    rendix::shaders::Shader vertexShader;
+    rendix::shaders::Shader fragmentShader;
+    rendix::shaders::ShaderProgram shaderProgram;
 };
 
 #endif // RENDIX_TRIANGLE_APPLICATION_H

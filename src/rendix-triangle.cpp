@@ -3,6 +3,7 @@
 #include "core/ESUtilWindowSystem.h"
 #include "core/Engine.h"
 #include "rendering/OpenGLESRenderer.h"
+#include "rendix-triangle/RendixTriangleApplication.h"
 #include <iostream>
 
 int main(int argc, char* argv[])
@@ -19,29 +20,15 @@ int main(int argc, char* argv[])
         return false;
     }
 
+    RendixTriangleApplication application;
     rendix::rendering::OpenGLESRenderer renderer(width, height);
-    rendix::core::Engine engine(&windowSystem, &renderer);
+    rendix::core::Engine engine(&windowSystem, &renderer, &application);
 
     if (!engine.Init()) {
         std::cerr << "Engine initialization failed" << std::endl;
 
         return false;
     }
-
-    rendix::shaders::Shader vertexShader(GL_VERTEX_SHADER);
-    rendix::shaders::Shader fragmentShader(GL_FRAGMENT_SHADER);
-    rendix::shaders::ShaderProgram shaderProgram;
-
-    vertexShader.LoadFromFile("shaders/basic-color.vs");
-    fragmentShader.LoadFromFile("shaders/basic.fs");
-
-    vertexShader.Compile();
-    fragmentShader.Compile();
-
-    shaderProgram.AttachShader(vertexShader);
-    shaderProgram.AttachShader(fragmentShader);
-
-    shaderProgram.LinkShaders();
 
     engine.Run();
 

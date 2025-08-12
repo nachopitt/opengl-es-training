@@ -12,15 +12,14 @@ namespace rendix::core {
     class Application : public IApplication {
     public:
         Application();
-        virtual ~Application() = default;
 
-        virtual void OnInit(Engine &engine);
-        virtual void OnRender(Engine &engine);
-        virtual void OnUpdate(Engine &engine, float deltaTime);
-        virtual void OnKey(Engine &engine, unsigned char key, bool pressed);
-        virtual void OnMouse(Engine &engine, int x, int y);
-        virtual void OnWindowResize(Engine &engine, int width, int height);
-        virtual void OnShutdown(Engine &engine);
+        void OnInit(Engine &engine) override;
+        void OnRender(Engine &engine) override;
+        void OnUpdate(Engine &engine, float deltaTime) override;
+        void OnKey(Engine &engine, unsigned char key, bool pressed) override;
+        void OnMouse(Engine &engine, int x, int y) override;
+        void OnWindowResize(Engine &engine, int width, int height) override;
+        void OnShutdown(Engine &engine) override;
 
     protected:
         shaders::Shader vertexShader;
