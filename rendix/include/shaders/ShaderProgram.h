@@ -15,6 +15,7 @@ namespace rendix::shaders
             GLuint GetShaderProgramId() const;
             bool AttachShader(const Shader& shader);
             bool LinkShaders();
+            bool Use();
             bool BindAttribute(GLuint index, const GLchar* attribute);
 
         private:

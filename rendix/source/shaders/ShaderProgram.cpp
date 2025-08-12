@@ -64,6 +64,18 @@ bool rendix::shaders::ShaderProgram::LinkShaders()
     return true;
 }
 
+bool rendix::shaders::ShaderProgram::Use()
+{
+    if (shaderProgramId == 0)
+    {
+        return false;
+    }
+
+    glUseProgram(shaderProgramId);
+
+    return true;
+}
+
 bool rendix::shaders::ShaderProgram::BindAttribute(GLuint index, const GLchar* attribute)
 {
     if (shaderProgramId == 0)

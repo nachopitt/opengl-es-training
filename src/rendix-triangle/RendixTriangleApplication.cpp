@@ -44,6 +44,10 @@ void RendixTriangleApplication::OnInit(rendix::core::Engine &engine) {
     {
         std::cerr << "Error linking vertex and fragment shaders into the shader program" << std::endl;
     }
+
+    if (!shaderProgram.Use()) {
+        std::cerr << "Error using shader program" << std::endl;
+    }
 }
 
 void RendixTriangleApplication::OnRender(rendix::core::Engine &engine) {
@@ -62,12 +66,10 @@ void RendixTriangleApplication::OnRender(rendix::core::Engine &engine) {
     engine.GetRenderer().SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     engine.GetRenderer().Clear();
 
-    glUseProgram(shaderProgram.GetShaderProgramId());
-
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, colors);
-
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, colors);
     glEnableVertexAttribArray(1);
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);

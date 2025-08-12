@@ -55,6 +55,11 @@ void main()
         {
             std::cerr << "Error linking vertex and fragment shaders into the shader program" << std::endl;
         }
+
+        if (!shaderProgram.Use())
+        {
+            std::cerr << "Error using shader program" << std::endl;
+        }
     }
 
     void Application::OnRender(Engine &engine)
@@ -68,8 +73,6 @@ void main()
 
         engine.GetRenderer().SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         engine.GetRenderer().Clear();
-
-        glUseProgram(shaderProgram.GetShaderProgramId());
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
         glEnableVertexAttribArray(0);
