@@ -2,7 +2,7 @@
 #include "shaders/ShaderProgram.h"
 #include "core/ESUtilWindowSystem.h"
 #include "core/Engine.h"
-#include "rendering/OpenGLESRenderer.h"
+#include "rendering/GLESRenderer.h"
 #include "rendix-triangle/RendixTriangleApplication.h"
 #include <iostream>
 
@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     }
 
     RendixTriangleApplication application;
-    rendix::rendering::OpenGLESRenderer renderer(width, height);
+    rendix::rendering::GLESRenderer renderer(width, height);
     rendix::core::Engine engine(&windowSystem, &renderer, &application);
 
     if (!engine.Init()) {

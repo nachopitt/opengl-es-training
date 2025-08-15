@@ -47,7 +47,7 @@ RENDIX_SRC := \
     $(RENDIX_SRC_DIR)/core/ESUtilWindowSystem.cpp \
     $(RENDIX_SRC_DIR)/main_loop/ESUtilMainLoopStrategy.cpp \
     $(RENDIX_SRC_DIR)/rendering/Mesh.cpp \
-    $(RENDIX_SRC_DIR)/rendering/OpenGLESRenderer.cpp \
+    $(RENDIX_SRC_DIR)/rendering/GLESRenderer.cpp \
     $(RENDIX_SRC_DIR)/shaders/Shader.cpp \
     $(RENDIX_SRC_DIR)/shaders/ShaderProgram.cpp \
     $(RENDIX_SRC_DIR)/texturing/Texture.cpp

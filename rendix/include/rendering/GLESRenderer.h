@@ -1,5 +1,5 @@
-#ifndef RENDIX_RENDERING_OPEN_GLES_RENDERER_H
-#define RENDIX_RENDERING_OPEN_GLES_RENDERER_H
+#ifndef RENDIX_RENDERING_GLES_RENDERER_H
+#define RENDIX_RENDERING_GLES_RENDERER_H
 
 #include "rendering/IRenderer.h"
 #include "rendering/Mesh.h"
@@ -9,10 +9,10 @@
 namespace rendix::rendering
 {
 
-    class OpenGLESRenderer: public IRenderer
+    class GLESRenderer: public IRenderer
     {
         public:
-            OpenGLESRenderer(int width, int height);
+            GLESRenderer(int width, int height);
             // Initialize OpenGL and other settings.
             void Init() override;
             // Draw mesh with a specific shader and texture.
@@ -26,4 +26,4 @@ namespace rendix::rendering
     };
 }
 
-#endif // RENDIX_RENDERING_OPEN_GLES_RENDERER_H
+#endif // RENDIX_RENDERING_GLES_RENDERER_H

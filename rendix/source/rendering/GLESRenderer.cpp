@@ -1,4 +1,4 @@
-#include "rendering/OpenGLESRenderer.h"
+#include "rendering/GLESRenderer.h"
 #include "rendering/Mesh.h"
 #include "shaders/ShaderProgram.h"
 #include "texturing/Texture.h"
@@ -9,30 +9,30 @@ namespace rendix::rendering {
     using namespace shaders;
     using namespace texturing;
 
-    void OpenGLESRenderer::Init()
+    void GLESRenderer::Init()
     {
     }
 
-    OpenGLESRenderer::OpenGLESRenderer(int width, int height) : IRenderer(width, height)
+    GLESRenderer::GLESRenderer(int width, int height) : IRenderer(width, height)
     {
     }
 
-    void OpenGLESRenderer::Draw(Mesh &mesh, ShaderProgram &shader, Texture &texture)
+    void GLESRenderer::Draw(Mesh &mesh, ShaderProgram &shader, Texture &texture)
     {
         // Drawing code, e.g., glDrawArrays or glDrawElements
         // This is a placeholder; actual implementation depends on your rendering pipeline
     }
 
-    void OpenGLESRenderer::SetClearColor(float r, float g, float b, float a) {
+    void GLESRenderer::SetClearColor(float r, float g, float b, float a) {
         glClearColor(r, g, b, a);
     }
 
-    void OpenGLESRenderer::Clear()
+    void GLESRenderer::Clear()
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void OpenGLESRenderer::Resize(int width, int height)
+    void GLESRenderer::Resize(int width, int height)
     {
         glViewport(0, 0, width, height);
     }
