@@ -1,5 +1,5 @@
-#ifndef RENDIX_EVENTS_EVENT
-#define RENDIX_EVENTS_EVENT
+#ifndef RENDIX_EVENTS_EVENT_H
+#define RENDIX_EVENTS_EVENT_H
 
 #include <vector>
 #include <functional>
@@ -32,4 +32,4 @@ namespace rendix::events {
     };
 }
 
-#endif //RENDIX_EVENTS_EVENT
+#endif //RENDIX_EVENTS_EVENT_H

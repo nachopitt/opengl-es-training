@@ -1,21 +1,21 @@
-#include "shaders/ShaderProgram.h"
+#include "shaders/GLESShaderProgram.h"
 #include "esUtil.h"
 
 #include <fstream>
 #include <iostream>
 
-rendix::shaders::ShaderProgram::ShaderProgram()
+rendix::shaders::GLESShaderProgram::GLESShaderProgram()
 {
     // Crete the program object
     shaderProgramId = glCreateProgram();
 }
 
-GLuint rendix::shaders::ShaderProgram::GetShaderProgramId() const
+GLuint rendix::shaders::GLESShaderProgram::GetShaderProgramId() const
 {
     return shaderProgramId;
 }
 
-bool rendix::shaders::ShaderProgram::AttachShader(const Shader& shader)
+bool rendix::shaders::GLESShaderProgram::AttachShader(const IShader &shader)
 {
     if (shaderProgramId == 0)
     {
@@ -27,7 +27,7 @@ bool rendix::shaders::ShaderProgram::AttachShader(const Shader& shader)
     return true;
 }
 
-bool rendix::shaders::ShaderProgram::LinkShaders()
+bool rendix::shaders::GLESShaderProgram::LinkShaders()
 {
     GLint linked;
 
@@ -64,7 +64,7 @@ bool rendix::shaders::ShaderProgram::LinkShaders()
     return true;
 }
 
-bool rendix::shaders::ShaderProgram::Use()
+bool rendix::shaders::GLESShaderProgram::Use()
 {
     if (shaderProgramId == 0)
     {
@@ -76,7 +76,7 @@ bool rendix::shaders::ShaderProgram::Use()
     return true;
 }
 
-bool rendix::shaders::ShaderProgram::BindAttribute(GLuint index, const GLchar* attribute)
+bool rendix::shaders::GLESShaderProgram::BindAttribute(unsigned int index, const std::string &attribute)
 {
     if (shaderProgramId == 0)
     {
@@ -84,7 +84,7 @@ bool rendix::shaders::ShaderProgram::BindAttribute(GLuint index, const GLchar* a
     }
 
     // Bind vPosition to attribute 0
-    glBindAttribLocation(shaderProgramId, index, attribute);
+    glBindAttribLocation(shaderProgramId, index, attribute.c_str());
 
     return true;
 }

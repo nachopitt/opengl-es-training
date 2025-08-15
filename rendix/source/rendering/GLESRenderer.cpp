@@ -1,6 +1,6 @@
 #include "rendering/GLESRenderer.h"
 #include "rendering/Mesh.h"
-#include "shaders/ShaderProgram.h"
+#include "shaders/IShaderProgram.h"
 #include "texturing/Texture.h"
 #include "esUtil.h"
 
@@ -17,7 +17,7 @@ namespace rendix::rendering {
     {
     }
 
-    void GLESRenderer::Draw(Mesh &mesh, ShaderProgram &shader, Texture &texture)
+    void GLESRenderer::Draw(Mesh &mesh, IShaderProgram &shader, Texture &texture)
     {
         // Drawing code, e.g., glDrawArrays or glDrawElements
         // This is a placeholder; actual implementation depends on your rendering pipeline

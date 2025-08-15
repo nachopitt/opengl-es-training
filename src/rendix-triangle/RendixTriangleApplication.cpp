@@ -1,9 +1,14 @@
 #include "rendix-triangle/RendixTriangleApplication.h"
 #include "core/Engine.h"
+#include "utils/FileReader.h"
 #include <iostream>
 #include <string>
 
-RendixTriangleApplication::RendixTriangleApplication() : vertexShader(GL_VERTEX_SHADER), fragmentShader(GL_FRAGMENT_SHADER)
+using namespace rendix::core;
+using namespace rendix::shaders;
+using namespace rendix::utils;
+
+RendixTriangleApplication::RendixTriangleApplication() : vertexShader(ShaderType::VERTEX), fragmentShader(ShaderType::FRAGMENT)
 {
 }
 
@@ -13,20 +18,27 @@ void RendixTriangleApplication::OnInit(rendix::core::Engine &engine) {
 
     std::cout << "RendixTriangleApplication OnInit" << std::endl;
 
-    if (!vertexShader.LoadFromFile(vertexShaderFile))
+    FileReader fileReader;
+    std::string vertexShaderSource;
+    std::string fragmentShaderSource;
+
+    vertexShaderSource = fileReader.readTextFile(vertexShaderFile);
+    if (vertexShaderSource.empty())
     {
         std::cerr << "Error loading vertex shader" << std::endl;
     }
-    if (!fragmentShader.LoadFromFile(fragmentShaderFile))
+
+    fragmentShaderSource = fileReader.readTextFile(fragmentShaderFile);
+    if (fragmentShaderSource.empty())
     {
         std::cerr << "Error loading fragment shader" << std::endl;
     }
 
-    if (!vertexShader.Compile())
+    if (!vertexShader.Compile(vertexShaderSource))
     {
         std::cerr << "Error compiling vertex shader" << std::endl;
     }
-    if (!fragmentShader.Compile())
+    if (!fragmentShader.Compile(fragmentShaderSource))
     {
         std::cerr << "Error compiling fragment shader" << std::endl;
     }

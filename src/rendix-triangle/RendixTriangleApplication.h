@@ -2,8 +2,8 @@
 #define RENDIX_TRIANGLE_APPLICATION_H
 
 #include "core/IApplication.h"
-#include "shaders/Shader.h"
-#include "shaders/ShaderProgram.h"
+#include "shaders/GLESShader.h"
+#include "shaders/GLESShaderProgram.h"
 
 class RendixTriangleApplication : public rendix::core::IApplication {
 public:
@@ -19,9 +19,9 @@ public:
     void OnShutdown(rendix::core::Engine &engine) override;
 
 protected:
-    rendix::shaders::Shader vertexShader;
-    rendix::shaders::Shader fragmentShader;
-    rendix::shaders::ShaderProgram shaderProgram;
+    rendix::shaders::GLESShader vertexShader;
+    rendix::shaders::GLESShader fragmentShader;
+    rendix::shaders::GLESShaderProgram shaderProgram;
 };
 
 #endif // RENDIX_TRIANGLE_APPLICATION_H

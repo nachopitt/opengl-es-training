@@ -1,5 +1,5 @@
-#ifndef RENDIX_RENDERING_MESH
-#define RENDIX_RENDERING_MESH
+#ifndef RENDIX_RENDERING_MESH_H
+#define RENDIX_RENDERING_MESH_H
 
 #include <vector>
 #include <glm/glm.hpp>
@@ -29,4 +29,4 @@ private:
 
 } // namespace rendix::rendering
 
-#endif //RENDIX_RENDERING_MESH
+#endif //RENDIX_RENDERING_MESH_H

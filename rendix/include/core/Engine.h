@@ -1,5 +1,5 @@
-#ifndef RENDIX_CORE_ENGINE
-#define RENDIX_CORE_ENGINE
+#ifndef RENDIX_CORE_ENGINE_H
+#define RENDIX_CORE_ENGINE_H
 
 #include <string>
 
@@ -33,4 +33,4 @@ namespace rendix::core
     };
 }
 
-#endif // RENDIX_CORE_ENGINE
+#endif // RENDIX_CORE_ENGINE_H

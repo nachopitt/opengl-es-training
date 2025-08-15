@@ -2,8 +2,8 @@
 #define RENDIX_CORE_APPLICATION_H
 
 #include "core/IApplication.h"
-#include "shaders/Shader.h"
-#include "shaders/ShaderProgram.h"
+#include "shaders/GLESShader.h"
+#include "shaders/GLESShaderProgram.h"
 
 namespace rendix::core {
 
@@ -22,9 +22,9 @@ namespace rendix::core {
         void OnShutdown(Engine &engine) override;
 
     protected:
-        shaders::Shader vertexShader;
-        shaders::Shader fragmentShader;
-        shaders::ShaderProgram shaderProgram;
+        shaders::GLESShader vertexShader;
+        shaders::GLESShader fragmentShader;
+        shaders::GLESShaderProgram shaderProgram;
     };
 
 } // namespace rendix::rendering

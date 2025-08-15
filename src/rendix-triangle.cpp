@@ -1,5 +1,3 @@
-#include "shaders/Shader.h"
-#include "shaders/ShaderProgram.h"
 #include "core/ESUtilWindowSystem.h"
 #include "core/Engine.h"
 #include "rendering/GLESRenderer.h"

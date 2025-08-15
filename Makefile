@@ -48,9 +48,10 @@ RENDIX_SRC := \
     $(RENDIX_SRC_DIR)/main_loop/ESUtilMainLoopStrategy.cpp \
     $(RENDIX_SRC_DIR)/rendering/Mesh.cpp \
     $(RENDIX_SRC_DIR)/rendering/GLESRenderer.cpp \
-    $(RENDIX_SRC_DIR)/shaders/Shader.cpp \
-    $(RENDIX_SRC_DIR)/shaders/ShaderProgram.cpp \
-    $(RENDIX_SRC_DIR)/texturing/Texture.cpp
+    $(RENDIX_SRC_DIR)/shaders/GLESShader.cpp \
+    $(RENDIX_SRC_DIR)/shaders/GLESShaderProgram.cpp \
+    $(RENDIX_SRC_DIR)/texturing/Texture.cpp \
+    $(RENDIX_SRC_DIR)/utils/FileReader.cpp
 
 rendix-triangle_SRC := \
     $(rendix-triangle_SRC_DIR)/RendixTriangleApplication.cpp
@@ -58,7 +59,7 @@ rendix-triangle_SRC := \
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJ := $(OBJ:$(ES_FRAMEWORK_SRC_DIR)/%.c=$(ES_FRAMEWORK_OBJ_DIR)/%.o)
 RENDIX_OBJ := $(RENDIX_SRC:$(RENDIX_SRC_DIR)/%.cpp=$(RENDIX_OBJ_DIR)/%.o)
-RENDIX_OBJ_SUBDIRS := $(foreach subdir,core main_loop rendering shaders texturing,$(RENDIX_OBJ_DIR)/$(subdir))
+RENDIX_OBJ_SUBDIRS := $(foreach subdir,core main_loop rendering shaders texturing utils,$(RENDIX_OBJ_DIR)/$(subdir))
 
 rendix-triangle_OBJ := $(rendix-triangle_SRC:$(rendix-triangle_SRC_DIR)/%.cpp=$(rendix-triangle_OBJ_DIR)/%.o)
 

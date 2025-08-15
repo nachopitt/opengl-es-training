@@ -1,5 +1,5 @@
-#ifndef RENDIX_TEXTURING_TEXTURE
-#define RENDIX_TEXTURING_TEXTURE
+#ifndef RENDIX_TEXTURING_TEXTURE_H
+#define RENDIX_TEXTURING_TEXTURE_H
 
 namespace rendix::texturing {
     class Texture {
@@ -9,4 +9,4 @@ namespace rendix::texturing {
     };
 }
 
-#endif //RENDIX_TEXTURING_TEXTURE
+#endif //RENDIX_TEXTURING_TEXTURE_H

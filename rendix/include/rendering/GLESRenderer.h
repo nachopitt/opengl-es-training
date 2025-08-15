@@ -3,7 +3,7 @@
 
 #include "rendering/IRenderer.h"
 #include "rendering/Mesh.h"
-#include "shaders/ShaderProgram.h"
+#include "shaders/IShaderProgram.h"
 #include "texturing/Texture.h"
 
 namespace rendix::rendering
@@ -16,7 +16,7 @@ namespace rendix::rendering
             // Initialize OpenGL and other settings.
             void Init() override;
             // Draw mesh with a specific shader and texture.
-            void Draw(Mesh &mesh, shaders::ShaderProgram &shaderProgram, texturing::Texture &texture) override;
+            void Draw(Mesh &mesh, shaders::IShaderProgram &shaderProgram, texturing::Texture &texture) override;
             // Set background clear color.
             void SetClearColor(float r, float g, float b, float a) override;
             // Clear screen.

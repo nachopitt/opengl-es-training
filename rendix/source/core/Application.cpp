@@ -4,7 +4,7 @@
 
 namespace rendix::core {
 
-    Application::Application(): vertexShader(GL_VERTEX_SHADER), fragmentShader(GL_FRAGMENT_SHADER)
+    Application::Application() : vertexShader(shaders::ShaderType::VERTEX), fragmentShader(shaders::ShaderType::VERTEX)
     {
     }
 
@@ -24,20 +24,11 @@ void main()
    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 })";
 
-        if (!vertexShader.LoadFromString(vertexShaderStr))
-        {
-            std::cerr << "Error loading vertex shader" << std::endl;
-        }
-        if (!fragmentShader.LoadFromString(fragmentShaderStr))
-        {
-            std::cerr << "Error loading fragment shader" << std::endl;
-        }
-
-        if (!vertexShader.Compile())
+        if (!vertexShader.Compile(vertexShaderStr))
         {
             std::cerr << "Error compiling vertex shader" << std::endl;
         }
-        if (!fragmentShader.Compile())
+        if (!fragmentShader.Compile(fragmentShaderStr))
         {
             std::cerr << "Error compiling fragment shader" << std::endl;
         }
