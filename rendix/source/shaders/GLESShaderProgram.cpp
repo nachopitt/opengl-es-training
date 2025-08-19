@@ -4,6 +4,14 @@
 #include <fstream>
 #include <iostream>
 
+rendix::shaders::GLESShaderProgram::~GLESShaderProgram()
+{
+    if (shaderProgramId != 0)
+    {
+        glDeleteProgram(shaderProgramId);
+    }
+}
+
 rendix::shaders::GLESShaderProgram::GLESShaderProgram()
 {
     // Crete the program object

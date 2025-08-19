@@ -13,6 +13,7 @@ namespace rendix::shaders
     {
         public:
             GLESShaderProgram();
+            ~GLESShaderProgram();
 
             unsigned int GetShaderProgramId() const override;
             bool AttachShader(const IShader& shader) override;

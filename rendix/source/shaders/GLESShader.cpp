@@ -6,6 +6,14 @@
 
 namespace rendix::shaders
 {
+    rendix::shaders::GLESShader::~GLESShader()
+    {
+        if (shaderId != 0)
+        {
+            glDeleteShader(shaderId);
+        }
+    }
+
     rendix::shaders::GLESShader::GLESShader(ShaderType type)
         : shaderId(0) // Initialize to 0 in case of failure
     {
