@@ -3,10 +3,12 @@
 #include "utils/FileReader.h"
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace rendix::core;
 using namespace rendix::shaders;
 using namespace rendix::utils;
+using namespace rendix::rendering;
 
 RendixTriangleApplication::RendixTriangleApplication() : vertexShader(ShaderType::VERTEX), fragmentShader(ShaderType::FRAGMENT)
 {
@@ -57,34 +59,23 @@ void RendixTriangleApplication::OnInit(rendix::core::Engine &engine) {
         std::cerr << "Error linking vertex and fragment shaders into the shader program" << std::endl;
     }
 
-    if (!shaderProgram.Use()) {
-        std::cerr << "Error using shader program" << std::endl;
-    }
+    // Create the triangle mesh
+    std::vector<Vertex> vertices = {
+        {glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec4(1.0f, 0.58f, 0.0f, 1.0f)},
+        {glm::vec3(0.0f, 0.5f, 0.0f), glm::vec4(1.0f, 0.95f, 0.0f, 1.0f)},
+        {glm::vec3(0.5f, -0.5f, 0.0f), glm::vec4(1.0f, 0.58f, 0.0f, 1.0f)},
+    };
+    std::vector<uint32_t> indices = {0, 1, 2};
+    triangleMesh.setVertices(vertices);
+    triangleMesh.setIndices(indices);
 }
 
 void RendixTriangleApplication::OnRender(rendix::core::Engine &engine) {
-    GLfloat vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        +0.0f, +0.5f, 0.0f,
-        +0.5f, -0.5f, 0.0f,
-    };
-
-    GLfloat colors[] = {
-        +1.0f, +0.58f, 0.0f,
-        +1.0f, +0.95f, 0.0f,
-        +1.0f, +0.58f, 0.0f,
-    };
-
     engine.GetRenderer().SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     engine.GetRenderer().Clear();
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, colors);
-    glEnableVertexAttribArray(1);
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+    shaderProgram.Use();
+    engine.GetRenderer().Draw(triangleMesh, shaderProgram);
 }
 
 void RendixTriangleApplication::OnUpdate(rendix::core::Engine &engine, float deltaTime) {

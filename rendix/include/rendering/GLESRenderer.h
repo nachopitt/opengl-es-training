@@ -15,8 +15,8 @@ namespace rendix::rendering
             GLESRenderer(int width, int height);
             // Initialize OpenGL and other settings.
             void Init() override;
-            // Draw mesh with a specific shader and texture.
-            void Draw(Mesh &mesh, shaders::IShaderProgram &shaderProgram, texturing::Texture &texture) override;
+            // Draw mesh with a specific shader.
+            void Draw(Mesh &mesh, shaders::IShaderProgram &shaderProgram) override;
             // Set background clear color.
             void SetClearColor(float r, float g, float b, float a) override;
             // Clear screen.

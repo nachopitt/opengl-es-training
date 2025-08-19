@@ -15,7 +15,7 @@ namespace rendix::rendering {
         // Initialize renderer.
         virtual void Init() = 0;
         // Draw mesh with a specific shader and texture.
-        virtual void Draw(Mesh &mesh, shaders::IShaderProgram &shaderProgram, texturing::Texture &texture) = 0;
+        virtual void Draw(Mesh &mesh, shaders::IShaderProgram &shaderProgram) = 0;
         // Set background clear color.
         virtual void SetClearColor(float r, float g, float b, float a) = 0;
         // Clear screen.
