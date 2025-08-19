@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <GLES2/gl2.h>
+#include <string>
 
 #include "shaders/IShaderProgram.h"
 #include "shaders/GLESShader.h"
@@ -21,9 +22,11 @@ namespace rendix::shaders
             bool Use() override;
             bool BindAttribute(unsigned int index, const std::string &attribute) override;
             int GetAttributeLocation(const std::string& name) const override;
+            const std::string& GetLinkLog() const override;
 
         private:
             GLuint shaderProgramId;
+            std::string linkLog;
     };
 }
 

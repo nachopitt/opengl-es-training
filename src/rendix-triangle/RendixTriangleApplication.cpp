@@ -1,6 +1,7 @@
 #include "rendix-triangle/RendixTriangleApplication.h"
 #include "core/Engine.h"
 #include "utils/FileReader.h"
+#include "core/RendixException.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -27,36 +28,36 @@ void RendixTriangleApplication::OnInit(rendix::core::Engine &engine) {
     vertexShaderSource = fileReader.readTextFile(vertexShaderFile);
     if (vertexShaderSource.empty())
     {
-        std::cerr << "Error loading vertex shader" << std::endl;
+        throw RendixException("Error loading vertex shader from " + vertexShaderFile);
     }
 
     fragmentShaderSource = fileReader.readTextFile(fragmentShaderFile);
     if (fragmentShaderSource.empty())
     {
-        std::cerr << "Error loading fragment shader" << std::endl;
+        throw RendixException("Error loading fragment shader from " + fragmentShaderFile);
     }
 
     if (!vertexShader.Compile(vertexShaderSource))
     {
-        std::cerr << "Error compiling vertex shader" << std::endl;
+        throw RendixException("Error compiling vertex shader:\n" + vertexShader.GetErrorLog());
     }
     if (!fragmentShader.Compile(fragmentShaderSource))
     {
-        std::cerr << "Error compiling fragment shader" << std::endl;
+        throw RendixException("Error compiling fragment shader:\n" + fragmentShader.GetErrorLog());
     }
 
     if (!shaderProgram.AttachShader(vertexShader))
     {
-        std::cerr << "Error attaching vertex shader to shader program" << std::endl;
+        throw RendixException("Error attaching vertex shader to shader program");
     }
     if (!shaderProgram.AttachShader(fragmentShader))
     {
-        std::cerr << "Error attaching fragment shader to shader program" << std::endl;
+        throw RendixException("Error attaching fragment shader to shader program");
     }
 
     if (!shaderProgram.LinkShaders())
     {
-        std::cerr << "Error linking vertex and fragment shaders into the shader program" << std::endl;
+        throw RendixException("Error linking shader program:\n" + shaderProgram.GetLinkLog());
     }
 
     // Create the triangle mesh

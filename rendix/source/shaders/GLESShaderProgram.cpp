@@ -58,11 +58,10 @@ bool rendix::shaders::GLESShaderProgram::LinkShaders()
 
         if (infoLen > 1)
         {
-            std::string infoLog;
-            infoLog.resize(infoLen);
+            linkLog.resize(infoLen);
 
-            glGetProgramInfoLog(shaderProgramId, infoLen, NULL, &infoLog[0]);
-            esLogMessage("Error linking shader program:\n%s\n", infoLog.c_str());
+            glGetProgramInfoLog(shaderProgramId, infoLen, NULL, &linkLog[0]);
+            esLogMessage("Error linking shader program:\n%s\n", linkLog.c_str());
         }
 
         glDeleteProgram(shaderProgramId);
@@ -105,4 +104,9 @@ int rendix::shaders::GLESShaderProgram::GetAttributeLocation(const std::string &
     }
 
     return glGetAttribLocation(shaderProgramId, name.c_str());
+}
+
+const std::string& rendix::shaders::GLESShaderProgram::GetLinkLog() const
+{
+    return linkLog;
 }

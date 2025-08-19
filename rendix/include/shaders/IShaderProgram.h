@@ -17,6 +17,7 @@ namespace rendix::shaders
         virtual bool Use() = 0;
         virtual bool BindAttribute(unsigned int index, const std::string &attribute) = 0;
         virtual int GetAttributeLocation(const std::string& name) const = 0;
+        virtual const std::string& GetLinkLog() const = 0;
     };
 }
 
