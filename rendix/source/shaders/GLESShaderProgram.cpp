@@ -96,3 +96,13 @@ bool rendix::shaders::GLESShaderProgram::BindAttribute(unsigned int index, const
 
     return true;
 }
+
+int rendix::shaders::GLESShaderProgram::GetAttributeLocation(const std::string &name) const
+{
+    if (shaderProgramId == 0)
+    {
+        return -1;
+    }
+
+    return glGetAttribLocation(shaderProgramId, name.c_str());
+}

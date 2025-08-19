@@ -74,7 +74,6 @@ void RendixTriangleApplication::OnRender(rendix::core::Engine &engine) {
     engine.GetRenderer().SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     engine.GetRenderer().Clear();
 
-    shaderProgram.Use();
     engine.GetRenderer().Draw(triangleMesh, shaderProgram);
 }
 

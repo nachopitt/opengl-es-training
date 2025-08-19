@@ -20,6 +20,7 @@ namespace rendix::shaders
             bool LinkShaders() override;
             bool Use() override;
             bool BindAttribute(unsigned int index, const std::string &attribute) override;
+            int GetAttributeLocation(const std::string& name) const override;
 
         private:
             GLuint shaderProgramId;

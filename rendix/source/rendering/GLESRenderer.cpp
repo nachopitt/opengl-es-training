@@ -24,16 +24,27 @@ namespace rendix::rendering {
         const auto& vertices = mesh.getVertices();
         const auto& indices = mesh.getIndices();
 
-        // Assuming the vertex layout is position (3 floats) and color (4 floats)
-        // Position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), &vertices[0].position);
-        glEnableVertexAttribArray(0);
+        GLint positionLoc = shader.GetAttributeLocation("vPosition");
+        GLint colorLoc = shader.GetAttributeLocation("aColor");
 
-        // Color attribute
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), &vertices[0].color);
-        glEnableVertexAttribArray(1);
+        if (positionLoc != -1) {
+            glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), &vertices[0].position);
+            glEnableVertexAttribArray(positionLoc);
+        }
+
+        if (colorLoc != -1) {
+            glVertexAttribPointer(colorLoc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), &vertices[0].color);
+            glEnableVertexAttribArray(colorLoc);
+        }
 
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, indices.data());
+
+        if (positionLoc != -1) {
+            glDisableVertexAttribArray(positionLoc);
+        }
+        if (colorLoc != -1) {
+            glDisableVertexAttribArray(colorLoc);
+        }
     }
 
     void GLESRenderer::SetClearColor(float r, float g, float b, float a) {
