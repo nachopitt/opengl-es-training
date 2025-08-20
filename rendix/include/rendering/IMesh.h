@@ -20,6 +20,10 @@ public:
 
     virtual void setVertices(const std::vector<Vertex>& vertices) = 0;
     virtual void setIndices(const std::vector<uint32_t>& indices) = 0;
+
+    virtual void Bind() = 0;
+    virtual void Unbind() = 0;
+    virtual size_t getIndexCount() const = 0;
 };
 
 } // namespace rendix::rendering

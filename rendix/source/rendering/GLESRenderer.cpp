@@ -20,13 +20,7 @@ namespace rendix::rendering {
     void GLESRenderer::Draw(IMesh &mesh, IShaderProgram &shader)
     {
         shader.Use();
-
-        auto& glesMesh = static_cast<GLESMesh&>(mesh);
-
-        glBindBuffer(GL_ARRAY_BUFFER, glesMesh.getVBO());
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glesMesh.getIBO());
-
-        const auto& indices = glesMesh.getIndices();
+        mesh.Bind();
 
         GLint positionLoc = shader.GetAttributeLocation("vPosition");
         GLint colorLoc = shader.GetAttributeLocation("aColor");
@@ -41,7 +35,7 @@ namespace rendix::rendering {
             glEnableVertexAttribArray(colorLoc);
         }
 
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, mesh.getIndexCount(), GL_UNSIGNED_INT, 0);
 
         if (positionLoc != -1) {
             glDisableVertexAttribArray(positionLoc);
@@ -50,8 +44,7 @@ namespace rendix::rendering {
             glDisableVertexAttribArray(colorLoc);
         }
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        mesh.Unbind();
     }
 
     void GLESRenderer::SetClearColor(float r, float g, float b, float a) {

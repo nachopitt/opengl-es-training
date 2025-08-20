@@ -54,4 +54,18 @@ namespace rendix::rendering {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboId);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(uint32_t), m_indices.data(), GL_STATIC_DRAW);
     }
+
+    void GLESMesh::Bind() {
+        glBindBuffer(GL_ARRAY_BUFFER, m_vboId);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboId);
+    }
+
+    void GLESMesh::Unbind() {
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
+    size_t GLESMesh::getIndexCount() const {
+        return m_indices.size();
+    }
 }

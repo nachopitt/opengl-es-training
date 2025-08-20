@@ -22,6 +22,10 @@ public:
 
     void setupMesh();
 
+    void Bind() override;
+    void Unbind() override;
+    size_t getIndexCount() const override;
+
 private:
     std::vector<Vertex> m_vertices;
     std::vector<uint32_t> m_indices;
