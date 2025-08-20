@@ -4,7 +4,7 @@
 #include "core/IApplication.h"
 #include "shaders/GLESShader.h"
 #include "shaders/GLESShaderProgram.h"
-#include "rendering/Mesh.h"
+#include "rendering/GLESMesh.h"
 
 class RendixTriangleApplication : public rendix::core::IApplication {
 public:
@@ -23,7 +23,7 @@ protected:
     rendix::shaders::GLESShader vertexShader;
     rendix::shaders::GLESShader fragmentShader;
     rendix::shaders::GLESShaderProgram shaderProgram;
-    rendix::rendering::Mesh triangleMesh;
+    rendix::rendering::GLESMesh triangleMesh;
 };
 
 #endif // RENDIX_TRIANGLE_APPLICATION_H
