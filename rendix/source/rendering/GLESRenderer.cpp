@@ -17,33 +17,14 @@ namespace rendix::rendering {
     {
     }
 
-    void GLESRenderer::Draw(IMesh &mesh, IShaderProgram &shader)
+    void GLESRenderer::Draw(IMesh &mesh, IShaderProgram &shaderProgram)
     {
-        shader.Use();
-        mesh.Bind();
-
-        GLint positionLoc = shader.GetAttributeLocation("vPosition");
-        GLint colorLoc = shader.GetAttributeLocation("aColor");
-
-        if (positionLoc != -1) {
-            glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, position));
-            glEnableVertexAttribArray(positionLoc);
-        }
-
-        if (colorLoc != -1) {
-            glVertexAttribPointer(colorLoc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, color));
-            glEnableVertexAttribArray(colorLoc);
-        }
+        shaderProgram.Use();
+        mesh.Bind(shaderProgram);
 
         glDrawElements(GL_TRIANGLES, mesh.getIndexCount(), GL_UNSIGNED_INT, 0);
 
-        if (positionLoc != -1) {
-            glDisableVertexAttribArray(positionLoc);
-        }
-        if (colorLoc != -1) {
-            glDisableVertexAttribArray(colorLoc);
-        }
-
+        // The attributes are disabled in the mesh.Unbind() method
         mesh.Unbind();
     }
 

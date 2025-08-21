@@ -110,3 +110,33 @@ const std::string& rendix::shaders::GLESShaderProgram::GetLinkLog() const
 {
     return linkLog;
 }
+
+void rendix::shaders::GLESShaderProgram::SetUniform(const std::string& name, int value)
+{
+    glUniform1i(glGetUniformLocation(shaderProgramId, name.c_str()), value);
+}
+
+void rendix::shaders::GLESShaderProgram::SetUniform(const std::string& name, float value)
+{
+    glUniform1f(glGetUniformLocation(shaderProgramId, name.c_str()), value);
+}
+
+void rendix::shaders::GLESShaderProgram::SetUniform(const std::string& name, const glm::vec2& value)
+{
+    glUniform2fv(glGetUniformLocation(shaderProgramId, name.c_str()), 1, glm::value_ptr(value));
+}
+
+void rendix::shaders::GLESShaderProgram::SetUniform(const std::string& name, const glm::vec3& value)
+{
+    glUniform3fv(glGetUniformLocation(shaderProgramId, name.c_str()), 1, glm::value_ptr(value));
+}
+
+void rendix::shaders::GLESShaderProgram::SetUniform(const std::string& name, const glm::vec4& value)
+{
+    glUniform4fv(glGetUniformLocation(shaderProgramId, name.c_str()), 1, glm::value_ptr(value));
+}
+
+void rendix::shaders::GLESShaderProgram::SetUniform(const std::string& name, const glm::mat4& value)
+{
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}

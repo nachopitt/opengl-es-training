@@ -43,14 +43,21 @@ void RendixTriangleApplication::OnInit(rendix::core::Engine &engine) {
     Application::OnInit(engine);
 
     // Create the triangle mesh
-    std::vector<Vertex> vertices = {
-        {glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec4(1.0f, 0.58f, 0.0f, 1.0f)},
-        {glm::vec3(0.0f, 0.5f, 0.0f), glm::vec4(1.0f, 0.95f, 0.0f, 1.0f)},
-        {glm::vec3(0.5f, -0.5f, 0.0f), glm::vec4(1.0f, 0.58f, 0.0f, 1.0f)},
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f, 1.0f, 0.58f, 0.0f, 1.0f, // Bottom-left
+        0.0f,  0.5f, 0.0f, 1.0f, 0.95f, 0.0f, 1.0f, // Top-middle
+        0.5f, -0.5f, 0.0f, 1.0f, 0.58f, 0.0f, 1.0f  // Bottom-right
     };
     std::vector<uint32_t> indices = {0, 1, 2};
-    triangleMesh.setVertices(vertices);
+
+    BufferLayout layout = {
+        {ShaderDataType::Float3, "a_Position"},
+        {ShaderDataType::Float4, "a_Color"}
+    };
+
+    triangleMesh.setVertices(vertices, sizeof(vertices));
     triangleMesh.setIndices(indices);
+    triangleMesh.setLayout(layout);
 }
 
 void RendixTriangleApplication::OnRender(rendix::core::Engine &engine) {

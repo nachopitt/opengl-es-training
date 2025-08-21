@@ -24,6 +24,13 @@ namespace rendix::shaders
             int GetAttributeLocation(const std::string& name) const override;
             const std::string& GetLinkLog() const override;
 
+            void SetUniform(const std::string& name, int value) override;
+            void SetUniform(const std::string& name, float value) override;
+            void SetUniform(const std::string& name, const glm::vec2& value) override;
+            void SetUniform(const std::string& name, const glm::vec3& value) override;
+            void SetUniform(const std::string& name, const glm::vec4& value) override;
+            void SetUniform(const std::string& name, const glm::mat4& value) override;
+
         private:
             GLuint shaderProgramId;
             std::string linkLog;

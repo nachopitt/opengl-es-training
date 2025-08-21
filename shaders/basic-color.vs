@@ -1,8 +1,8 @@
-attribute vec4 vPosition;
-attribute vec4 aColor;
+attribute vec3 a_Position;
+attribute vec4 a_Color;
 varying vec4 vColor;
 void main()
 {
-   vColor = aColor;
-   gl_Position = vPosition;
+   vColor = a_Color;
+   gl_Position = vec4(a_Position, 1.0);
 }
