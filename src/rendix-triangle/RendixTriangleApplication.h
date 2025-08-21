@@ -13,12 +13,10 @@ public:
     RendixTriangleApplication();
     ~RendixTriangleApplication() = default;
 
-    void OnInit(rendix::core::Engine &engine) override;
-    void OnRender(rendix::core::Engine &engine) override;
+    void SetupScene() override;
 
 protected:
     std::shared_ptr<rendix::rendering::GLESMesh> triangleMesh;
-    std::shared_ptr<rendix::rendering::IScene> m_scene;
 };
 
 #endif // RENDIX_TRIANGLE_APPLICATION_H

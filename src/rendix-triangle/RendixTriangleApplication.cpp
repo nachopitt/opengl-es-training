@@ -31,30 +31,7 @@ RendixTriangleApplication::RendixTriangleApplication() {
     }
 }
 
-void RendixTriangleApplication::OnInit(rendix::core::Engine &engine) {
-    std::cout << "RendixTriangleApplication OnInit" << std::endl;
-
-    Application::OnInit(engine);
-
-    // Compile shaders
-    if (!vertexShader->Compile(vertexShaderStr)) {
-        throw RendixException("Vertex shader compilation failed: " + vertexShader->GetErrorLog());
-    }
-    if (!fragmentShader->Compile(fragmentShaderStr)) {
-        throw RendixException("Fragment shader compilation failed: " + fragmentShader->GetErrorLog());
-    }
-
-    // Link shader program
-    if (!shaderProgram->AttachShader(*vertexShader)) {
-        throw RendixException("Failed to attach vertex shader to program.");
-    }
-    if (!shaderProgram->AttachShader(*fragmentShader)) {
-        throw RendixException("Failed to attach fragment shader to program.");
-    }
-    if (!shaderProgram->LinkShaders()) {
-        throw RendixException("Shader program linking failed: " + shaderProgram->GetLinkLog());
-    }
-
+void RendixTriangleApplication::SetupScene() {
     // Create the triangle mesh
     triangleMesh = std::make_shared<GLESMesh>();
     float vertices[] = {
@@ -76,11 +53,4 @@ void RendixTriangleApplication::OnInit(rendix::core::Engine &engine) {
     // Create scene and add objects
     m_scene = std::make_shared<Scene>();
     m_scene->AddObject(triangleMesh, shaderProgram);
-}
-
-void RendixTriangleApplication::OnRender(rendix::core::Engine &engine) {
-    engine.GetRenderer().SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    engine.GetRenderer().Clear();
-
-    engine.GetRenderer().Draw(*m_scene);
 }

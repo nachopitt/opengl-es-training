@@ -24,6 +24,9 @@ namespace rendix::core {
         void OnWindowResize(Engine &engine, int width, int height) override;
         void OnShutdown(Engine &engine) override;
 
+        virtual void SetupShaders();
+        virtual void SetupScene();
+
     protected:
         std::shared_ptr<shaders::GLESShader> vertexShader;
         std::shared_ptr<shaders::GLESShader> fragmentShader;
