@@ -6,59 +6,41 @@
 #include <string>
 #include <vector>
 
+#include "rendix-triangle/RendixTriangleApplication.h"
+#include "core/Engine.h"
+#include "utils/FileReader.h"
+#include "core/RendixException.h"
+#include <iostream>
+#include <string>
+#include <vector>
+
 using namespace rendix::core;
 using namespace rendix::shaders;
 using namespace rendix::utils;
 using namespace rendix::rendering;
 
-RendixTriangleApplication::RendixTriangleApplication() : vertexShader(ShaderType::VERTEX), fragmentShader(ShaderType::FRAGMENT)
-{
-}
-
-void RendixTriangleApplication::OnInit(rendix::core::Engine &engine) {
+RendixTriangleApplication::RendixTriangleApplication() {
     const std::string vertexShaderFile = "shaders/basic-color.vs";
     const std::string fragmentShaderFile = "shaders/basic.fs";
 
-    std::cout << "RendixTriangleApplication OnInit" << std::endl;
-
     FileReader fileReader;
-    std::string vertexShaderSource;
-    std::string fragmentShaderSource;
-
-    vertexShaderSource = fileReader.readTextFile(vertexShaderFile);
-    if (vertexShaderSource.empty())
+    vertexShaderStr = fileReader.readTextFile(vertexShaderFile);
+    if (vertexShaderStr.empty())
     {
         throw RendixException("Error loading vertex shader from " + vertexShaderFile);
     }
 
-    fragmentShaderSource = fileReader.readTextFile(fragmentShaderFile);
-    if (fragmentShaderSource.empty())
+    fragmentShaderStr = fileReader.readTextFile(fragmentShaderFile);
+    if (fragmentShaderStr.empty())
     {
         throw RendixException("Error loading fragment shader from " + fragmentShaderFile);
     }
+}
 
-    if (!vertexShader.Compile(vertexShaderSource))
-    {
-        throw RendixException("Error compiling vertex shader:\n" + vertexShader.GetErrorLog());
-    }
-    if (!fragmentShader.Compile(fragmentShaderSource))
-    {
-        throw RendixException("Error compiling fragment shader:\n" + fragmentShader.GetErrorLog());
-    }
+void RendixTriangleApplication::OnInit(rendix::core::Engine &engine) {
+    std::cout << "RendixTriangleApplication OnInit" << std::endl;
 
-    if (!shaderProgram.AttachShader(vertexShader))
-    {
-        throw RendixException("Error attaching vertex shader to shader program");
-    }
-    if (!shaderProgram.AttachShader(fragmentShader))
-    {
-        throw RendixException("Error attaching fragment shader to shader program");
-    }
-
-    if (!shaderProgram.LinkShaders())
-    {
-        throw RendixException("Error linking shader program:\n" + shaderProgram.GetLinkLog());
-    }
+    Application::OnInit(engine);
 
     // Create the triangle mesh
     std::vector<Vertex> vertices = {

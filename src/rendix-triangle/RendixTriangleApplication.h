@@ -15,9 +15,6 @@ public:
     void OnRender(rendix::core::Engine &engine) override;
 
 protected:
-    rendix::shaders::GLESShader vertexShader;
-    rendix::shaders::GLESShader fragmentShader;
-    rendix::shaders::GLESShaderProgram shaderProgram;
     rendix::rendering::GLESMesh triangleMesh;
 };
 

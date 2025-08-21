@@ -4,6 +4,7 @@
 #include "core/IApplication.h"
 #include "shaders/GLESShader.h"
 #include "shaders/GLESShaderProgram.h"
+#include <string>
 
 namespace rendix::core {
 
@@ -25,8 +26,11 @@ namespace rendix::core {
         shaders::GLESShader vertexShader;
         shaders::GLESShader fragmentShader;
         shaders::GLESShaderProgram shaderProgram;
+
+        std::string vertexShaderStr;
+        std::string fragmentShaderStr;
     };
 
-} // namespace rendix::rendering
+} // namespace rendix::core
 
 #endif //RENDIX_CORE_APPLICATION_H

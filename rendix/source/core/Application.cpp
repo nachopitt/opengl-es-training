@@ -4,25 +4,24 @@
 
 namespace rendix::core {
 
-    Application::Application() : vertexShader(shaders::ShaderType::VERTEX), fragmentShader(shaders::ShaderType::VERTEX)
+    Application::Application() : vertexShader(shaders::ShaderType::VERTEX), fragmentShader(shaders::ShaderType::FRAGMENT)
     {
-    }
-
-    void Application::OnInit(Engine &engine)
-    {
-        std::cout << "Application OnInit" << std::endl;
-
-        std::string vertexShaderStr = R"(
+        vertexShaderStr = R"(
 attribute vec4 position;
 void main()
 {
    gl_Position = position;
 })";
-        std::string fragmentShaderStr = R"(
+        fragmentShaderStr = R"(
 void main()
 {
    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 })";
+    }
+
+    void Application::OnInit(Engine &engine)
+    {
+        std::cout << "Application OnInit" << std::endl;
 
         if (!vertexShader.Compile(vertexShaderStr))
         {
