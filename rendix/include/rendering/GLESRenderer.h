@@ -5,6 +5,7 @@
 #include "rendering/IMesh.h"
 #include "shaders/IShaderProgram.h"
 #include "texturing/Texture.h"
+#include "rendering/IScene.h"
 
 namespace rendix::rendering
 {
@@ -15,8 +16,8 @@ namespace rendix::rendering
             GLESRenderer(int width, int height);
             // Initialize OpenGL and other settings.
             void Init() override;
-            // Draw mesh with a specific shader.
-            void Draw(IMesh &mesh, shaders::IShaderProgram &shaderProgram) override;
+            // Draw a scene.
+            void Draw(IScene &scene) override;
             // Set background clear color.
             void SetClearColor(float r, float g, float b, float a) override;
             // Clear screen.

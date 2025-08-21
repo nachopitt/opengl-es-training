@@ -5,6 +5,8 @@
 #include "shaders/GLESShader.h"
 #include "shaders/GLESShaderProgram.h"
 #include "rendering/GLESMesh.h"
+#include "rendering/IScene.h"
+#include <memory>
 
 class RendixTriangleApplication : public rendix::core::Application {
 public:
@@ -15,7 +17,8 @@ public:
     void OnRender(rendix::core::Engine &engine) override;
 
 protected:
-    rendix::rendering::GLESMesh triangleMesh;
+    std::shared_ptr<rendix::rendering::GLESMesh> triangleMesh;
+    std::shared_ptr<rendix::rendering::IScene> m_scene;
 };
 
 #endif // RENDIX_TRIANGLE_APPLICATION_H

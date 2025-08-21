@@ -3,6 +3,7 @@
 #include "shaders/IShaderProgram.h"
 #include "texturing/Texture.h"
 #include "esUtil.h"
+#include "rendering/IScene.h"
 
 namespace rendix::rendering {
 
@@ -17,15 +18,19 @@ namespace rendix::rendering {
     {
     }
 
-    void GLESRenderer::Draw(IMesh &mesh, IShaderProgram &shaderProgram)
+    void GLESRenderer::Draw(IScene &scene)
     {
-        shaderProgram.Use();
-        mesh.Bind(shaderProgram);
+        for (const auto& object : scene.GetObjects()) {
+            object.shaderProgram->Use();
+            object.mesh->Bind(*object.shaderProgram);
 
-        glDrawElements(GL_TRIANGLES, mesh.getIndexCount(), GL_UNSIGNED_INT, 0);
+            // TODO: Set model matrix uniform
+            // object.shaderProgram->SetUniform("u_ModelMatrix", object.modelMatrix);
 
-        // The attributes are disabled in the mesh.Unbind() method
-        mesh.Unbind();
+            glDrawElements(GL_TRIANGLES, object.mesh->getIndexCount(), GL_UNSIGNED_INT, 0);
+
+            object.mesh->Unbind();
+        }
     }
 
     void GLESRenderer::SetClearColor(float r, float g, float b, float a) {

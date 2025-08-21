@@ -49,6 +49,7 @@ RENDIX_SRC := \
     $(RENDIX_SRC_DIR)/rendering/GLESConvert.cpp \
     $(RENDIX_SRC_DIR)/rendering/GLESMesh.cpp \
     $(RENDIX_SRC_DIR)/rendering/GLESRenderer.cpp \
+    $(RENDIX_SRC_DIR)/rendering/Scene.cpp \
     $(RENDIX_SRC_DIR)/shaders/GLESShader.cpp \
     $(RENDIX_SRC_DIR)/shaders/GLESShaderProgram.cpp \
     $(RENDIX_SRC_DIR)/texturing/Texture.cpp \

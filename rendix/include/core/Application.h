@@ -4,7 +4,9 @@
 #include "core/IApplication.h"
 #include "shaders/GLESShader.h"
 #include "shaders/GLESShaderProgram.h"
+#include "rendering/IScene.h"
 #include <string>
+#include <memory>
 
 namespace rendix::core {
 
@@ -23,12 +25,14 @@ namespace rendix::core {
         void OnShutdown(Engine &engine) override;
 
     protected:
-        shaders::GLESShader vertexShader;
-        shaders::GLESShader fragmentShader;
-        shaders::GLESShaderProgram shaderProgram;
+        std::shared_ptr<shaders::GLESShader> vertexShader;
+        std::shared_ptr<shaders::GLESShader> fragmentShader;
+        std::shared_ptr<shaders::GLESShaderProgram> shaderProgram;
 
         std::string vertexShaderStr;
         std::string fragmentShaderStr;
+
+        std::shared_ptr<rendix::rendering::IScene> m_scene;
     };
 
 } // namespace rendix::core

@@ -4,6 +4,7 @@
 #include "rendering/IMesh.h"
 #include "shaders/IShaderProgram.h"
 #include "texturing/Texture.h"
+#include "rendering/IScene.h"
 
 namespace rendix::rendering {
 
@@ -14,8 +15,8 @@ namespace rendix::rendering {
 
         // Initialize renderer.
         virtual void Init() = 0;
-        // Draw mesh with a specific shader and texture.
-        virtual void Draw(IMesh &mesh, shaders::IShaderProgram &shaderProgram) = 0;
+        // Draw a scene.
+        virtual void Draw(IScene &scene) = 0;
         // Set background clear color.
         virtual void SetClearColor(float r, float g, float b, float a) = 0;
         // Clear screen.
