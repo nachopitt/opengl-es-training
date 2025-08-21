@@ -159,3 +159,4 @@ install:
 # Include dependency .d files
 -include $(OBJ:.o=.d)
 -include $(RENDIX_OBJ:.o=.d)
+-include $(rendix-triangle_OBJ:.o=.d)
