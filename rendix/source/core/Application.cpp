@@ -95,6 +95,10 @@ void main()
             std::cerr << "Error attaching fragment shader to shader program" << std::endl;
         }
 
+        shaderProgram->BindAttribute(0, "a_Position");
+        shaderProgram->BindAttribute(1, "a_Color");
+        shaderProgram->BindAttribute(2, "a_TexCoord");
+
         if (!shaderProgram->LinkShaders())
         {
             std::cerr << "Error linking vertex and fragment shaders into the shader program" << std::endl;

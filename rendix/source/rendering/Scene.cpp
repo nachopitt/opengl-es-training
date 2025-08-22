@@ -2,8 +2,12 @@
 
 namespace rendix::rendering {
 
+    void Scene::AddObject(std::shared_ptr<IMesh> mesh, std::shared_ptr<shaders::IShaderProgram> shaderProgram, std::shared_ptr<texturing::ITexture> texture, const glm::mat4& modelMatrix) {
+        m_objects.push_back({mesh, shaderProgram, texture, modelMatrix});
+    }
+
     void Scene::AddObject(std::shared_ptr<IMesh> mesh, std::shared_ptr<shaders::IShaderProgram> shaderProgram, const glm::mat4& modelMatrix) {
-        m_objects.push_back({mesh, shaderProgram, modelMatrix});
+        AddObject(mesh, shaderProgram, nullptr, modelMatrix);
     }
 
     const std::vector<SceneObject>& Scene::GetObjects() const {

@@ -12,10 +12,11 @@ using namespace rendix::core;
 using namespace rendix::shaders;
 using namespace rendix::utils;
 using namespace rendix::rendering;
+using namespace rendix::texturing;
 
 RendixTriangleApplication::RendixTriangleApplication() {
-    const std::string vertexShaderFile = "shaders/basic-color.vs";
-    const std::string fragmentShaderFile = "shaders/basic.fs";
+    const std::string vertexShaderFile = "shaders/basic-texture.vs";
+    const std::string fragmentShaderFile = "shaders/basic-texture.fs";
 
     FileReader fileReader;
     vertexShaderStr = fileReader.readTextFile(vertexShaderFile);
@@ -35,22 +36,25 @@ void RendixTriangleApplication::SetupScene() {
     // Create the triangle mesh
     triangleMesh = std::make_shared<GLESMesh>();
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f, 1.0f, 0.58f, 0.0f, 1.0f, // Bottom-left
-        0.0f,  0.5f, 0.0f, 1.0f, 0.95f, 0.0f, 1.0f, // Top-middle
-        0.5f, -0.5f, 0.0f, 1.0f, 0.58f, 0.0f, 1.0f  // Bottom-right
+        -0.5f, -0.5f, 0.0f, 1.0f, 0.58f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom-left
+        0.0f,  0.5f, 0.0f, 1.0f, 0.95f, 0.0f, 1.0f, 0.5f, 1.0f, // Top-middle
+        0.5f, -0.5f, 0.0f, 1.0f, 0.58f, 0.0f, 1.0f, 1.0f, 0.0f  // Bottom-right
     };
     std::vector<uint32_t> indices = {0, 1, 2};
 
     BufferLayout layout = {
         {ShaderDataType::Float3, "a_Position"},
-        {ShaderDataType::Float4, "a_Color"}
+        {ShaderDataType::Float4, "a_Color"},
+        {ShaderDataType::Float2, "a_TexCoord"}
     };
 
     triangleMesh->setVertices(vertices, sizeof(vertices));
     triangleMesh->setIndices(indices);
     triangleMesh->setLayout(layout);
 
+    std::shared_ptr<rendix::texturing::ITexture> texture = rendix::texturing::ITexture::create("assets/textures/checkerboard.jpg");
+
     // Create scene and add objects
     m_scene = std::make_shared<Scene>();
-    m_scene->AddObject(triangleMesh, shaderProgram);
+    m_scene->AddObject(triangleMesh, shaderProgram, texture);
 }

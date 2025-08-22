@@ -10,6 +10,7 @@ namespace rendix::rendering {
         Scene() = default;
         ~Scene() = default;
 
+        void AddObject(std::shared_ptr<IMesh> mesh, std::shared_ptr<shaders::IShaderProgram> shaderProgram, std::shared_ptr<texturing::ITexture> texture, const glm::mat4& modelMatrix = glm::mat4(1.0f)) override;
         void AddObject(std::shared_ptr<IMesh> mesh, std::shared_ptr<shaders::IShaderProgram> shaderProgram, const glm::mat4& modelMatrix = glm::mat4(1.0f)) override;
         const std::vector<SceneObject>& GetObjects() const override;
 

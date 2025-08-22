@@ -3,7 +3,7 @@
 
 #include "rendering/IMesh.h"
 #include "shaders/IShaderProgram.h"
-#include "texturing/Texture.h"
+#include "texturing/GLESTexture.h"
 #include "rendering/IScene.h"
 
 namespace rendix::rendering {

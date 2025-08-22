@@ -14,6 +14,8 @@ rendix-triangle_OBJ_DIR := $(OBJ_DIR)/rendix-triangle
 
 GLM_DIR := glm
 
+VENDOR_DIR := vendor
+
 ifeq '$(findstring ;,$(PATH))' ';'
 UNAME := Windows
 else
@@ -52,7 +54,7 @@ RENDIX_SRC := \
     $(RENDIX_SRC_DIR)/rendering/Scene.cpp \
     $(RENDIX_SRC_DIR)/shaders/GLESShader.cpp \
     $(RENDIX_SRC_DIR)/shaders/GLESShaderProgram.cpp \
-    $(RENDIX_SRC_DIR)/texturing/Texture.cpp \
+    $(RENDIX_SRC_DIR)/texturing/GLESTexture.cpp \
     $(RENDIX_SRC_DIR)/utils/FileReader.cpp
 
 rendix-triangle_SRC := \
@@ -73,7 +75,7 @@ CPPFLAGS += -MMD -MP
 CFLAGS ?= -Wall -g -O0
 CFLAGS += -I$(ES_FRAMEWORK_SRC_DIR) -I$(SRC_DIR) $(shell pkg-config gstreamer-1.0 --cflags)
 CXXFLAGS ?= -Wall -g -O0
-CXXFLAGS += -I$(RENDIX_INC_DIR) -I$(RENDIX_SRC_DIR) -I$(GLM_DIR) -I$(ES_FRAMEWORK_SRC_DIR) -I$(SRC_DIR)
+CXXFLAGS += -I$(RENDIX_INC_DIR) -I$(RENDIX_SRC_DIR) -I$(GLM_DIR) -I$(ES_FRAMEWORK_SRC_DIR) -I$(SRC_DIR) -I$(VENDOR_DIR)
 LDFLAGS += $(shell pkg-config gstreamer-1.0 --libs)
 
 ifeq ($(NATIVE_DISPLAY_TYPE), x11)
