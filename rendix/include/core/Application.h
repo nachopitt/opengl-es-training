@@ -25,6 +25,7 @@ namespace rendix::core {
         void OnShutdown(Engine &engine) override;
 
         virtual void SetupShaders();
+        virtual void SetupAttributes();
         virtual void SetupScene();
 
     protected:

@@ -13,6 +13,7 @@ public:
     RendixTriangleApplication();
     ~RendixTriangleApplication() = default;
 
+    void SetupAttributes() override;
     void SetupScene() override;
 
 protected:

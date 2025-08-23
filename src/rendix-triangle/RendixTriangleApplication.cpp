@@ -32,6 +32,13 @@ RendixTriangleApplication::RendixTriangleApplication() {
     }
 }
 
+void RendixTriangleApplication::SetupAttributes()
+{
+    shaderProgram->BindAttribute(0, "a_Position");
+    shaderProgram->BindAttribute(1, "a_Color");
+    shaderProgram->BindAttribute(2, "a_TexCoord");
+}
+
 void RendixTriangleApplication::SetupScene() {
     // Create the triangle mesh
     triangleMesh = std::make_shared<GLESMesh>();
