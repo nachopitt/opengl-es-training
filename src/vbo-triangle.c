@@ -43,8 +43,8 @@ void onDraw(ESContext *esContext)
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(1);
 
-    // glBindAttribLocation(userData->userData.programObject, 0, "vPosition");
-    // glBindAttribLocation(userData->userData.programObject, 1, "aColor");
+    // glBindAttribLocation(userData->userData.programObject, 0, "a_Position");
+    // glBindAttribLocation(userData->userData.programObject, 1, "a_Color");
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
@@ -83,7 +83,8 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    if (!CompileAndLinkShaders(&esContext, "shaders/basic-color.vs", "shaders/basic.fs")) {
+    if (!CompileAndLinkShaders(&esContext, "shaders/basic-color.vs", "shaders/basic-color.fs"))
+    {
         return 1;
     }
 
