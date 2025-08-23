@@ -49,7 +49,7 @@ void DrawTriangle(ESContext* esContext) {
     ClearScreen(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Call gl-utils's TransformShape function
-    TransformShape(esContext, 0, x_distance, "modelViewProjection");
+    TransformShape(esContext, 0, x_distance, "u_ModelViewProjection");
 
     // Call gl-utils's DrawShape function
     DrawShape(esContext, GL_TRIANGLES, vVertices, 3, GL_FLOAT, vColors, 4, GL_FLOAT, 3);
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    if (!CompileAndLinkShaders(&esContext, "shaders/basic-color-transform.vs", "shaders/basic.fs")) {
+    if (!CompileAndLinkShaders(&esContext, "shaders/basic-color-transform.vs", "shaders/basic-color.fs")) {
         return 1;
     }
 

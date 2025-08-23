@@ -49,7 +49,8 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    if (!CompileAndLinkShaders(&esContext, "shaders/basic-color.vs", "shaders/basic.fs")) {
+    if (!CompileAndLinkShaders(&esContext, "shaders/basic-color.vs", "shaders/basic-color.fs"))
+    {
         return 1;
     }
 
