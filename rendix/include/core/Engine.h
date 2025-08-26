@@ -22,8 +22,6 @@ namespace rendix::core
         IWindowSystem &GetWindowSystem() const;
         rendering::IRenderer &GetRenderer() const;
 
-        float GetDeltaTime() const; // New getter
-
         // Events
         events::Event<> onInit;
         events::Event<> onShutdown;

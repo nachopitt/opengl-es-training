@@ -96,10 +96,10 @@ void RendixTriangleApplication::OnRender(Engine &engine) {
 
 void RendixTriangleApplication::OnKey(Engine &engine, unsigned char key, bool pressed) {
     if (pressed) {
-        if (key == 'w') m_camera->Move(FORWARD, engine.GetDeltaTime());
-        if (key == 's') m_camera->Move(BACKWARD, engine.GetDeltaTime());
-        if (key == 'a') m_camera->Move(LEFT, engine.GetDeltaTime());
-        if (key == 'd') m_camera->Move(RIGHT, engine.GetDeltaTime());
+        if (key == 'w') m_camera->Move(FORWARD, m_deltaTime);
+        if (key == 's') m_camera->Move(BACKWARD, m_deltaTime);
+        if (key == 'a') m_camera->Move(LEFT, m_deltaTime);
+        if (key == 'd') m_camera->Move(RIGHT, m_deltaTime);
     }
 }
 

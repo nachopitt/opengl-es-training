@@ -142,8 +142,4 @@ void main()
             .Build();
         m_scene->AddObject(sceneObject);
     }
-
-    float Application::GetDeltaTime() const {
-        return m_deltaTime;
-    }
 }

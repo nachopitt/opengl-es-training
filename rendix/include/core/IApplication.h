@@ -15,8 +15,6 @@ namespace rendix::core {
         virtual void OnMouse(Engine &engine, int x, int y) = 0;
         virtual void OnWindowResize(Engine &engine, int width, int height) = 0;
         virtual void OnShutdown(Engine &engine) = 0;
-
-        virtual float GetDeltaTime() const = 0; // New method
     };
 }
 
