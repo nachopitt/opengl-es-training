@@ -1,3 +1,5 @@
+uniform mat4 u_ProjectionMatrix;
+uniform mat4 u_ViewMatrix;
 uniform mat4 u_ModelMatrix;
 
 attribute vec3 a_Position;
@@ -9,7 +11,7 @@ varying vec2 v_TexCoord;
 
 void main()
 {
-   gl_Position = u_ModelMatrix * vec4(a_Position, 1.0);
+   gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
    v_Color = a_Color;
    v_TexCoord = a_TexCoord;
 }

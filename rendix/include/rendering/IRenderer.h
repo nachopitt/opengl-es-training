@@ -5,6 +5,7 @@
 #include "shaders/IShaderProgram.h"
 #include "texturing/GLESTexture.h"
 #include "rendering/IScene.h"
+#include "core/Camera.h"
 
 namespace rendix::rendering {
 
@@ -15,8 +16,10 @@ namespace rendix::rendering {
 
         // Initialize renderer.
         virtual void Init() = 0;
-        // Draw a scene.
+        // Draw a scene with a default camera.
         virtual void Draw(IScene &scene) = 0;
+        // Draw a scene with a custom camera.
+        virtual void Draw(IScene &scene, const core::Camera& camera) = 0;
         // Set background clear color.
         virtual void SetClearColor(float r, float g, float b, float a) = 0;
         // Clear screen.

@@ -8,6 +8,8 @@
 #include "rendering/Scene.h"
 #include <memory>
 #include "core/Transform.h"
+#include "core/Camera.h"
+#include "rendering/PerspectiveProjectionStrategy.h"
 
 using namespace rendix::core;
 using namespace rendix::shaders;
@@ -31,6 +33,10 @@ RendixTriangleApplication::RendixTriangleApplication() {
     {
         throw RendixException("Error loading fragment shader from " + fragmentShaderFile);
     }
+
+    // Initialize camera
+    m_camera = std::make_unique<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
+    m_camera->SetProjectionStrategy(std::make_unique<PerspectiveProjectionStrategy>(45.0f, 800.0f / 600.0f, 0.1f, 100.0f));
 }
 
 void RendixTriangleApplication::SetupAttributes()
@@ -80,4 +86,39 @@ void RendixTriangleApplication::OnUpdate(Engine &engine, float deltaTime) {
     // Rotate the triangle
     glm::quat rotation = glm::angleAxis(deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
     m_transform->SetRotation(m_transform->GetRotation() * rotation);
+}
+
+void RendixTriangleApplication::OnRender(Engine &engine) {
+    engine.GetRenderer().SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    engine.GetRenderer().Clear();
+    engine.GetRenderer().Draw(*m_scene, *m_camera);
+}
+
+void RendixTriangleApplication::OnKey(Engine &engine, unsigned char key, bool pressed) {
+    if (pressed) {
+        if (key == 'w') m_camera->Move(FORWARD, engine.GetDeltaTime());
+        if (key == 's') m_camera->Move(BACKWARD, engine.GetDeltaTime());
+        if (key == 'a') m_camera->Move(LEFT, engine.GetDeltaTime());
+        if (key == 'd') m_camera->Move(RIGHT, engine.GetDeltaTime());
+    }
+}
+
+void RendixTriangleApplication::OnMouse(Engine &engine, int x, int y) {
+    static bool firstMouse = true;
+    static float lastX = 0.0f;
+    static float lastY = 0.0f;
+
+    if (firstMouse) {
+        lastX = x;
+        lastY = y;
+        firstMouse = false;
+    }
+
+    float xoffset = x - lastX;
+    float yoffset = lastY - y; // Reversed since y-coordinates go from bottom to top
+
+    lastX = x;
+    lastY = y;
+
+    m_camera->Look(xoffset, yoffset);
 }

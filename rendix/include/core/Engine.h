@@ -2,12 +2,12 @@
 #define RENDIX_CORE_ENGINE_H
 
 #include <string>
+#include <memory>
 
 #include "esUtil.h"
 #include "core/IApplication.h"
 #include "core/IWindowSystem.h"
 #include "rendering/IRenderer.h"
-#include <memory>
 
 namespace rendix::core
 {
@@ -21,6 +21,8 @@ namespace rendix::core
         void Run();
         IWindowSystem &GetWindowSystem() const;
         rendering::IRenderer &GetRenderer() const;
+
+        float GetDeltaTime() const; // New getter
 
         // Events
         events::Event<> onInit;

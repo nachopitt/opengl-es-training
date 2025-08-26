@@ -10,7 +10,7 @@
 
 namespace rendix::core {
 
-    Application::Application() : m_scene(std::make_shared<rendering::Scene>())
+    Application::Application() : m_scene(std::make_shared<rendering::Scene>()), m_deltaTime(0.0f)
     {
         vertexShaderStr = R"(
 attribute vec4 position;
@@ -43,6 +43,8 @@ void main()
 
     void Application::OnUpdate(Engine &engine, float deltaTime)
     {
+        m_deltaTime = deltaTime; // Store deltaTime
+
         static float totaltime = 0;
 
         totaltime += deltaTime;
@@ -139,5 +141,9 @@ void main()
             .WithShaderProgram(shaderProgram)
             .Build();
         m_scene->AddObject(sceneObject);
+    }
+
+    float Application::GetDeltaTime() const {
+        return m_deltaTime;
     }
 }

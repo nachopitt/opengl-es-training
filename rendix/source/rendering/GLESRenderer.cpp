@@ -5,21 +5,35 @@
 #include "esUtil.h"
 #include "rendering/IScene.h"
 #include "core/Transform.h"
+#include "core/Camera.h"
+#include "rendering/PerspectiveProjectionStrategy.h"
 
 namespace rendix::rendering {
 
     using namespace shaders;
     using namespace texturing;
+    using namespace core;
+
+    // Static default camera for the Draw(IScene& scene) overload
+    static Camera s_defaultCamera(glm::vec3(0.0f, 0.0f, 3.0f));
 
     void GLESRenderer::Init()
     {
+        glEnable(GL_DEPTH_TEST); // Enable depth testing
+        // Initialize default camera's projection strategy
+        s_defaultCamera.SetProjectionStrategy(std::make_unique<PerspectiveProjectionStrategy>(45.0f, 800.0f / 600.0f, 0.1f, 100.0f));
     }
 
     GLESRenderer::GLESRenderer(int width, int height) : IRenderer(width, height)
     {
     }
 
-    void GLESRenderer::Draw(IScene &scene)
+    void GLESRenderer::Draw(IScene &scene) // New overload implementation
+    {
+        Draw(scene, s_defaultCamera); // Call the other Draw overload with the default camera
+    }
+
+    void GLESRenderer::Draw(IScene &scene, const Camera& camera)
     {
         for (const auto& object : scene.GetObjects()) {
             object.shaderProgram->Use();
@@ -31,6 +45,8 @@ namespace rendix::rendering {
             }
 
             object.shaderProgram->SetUniform("u_ModelMatrix", object.transform->GetModelMatrix());
+            object.shaderProgram->SetUniform("u_ViewMatrix", camera.GetViewMatrix());
+            object.shaderProgram->SetUniform("u_ProjectionMatrix", camera.GetProjectionMatrix());
 
             glDrawElements(GL_TRIANGLES, object.mesh->getIndexCount(), GL_UNSIGNED_INT, 0);
 

@@ -76,4 +76,8 @@ namespace rendix::core {
     rendering::IRenderer &Engine::GetRenderer() const {
         return *renderer;
     }
+
+    float Engine::GetDeltaTime() const {
+        return application->GetDeltaTime();
+    }
 }

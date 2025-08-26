@@ -6,6 +6,7 @@
 #include "shaders/IShaderProgram.h"
 #include "texturing/GLESTexture.h"
 #include "rendering/IScene.h"
+#include "core/Camera.h"
 
 namespace rendix::rendering
 {
@@ -16,8 +17,10 @@ namespace rendix::rendering
             GLESRenderer(int width, int height);
             // Initialize OpenGL and other settings.
             void Init() override;
-            // Draw a scene.
+            // Draw a scene with a default camera.
             void Draw(IScene &scene) override;
+            // Draw a scene with a custom camera.
+            void Draw(IScene &scene, const core::Camera& camera) override;
             // Set background clear color.
             void SetClearColor(float r, float g, float b, float a) override;
             // Clear screen.

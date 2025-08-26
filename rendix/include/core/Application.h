@@ -28,6 +28,8 @@ namespace rendix::core {
         virtual void SetupAttributes();
         virtual void SetupScene();
 
+        float GetDeltaTime() const; // New getter
+
     protected:
         std::shared_ptr<shaders::GLESShader> vertexShader;
         std::shared_ptr<shaders::GLESShader> fragmentShader;
@@ -37,6 +39,7 @@ namespace rendix::core {
         std::string fragmentShaderStr;
 
         std::shared_ptr<rendix::rendering::IScene> m_scene;
+        float m_deltaTime; // New member
     };
 
 } // namespace rendix::core

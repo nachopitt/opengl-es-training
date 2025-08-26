@@ -45,6 +45,7 @@ RENDIX_BINS := $(RENDIX_TARGETS:%=$(BIN_DIR)/%)
 SRC := $(SRC_DIR)/gl-utils.c $(ES_FRAMEWORK_SRC_DIR)/esUtil.c
 RENDIX_SRC := \
     $(RENDIX_SRC_DIR)/core/Application.cpp \
+    $(RENDIX_SRC_DIR)/core/Camera.cpp \
     $(RENDIX_SRC_DIR)/core/Engine.cpp \
     $(RENDIX_SRC_DIR)/core/ESUtilWindowSystem.cpp \
     $(RENDIX_SRC_DIR)/core/Transform.cpp \
@@ -52,6 +53,8 @@ RENDIX_SRC := \
     $(RENDIX_SRC_DIR)/rendering/GLESConvert.cpp \
     $(RENDIX_SRC_DIR)/rendering/GLESMesh.cpp \
     $(RENDIX_SRC_DIR)/rendering/GLESRenderer.cpp \
+    $(RENDIX_SRC_DIR)/rendering/OrthographicProjectionStrategy.cpp \
+    $(RENDIX_SRC_DIR)/rendering/PerspectiveProjectionStrategy.cpp \
     $(RENDIX_SRC_DIR)/rendering/Scene.cpp \
     $(RENDIX_SRC_DIR)/rendering/SceneObjectBuilder.cpp \
     $(RENDIX_SRC_DIR)/shaders/GLESShader.cpp \
