@@ -5,6 +5,8 @@
 #include "rendering/Scene.h" // For default scene
 #include "rendering/Vertex.h" // For BufferLayout
 #include <memory> // For std::make_shared
+#include "core/Transform.h"
+#include "rendering/SceneObjectBuilder.h"
 
 namespace rendix::core {
 
@@ -132,6 +134,10 @@ void main()
 
         // Create scene and add the default mesh
         m_scene = std::make_shared<rendering::Scene>();
-        m_scene->AddObject(defaultMesh, shaderProgram);
+        auto sceneObject = rendering::SceneObject::CreateBuilder()
+            .WithMesh(defaultMesh)
+            .WithShaderProgram(shaderProgram)
+            .Build();
+        m_scene->AddObject(sceneObject);
     }
 }

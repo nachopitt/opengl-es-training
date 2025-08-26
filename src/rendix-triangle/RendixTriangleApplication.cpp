@@ -7,6 +7,7 @@
 #include <vector>
 #include "rendering/Scene.h"
 #include <memory>
+#include "core/Transform.h"
 
 using namespace rendix::core;
 using namespace rendix::shaders;
@@ -63,5 +64,20 @@ void RendixTriangleApplication::SetupScene() {
 
     // Create scene and add objects
     m_scene = std::make_shared<Scene>();
-    m_scene->AddObject(triangleMesh, shaderProgram, texture);
+    m_transform = std::make_shared<Transform>();
+
+    auto sceneObject = SceneObject::CreateBuilder()
+        .WithMesh(triangleMesh)
+        .WithShaderProgram(shaderProgram)
+        .WithTexture(texture)
+        .WithTransform(m_transform)
+        .Build();
+
+    m_scene->AddObject(sceneObject);
+}
+
+void RendixTriangleApplication::OnUpdate(Engine &engine, float deltaTime) {
+    // Rotate the triangle
+    glm::quat rotation = glm::angleAxis(deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
+    m_transform->SetRotation(m_transform->GetRotation() * rotation);
 }

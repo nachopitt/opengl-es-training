@@ -4,6 +4,7 @@
 #include "texturing/GLESTexture.h"
 #include "esUtil.h"
 #include "rendering/IScene.h"
+#include "core/Transform.h"
 
 namespace rendix::rendering {
 
@@ -29,8 +30,7 @@ namespace rendix::rendering {
                 object.shaderProgram->SetUniform("u_Texture", 0); // Set uniform to texture unit 0
             }
 
-            // TODO: Set model matrix uniform
-            // object.shaderProgram->SetUniform("u_ModelMatrix", object.modelMatrix);
+            object.shaderProgram->SetUniform("u_ModelMatrix", object.transform->GetModelMatrix());
 
             glDrawElements(GL_TRIANGLES, object.mesh->getIndexCount(), GL_UNSIGNED_INT, 0);
 

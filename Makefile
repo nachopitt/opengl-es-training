@@ -47,11 +47,13 @@ RENDIX_SRC := \
     $(RENDIX_SRC_DIR)/core/Application.cpp \
     $(RENDIX_SRC_DIR)/core/Engine.cpp \
     $(RENDIX_SRC_DIR)/core/ESUtilWindowSystem.cpp \
+    $(RENDIX_SRC_DIR)/core/Transform.cpp \
     $(RENDIX_SRC_DIR)/main_loop/ESUtilMainLoopStrategy.cpp \
     $(RENDIX_SRC_DIR)/rendering/GLESConvert.cpp \
     $(RENDIX_SRC_DIR)/rendering/GLESMesh.cpp \
     $(RENDIX_SRC_DIR)/rendering/GLESRenderer.cpp \
     $(RENDIX_SRC_DIR)/rendering/Scene.cpp \
+    $(RENDIX_SRC_DIR)/rendering/SceneObjectBuilder.cpp \
     $(RENDIX_SRC_DIR)/shaders/GLESShader.cpp \
     $(RENDIX_SRC_DIR)/shaders/GLESShaderProgram.cpp \
     $(RENDIX_SRC_DIR)/texturing/GLESTexture.cpp \

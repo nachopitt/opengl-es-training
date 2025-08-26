@@ -7,6 +7,7 @@
 #include "rendering/GLESMesh.h"
 #include "rendering/IScene.h"
 #include <memory>
+#include "core/Transform.h"
 
 class RendixTriangleApplication : public rendix::core::Application {
 public:
@@ -15,9 +16,11 @@ public:
 
     void SetupAttributes() override;
     void SetupScene() override;
+    void OnUpdate(rendix::core::Engine &engine, float deltaTime) override;
 
 protected:
     std::shared_ptr<rendix::rendering::GLESMesh> triangleMesh;
+    std::shared_ptr<rendix::core::Transform> m_transform;
 };
 
 #endif // RENDIX_TRIANGLE_APPLICATION_H
