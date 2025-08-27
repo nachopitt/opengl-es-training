@@ -21,6 +21,7 @@ public:
     void OnRender(rendix::core::Engine &engine) override;
     void OnKey(rendix::core::Engine &engine, unsigned char key, bool pressed) override;
     void OnMouse(rendix::core::Engine &engine, int x, int y) override;
+    void OnWindowResize(rendix::core::Engine &engine, int width, int height) override;
 
 protected:
     std::shared_ptr<rendix::rendering::GLESMesh> triangleMesh;

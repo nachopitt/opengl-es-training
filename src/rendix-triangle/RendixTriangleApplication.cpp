@@ -154,3 +154,8 @@ void RendixTriangleApplication::OnMouse(Engine &engine, int x, int y) {
 
     m_camera->Look(xoffset, yoffset);
 }
+
+void RendixTriangleApplication::OnWindowResize(rendix::core::Engine &engine, int width, int height)
+{
+    engine.GetRenderer().Resize(width, height);
+}
