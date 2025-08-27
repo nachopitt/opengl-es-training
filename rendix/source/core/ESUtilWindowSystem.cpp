@@ -22,7 +22,7 @@ namespace rendix::core {
 
     bool ESUtilWindowSystem::CreateWindow(int width, int height, const std::string &title)
     {
-        return esCreateWindow(&esContext, title.c_str(), width, height, ES_WINDOW_RGB);
+        return esCreateWindow(&esContext, title.c_str(), width, height, ES_WINDOW_RGB | ES_WINDOW_DEPTH);
     }
 
     void ESUtilWindowSystem::SwapBuffers() {

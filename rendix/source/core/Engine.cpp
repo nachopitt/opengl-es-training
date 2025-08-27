@@ -38,6 +38,8 @@ namespace rendix::core {
             application->OnWindowResize(*this, width, height);
         });
 
+        renderer->Init();
+
         onInit.Notify();
 
         return true;
