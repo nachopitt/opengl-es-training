@@ -13,6 +13,7 @@ namespace rendix::shaders
         GLESShader(ShaderType type);
         ~GLESShader();
         bool Compile(const std::string &source) override;
+        bool Compile(const std::string &source, const std::vector<std::string> &defines) override;
         const std::string &GetErrorLog() const override;
         unsigned int GetShaderId() const override;
         ShaderType GetShaderType() const override;

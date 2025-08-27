@@ -6,6 +6,7 @@
 #include "shaders/GLESShaderProgram.h"
 #include "rendering/IScene.h"
 #include <string>
+#include <vector>
 #include <memory>
 
 namespace rendix::core {
@@ -35,6 +36,9 @@ namespace rendix::core {
 
         std::string vertexShaderStr;
         std::string fragmentShaderStr;
+
+        std::vector<std::string> vertexShaderDefines;
+        std::vector<std::string> fragmentShaderDefines;
 
         std::shared_ptr<rendix::rendering::IScene> m_scene;
         float m_deltaTime; // New member

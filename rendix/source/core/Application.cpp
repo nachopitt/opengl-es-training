@@ -81,11 +81,11 @@ void main()
         fragmentShader = std::make_shared<shaders::GLESShader>(shaders::ShaderType::FRAGMENT);
         shaderProgram = std::make_shared<shaders::GLESShaderProgram>();
 
-        if (!vertexShader->Compile(vertexShaderStr))
+        if (!vertexShader->Compile(vertexShaderStr, vertexShaderDefines))
         {
             std::cerr << "Error compiling vertex shader" << std::endl;
         }
-        if (!fragmentShader->Compile(fragmentShaderStr))
+        if (!fragmentShader->Compile(fragmentShaderStr, fragmentShaderDefines))
         {
             std::cerr << "Error compiling fragment shader" << std::endl;
         }

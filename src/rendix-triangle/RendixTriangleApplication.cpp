@@ -10,6 +10,7 @@
 #include "core/Transform.h"
 #include "core/Camera.h"
 #include "rendering/PerspectiveProjectionStrategy.h"
+#include "shaders/GLESShaderKeywords.h"
 
 using namespace rendix::core;
 using namespace rendix::shaders;
@@ -18,8 +19,19 @@ using namespace rendix::rendering;
 using namespace rendix::texturing;
 
 RendixTriangleApplication::RendixTriangleApplication() {
-    const std::string vertexShaderFile = "shaders/basic-texture.vs";
-    const std::string fragmentShaderFile = "shaders/basic-texture.fs";
+    const std::string vertexShaderFile = "shaders/basic.vert";
+    const std::string fragmentShaderFile = "shaders/basic.frag";
+
+    vertexShaderDefines = {
+        keywords::HasMVP,
+        keywords::HasColor,
+        keywords::HasTexture,
+    };
+
+    fragmentShaderDefines = {
+        keywords::HasColor,
+        keywords::HasTexture,
+    };
 
     FileReader fileReader;
     vertexShaderStr = fileReader.readTextFile(vertexShaderFile);
@@ -50,11 +62,31 @@ void RendixTriangleApplication::SetupScene() {
     // Create the triangle mesh
     triangleMesh = std::make_shared<GLESMesh>();
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f, 1.0f, 0.58f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom-left
-        0.0f,  0.5f, 0.0f, 1.0f, 0.95f, 0.0f, 1.0f, 0.5f, 1.0f, // Top-middle
-        0.5f, -0.5f, 0.0f, 1.0f, 0.58f, 0.0f, 1.0f, 1.0f, 0.0f  // Bottom-right
+        // positions            // colors
+        // Front face
+         0.0f,  0.5f,  0.125f,  0.80f, 0.60f, 0.21f, 1.0f,  0.5f, 1.0f, // v0: Top-front
+        -0.5f, -0.5f,  0.125f,  1.00f, 0.76f, 0.28f, 1.0f,  0.0f, 0.0f, // v1: Bottom-left-front
+         0.5f, -0.5f,  0.125f,  1.00f, 0.76f, 0.28f, 1.0f,  1.0f, 0.0f, // v2: Bottom-right-front
+        // Back face
+         0.0f,  0.5f, -0.125f,  0.80f, 0.60f, 0.21f, 1.0f,  0.5f, 1.0f, // v3: Top-back
+        -0.5f, -0.5f, -0.125f,  1.00f, 0.76f, 0.28f, 1.0f,  0.0f, 0.0f, // v4: Bottom-left-back
+         0.5f, -0.5f, -0.125f,  1.00f, 0.76f, 0.28f, 1.0f,  1.0f, 0.0f, // v5: Bottom-right-back
     };
-    std::vector<uint32_t> indices = {0, 1, 2};
+    std::vector<uint32_t> indices = {
+        // Front face
+        0, 1, 2,
+        // Back face
+        3, 5, 4,
+        // Bottom face
+        1, 4, 5,
+        1, 5, 2,
+        // Left face
+        1, 0, 3,
+        1, 3, 4,
+        // Right face
+        2, 5, 3,
+        2, 3, 0
+    };
 
     BufferLayout layout = {
         {ShaderDataType::Float3, "a_Position"},

@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 namespace rendix::shaders
 {
@@ -42,12 +43,38 @@ namespace rendix::shaders
 
     bool GLESShader::Compile(const std::string &source)
     {
-        GLint compiled;
+        return Compile(source, std::vector<std::string>());
+    }
 
-        const char *src = source.c_str();
+    bool GLESShader::Compile(const std::string &source, const std::vector<std::string> &defines)
+    {
+        GLint compiled;
+        std::vector<const char*> sources;
+        // Reserve space for the #version string, all defines, and the main source
+        sources.reserve(defines.size() + 2);
+
+        std::string version_string;
+        const char* source_code_ptr = source.c_str();
+
+        // The #version directive must be the very first thing.
+        // We find it and separate it from the rest of the code.
+        if (source.rfind("#version", 0) == 0) {
+            size_t newline_pos = source.find('\n');
+            version_string = source.substr(0, newline_pos + 1);
+            source_code_ptr = source.c_str() + version_string.length();
+            sources.push_back(version_string.c_str());
+        }
+
+        // Add all the #define directives.
+        for (const std::string& define : defines) {
+            sources.push_back(define.c_str());
+        }
+
+        // Add the main body of the shader code.
+        sources.push_back(source_code_ptr);
 
         // Load the shader source
-        glShaderSource(shaderId, 1, &src, NULL);
+        glShaderSource(shaderId, sources.size(), sources.data(), NULL);
 
         // Compile the shader
         glCompileShader(shaderId);

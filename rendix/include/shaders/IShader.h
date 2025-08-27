@@ -2,6 +2,7 @@
 #define RENDIX_SHADERS_I_SHADER_H
 
 #include <string>
+#include <vector>
 
 namespace rendix::shaders {
 
@@ -18,6 +19,7 @@ namespace rendix::shaders {
     public:
         virtual ~IShader() = default;
         virtual bool Compile(const std::string &source) = 0;
+        virtual bool Compile(const std::string &source, const std::vector<std::string> &defines) = 0;
         virtual const std::string &GetErrorLog() const = 0;
         virtual unsigned int GetShaderId() const = 0;
         virtual ShaderType GetShaderType() const = 0;
