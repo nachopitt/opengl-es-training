@@ -64,28 +64,36 @@ void RendixTriangleApplication::SetupScene() {
     float vertices[] = {
         // positions            // colors
         // Front face
-         0.0f,  0.5f,  0.125f,  0.80f, 0.60f, 0.21f, 1.0f,  0.5f, 1.0f, // v0: Top-front
-        -0.5f, -0.5f,  0.125f,  1.00f, 0.76f, 0.28f, 1.0f,  0.0f, 0.0f, // v1: Bottom-left-front
-         0.5f, -0.5f,  0.125f,  1.00f, 0.76f, 0.28f, 1.0f,  1.0f, 0.0f, // v2: Bottom-right-front
+        -0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.1, 1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f, 0.8f, 0.2f, 0.1, 1.0f, 0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.1, 1.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f, 0.8f, 0.2f, 0.1, 1.0f, 1.0f, 1.0f,
         // Back face
-         0.0f,  0.5f, -0.125f,  0.80f, 0.60f, 0.21f, 1.0f,  0.5f, 1.0f, // v3: Top-back
-        -0.5f, -0.5f, -0.125f,  1.00f, 0.76f, 0.28f, 1.0f,  0.0f, 0.0f, // v4: Bottom-left-back
-         0.5f, -0.5f, -0.125f,  1.00f, 0.76f, 0.28f, 1.0f,  1.0f, 0.0f, // v5: Bottom-right-back
+        -0.5f, -0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 1.0f, 1.0f,
+        // Left face
+        -0.5f, -0.5f, -0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 1.0f, 1.0f,
+        // Right face
+         0.5f, -0.5f,  0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 1.0f, 1.0f,
     };
     std::vector<uint32_t> indices = {
         // Front face
         0, 1, 2,
-        // Back face
-        3, 5, 4,
-        // Bottom face
-        1, 4, 5,
-        1, 5, 2,
-        // Left face
-        1, 0, 3,
-        1, 3, 4,
-        // Right face
-        2, 5, 3,
-        2, 3, 0
+        1, 2, 3,
+        4, 5, 6,
+        5, 6, 7,
+        8, 9, 10,
+        9, 10, 11,
+        12, 13, 14,
+        13, 14, 15,
     };
 
     BufferLayout layout = {
@@ -98,7 +106,7 @@ void RendixTriangleApplication::SetupScene() {
     triangleMesh->setIndices(indices);
     triangleMesh->setLayout(layout);
 
-    std::shared_ptr<rendix::texturing::ITexture> texture = rendix::texturing::ITexture::create("assets/textures/checkerboard.jpg");
+    std::shared_ptr<rendix::texturing::ITexture> texture = rendix::texturing::ITexture::create("assets/textures/wooden-crate.jpg");
 
     // Create scene and add objects
     m_scene = std::make_shared<Scene>();
