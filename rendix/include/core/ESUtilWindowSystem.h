@@ -26,6 +26,7 @@ namespace rendix::core {
 
         static void OnDraw(ESContext *esContext);
         static void OnKey(ESContext *esContext, unsigned char key, int x, int y);
+        static void OnMouse(ESContext *esContext, int x, int y);
         static void OnUpdate(ESContext *esContext, float deltaTime);
         static void OnWindowResize(ESContext *esContext, int width, int height);
 

@@ -16,6 +16,7 @@ namespace rendix::core {
 
         esRegisterDrawFunc(&esContext, ESUtilWindowSystem::OnDraw);
         esRegisterKeyFunc(&esContext, ESUtilWindowSystem::OnKey);
+        esRegisterMouseFunc(&esContext, ESUtilWindowSystem::OnMouse);
         esRegisterUpdateFunc(&esContext, ESUtilWindowSystem::OnUpdate);
         esRegisterWindowResizeFunc(&esContext, ESUtilWindowSystem::OnWindowResize);
     }
@@ -67,6 +68,11 @@ namespace rendix::core {
     {
         ESUtilWindowSystem *_this = static_cast<ESUtilWindowSystem *>(esContext->userData);
         _this->onKey.Notify(key, true);
+    }
+
+    void ESUtilWindowSystem::OnMouse(ESContext *esContext, int x, int y)
+    {
+        ESUtilWindowSystem *_this = static_cast<ESUtilWindowSystem *>(esContext->userData);
         _this->onMouse.Notify(x, y);
     }
 

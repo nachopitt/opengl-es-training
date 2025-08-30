@@ -235,6 +235,13 @@ GLboolean userInterrupt(ESContext *esContext)
                     esContext->keyFunc(esContext, text, 0, 0);
             }
         }
+
+        if ( xev.type == MotionNotify )
+        {
+            if (esContext->mouseFunc != NULL)
+                esContext->mouseFunc(esContext, xev.xmotion.x, xev.xmotion.y);
+        }
+
         if ( xev.type == DestroyNotify )
             userinterrupt = GL_TRUE;
 
@@ -623,6 +630,15 @@ void ESUTIL_API esRegisterKeyFunc ( ESContext *esContext,
         void (ESCALLBACK *keyFunc) (ESContext*, unsigned char, int, int ) )
 {
     esContext->keyFunc = keyFunc;
+}
+
+///
+//  esRegisterMouseFunc()
+//
+void ESUTIL_API esRegisterMouseFunc ( ESContext *esContext,
+                                     void (ESCALLBACK *mouseFunc) (ESContext*, int, int) )
+{
+    esContext->mouseFunc = mouseFunc;
 }
 
 ///

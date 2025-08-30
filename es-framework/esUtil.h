@@ -110,6 +110,7 @@ typedef struct _escontext
    /// Callbacks
    void (ESCALLBACK *drawFunc) ( struct _escontext * );
    void (ESCALLBACK *keyFunc) ( struct _escontext *, unsigned char, int, int );
+   void (ESCALLBACK *mouseFunc) ( struct _escontext *, int, int );
    void (ESCALLBACK *updateFunc) ( struct _escontext *, float deltaTime );
    void (ESCALLBACK *windowResizeFunc) (struct _escontext *, int width, int height);
 } ESContext;
@@ -167,6 +168,13 @@ void ESUTIL_API esRegisterUpdateFunc ( ESContext *esContext, void (ESCALLBACK *u
 /// \param keyFunc Key callback function for application processing of keyboard input
 //
 void ESUTIL_API esRegisterKeyFunc ( ESContext *esContext, void (ESCALLBACK *keyFunc) ( ESContext*, unsigned char, int, int ) );
+
+//
+/// \brief Register a mouse input processing callback function
+/// \param esContext Application context
+/// \param mouseFunc Mouse callback function for application processing of mouse input
+//
+void ESUTIL_API esRegisterMouseFunc ( ESContext *esContext, void (ESCALLBACK *mouseFunc) ( ESContext*, int, int ) );
 
 //
 /// \brief Register window resize callback function
