@@ -176,6 +176,7 @@ void RendixTriangleApplication::SetupScene() {
 }
 
 void RendixTriangleApplication::OnUpdate(Engine &engine, float deltaTime) {
+    Application::OnUpdate(engine, deltaTime);
     // Rotate the box
     glm::quat rotation = glm::angleAxis(deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
     m_transform->SetRotation(m_transform->GetRotation() * rotation);
