@@ -9,6 +9,7 @@
 #include <memory>
 #include "core/Transform.h"
 #include "core/Camera.h"
+#include "rendering/Light.h"
 
 class RendixTriangleApplication : public rendix::core::Application {
 public:
@@ -27,6 +28,7 @@ protected:
     std::shared_ptr<rendix::rendering::GLESMesh> triangleMesh;
     std::shared_ptr<rendix::core::Transform> m_transform;
     std::unique_ptr<rendix::core::Camera> m_camera;
+    rendix::rendering::DirectionalLight m_light;
 };
 
 #endif // RENDIX_TRIANGLE_APPLICATION_H

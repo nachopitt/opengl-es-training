@@ -20,6 +20,7 @@ namespace rendix::rendering {
     void GLESRenderer::Init()
     {
         glEnable(GL_DEPTH_TEST); // Enable depth testing
+        glDisable(GL_CULL_FACE); // Disable back-face culling
         // Initialize default camera's projection strategy
         s_defaultCamera.SetProjectionStrategy(std::make_unique<PerspectiveProjectionStrategy>(45.0f, 800.0f / 600.0f, 0.1f, 100.0f));
     }

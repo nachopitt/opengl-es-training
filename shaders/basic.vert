@@ -22,6 +22,10 @@ attribute vec4 a_Color;
 attribute vec2 a_TexCoord;
 #endif
 
+#ifdef HAS_LIGHTING
+attribute vec3 a_Normal;
+#endif
+
 // --- VARYINGS ---
 // These pass data to the fragment shader. They are only needed if
 // the corresponding feature is enabled.
@@ -33,23 +37,32 @@ varying vec4 v_Color;
 varying vec2 v_TexCoord;
 #endif
 
+#ifdef HAS_LIGHTING
+varying vec3 v_Normal;
+varying vec3 v_FragPos;
+#endif
+
 
 void main()
 {
     // Calculate final vertex position.
 #ifdef HAS_MVP
-	gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+    v_FragPos = vec3(u_ModelMatrix * vec4(a_Position, 1.0));
+    v_Normal = mat3(u_ModelMatrix) * a_Normal;
 #else
-	// If no MVP matrix, just use the raw position (for 2D or screen-space UI).
-	gl_Position = vec4(a_Position, 1.0);
+    // If no MVP matrix, just use the raw position (for 2D or screen-space UI).
+    gl_Position = vec4(a_Position, 1.0);
+    v_FragPos = a_Position;
+    v_Normal = a_Normal;
 #endif
 
-	// Pass color and texture coordinates to the fragment shader if enabled.
+    // Pass color and texture coordinates to the fragment shader if enabled.
 #ifdef HAS_COLOR
-	v_Color = a_Color;
+    v_Color = a_Color;
 #endif
 
 #ifdef HAS_TEXTURE
-	v_TexCoord = a_TexCoord;
+    v_TexCoord = a_TexCoord;
 #endif
 }

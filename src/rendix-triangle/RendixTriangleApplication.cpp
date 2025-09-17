@@ -26,11 +26,13 @@ RendixTriangleApplication::RendixTriangleApplication() {
         keywords::HasMVP,
         keywords::HasColor,
         keywords::HasTexture,
+        keywords::HasLighting
     };
 
     fragmentShaderDefines = {
         keywords::HasColor,
         keywords::HasTexture,
+        keywords::HasLighting
     };
 
     FileReader fileReader;
@@ -49,6 +51,10 @@ RendixTriangleApplication::RendixTriangleApplication() {
     // Initialize camera
     m_camera = std::make_unique<Camera>(glm::vec3(0.0f, 1.50f, 10.0f));
     m_camera->SetProjectionStrategy(std::make_unique<PerspectiveProjectionStrategy>(45.0f, 800.0f / 600.0f, 0.1f, 100.0f));
+
+    // Initialize light
+    m_light.direction = glm::vec3(0.5f, 1.0f, 0.0f);
+    m_light.color = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
 void RendixTriangleApplication::SetupAttributes()
@@ -56,43 +62,44 @@ void RendixTriangleApplication::SetupAttributes()
     shaderProgram->BindAttribute(0, "a_Position");
     shaderProgram->BindAttribute(1, "a_Color");
     shaderProgram->BindAttribute(2, "a_TexCoord");
+    shaderProgram->BindAttribute(3, "a_Normal");
 }
 
 void RendixTriangleApplication::SetupScene() {
     // Create the triangle mesh
     triangleMesh = std::make_shared<GLESMesh>();
     float vertices[] = {
-        // positions         // colors               //texture coordinates
+        // positions         // colors               //texture coordinates // normals
         // Front face
-        -0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.1f, 1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f, 0.8f, 0.2f, 0.1f, 1.0f, 0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.1f, 1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f, 0.8f, 0.2f, 0.1f, 1.0f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.1f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f, 0.8f, 0.2f, 0.1f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f, 0.8f, 0.2f, 0.1f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f, 0.8f, 0.2f, 0.1f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,
         // Back face
-        -0.5f, -0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 1.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f, 0.2f, 0.8f, 0.1f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
         // Left face
-        -0.5f, -0.5f, -0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, 0.2f, 0.1f, 0.8f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
         // Right face
-         0.5f, -0.5f,  0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+         0.5f,  0.5f, -0.5f, 0.5f, 0.5f, 0.2f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
         //Top face
-        -0.5f,  0.5f,  0.5f, 0.2f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f, 0.2f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-         0.5f,  0.5f,  0.5f, 0.2f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f, 0.2f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f, 0.2f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f, 0.2f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f, 0.2f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f, 0.2f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
         //Bottom face
-        -0.5f, -0.5f,  0.5f, 0.5f, 0.2f, 0.5f, 1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, 0.5f, 0.2f, 0.5f, 1.0f, 0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f, 0.5f, 0.2f, 0.5f, 1.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, -0.5f, 0.5f, 0.2f, 0.5f, 1.0f, 1.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f, 0.5f, 0.2f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.5f, 0.2f, 0.5f, 1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f, 0.5f, 0.2f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+         0.5f, -0.5f, -0.5f, 0.5f, 0.2f, 0.5f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
     };
     std::vector<uint32_t> indices = {
         // Front face
@@ -112,7 +119,8 @@ void RendixTriangleApplication::SetupScene() {
     BufferLayout layout = {
         {ShaderDataType::Float3, "a_Position"},
         {ShaderDataType::Float4, "a_Color"},
-        {ShaderDataType::Float2, "a_TexCoord"}
+        {ShaderDataType::Float2, "a_TexCoord"},
+        {ShaderDataType::Float3, "a_Normal"}
     };
 
     triangleMesh->setVertices(vertices, sizeof(vertices));
@@ -124,11 +132,11 @@ void RendixTriangleApplication::SetupScene() {
     // --- Create the Floor Mesh ---
     auto floorMesh = std::make_shared<GLESMesh>();
     float floorVertices[] = {
-        // positions           // colors (white)        // texture coords
-        -10.0f,  0.0f,  10.0f,  1.0f, 1.0f, 1.0f, 1.0f,   0.0f,  0.0f,
-        -10.0f,  0.0f, -10.0f,  1.0f, 1.0f, 1.0f, 1.0f,   0.0f, 10.0f,
-         10.0f,  0.0f,  10.0f,  1.0f, 1.0f, 1.0f, 1.0f,  10.0f,  0.0f,
-         10.0f,  0.0f, -10.0f,  1.0f, 1.0f, 1.0f, 1.0f,  10.0f, 10.0f
+        // positions           // colors (white)        // texture coords // normals
+        -10.0f,  0.0f,  10.0f,  1.0f, 1.0f, 1.0f, 1.0f,   0.0f,  0.0f, 0.0f, 1.0f, 0.0f,
+        -10.0f,  0.0f, -10.0f,  1.0f, 1.0f, 1.0f, 1.0f,   0.0f, 10.0f, 0.0f, 1.0f, 0.0f,
+         10.0f,  0.0f,  10.0f,  1.0f, 1.0f, 1.0f, 1.0f,  10.0f,  0.0f, 0.0f, 1.0f, 0.0f,
+         10.0f,  0.0f, -10.0f,  1.0f, 1.0f, 1.0f, 1.0f,  10.0f, 10.0f, 0.0f, 1.0f, 0.0f
     };
     std::vector<uint32_t> floorIndices = { 0, 1, 2, 1, 2, 3 };
 
@@ -139,7 +147,8 @@ void RendixTriangleApplication::SetupScene() {
     BufferLayout floorLayout = {
         {ShaderDataType::Float3, "a_Position"},
         {ShaderDataType::Float4, "a_Color"},
-        {ShaderDataType::Float2, "a_TexCoord"}
+        {ShaderDataType::Float2, "a_TexCoord"},
+        {ShaderDataType::Float3, "a_Normal"}
     };
 
     floorMesh->setVertices(floorVertices, sizeof(floorVertices));
@@ -185,6 +194,11 @@ void RendixTriangleApplication::OnUpdate(Engine &engine, float deltaTime) {
 void RendixTriangleApplication::OnRender(Engine &engine) {
     engine.GetRenderer().SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     engine.GetRenderer().Clear();
+
+    shaderProgram->Use();
+    shaderProgram->SetUniform("u_LightDirection", m_light.direction);
+    shaderProgram->SetUniform("u_LightColor", m_light.color);
+
     engine.GetRenderer().Draw(*m_scene, *m_camera);
 }
 
